@@ -1,0 +1,156 @@
+window.BODEGA_DIALOGUE_SOURCE = function () { /*
+# DIÁLOGOS DA BODEGA — edite abaixo e salve em UTF-8.
+# Preserve a primeira e a última linha deste arquivo. Elas permitem abrir pelo index.html.
+# Use [personagem] e depois: pergunta do jogador | resposta do personagem
+# Após salvar, recarregue o jogo (F5). Não precisa importar nem instalar nada.
+# Uma conversa por linha. Linhas começadas com # são comentários.
+
+[badin]
+Como anda a colônia? | CUDIO! Plantei alface e nasceu visita querendo salame. A terra é generosa demais!
+Vai um xis caprichado? | DIO MADONA! Se vier desse tamanho, vou ter que chamar os primos pra ajudar.
+E a safra, Badin? | CUDIO, a uva ficou uma beleza. O problema é o nono contando os cachos todo dia.
+Hoje tem salame da colônia. | Dio madona, agora sim! Corta fino que daí eu posso dizer que comi só umas fatias.
+Tá com pressa? | Na colônia só se corre atrás de galinha. E geralmente é a galinha que ganha.
+O que tu trouxe da roça? | Uma sacola de bergamota e três conselho do nono. A sacola pesava menos.
+Gostou do atendimento? | CUDIO, ligeiro assim nem a nona quando percebe que esqueceram o pão no forno!
+Mais um café? | DIO MADONA, bota! Café fraco é água que ouviu falar de café.
+E o domingo na família? | Era pra ser almoço de quatro. A nona fez comida pra quarenta, por garantia.
+Tem causo novo? | Fui economizar na cerca. As galinha fizeram turismo e agora conhecem a colônia inteira.
+Como tá o tempo lá fora? | CUDIO! Saí de casa com sol, peguei chuva e cheguei com vontade de polenta.
+Vai levar erva? | Me pesa bem certinho. O nono desconfia até da balança da farmácia.
+
+[guri]
+E aí, guri? | Chê, vim só dar uma olhada e o cheiro da chapa já fez meu pedido.
+Como foi a lida? | Chê, trabalhei tanto que até minha sombra pediu folga.
+Vai jogar truco? | Se tiver parceiro, chê! Meu problema é que a cara entrega antes da carta.
+Mais um mate? | Chê, aceito. Mate e prosa boa nunca precisam de convite duas vezes.
+Tá com fome? | Mais que cusco olhando churrasco, chê. Capricha nesse xis!
+Como tá o cavalo? | Chê, viu eu pegar a sela e foi pastar do outro lado do campo. Inteligente o vivente.
+Gostou da bodega? | Chê, aqui até a espera vem acompanhada de causo.
+Qual é a previsão? | O céu tá indeciso, chê. Eu já decidi: fico perto da comida.
+Vai uma torrada? | Show, chê! Mas se o salame aparecer só na lembrança, eu reclamo.
+E esse frio? | Chê, hoje o minuano veio buscar troco que eu nem devia.
+De onde tu vem? | Lá de onde o GPS diz boa sorte, chê.
+Já vai embora? | Depois da saideira de prosa, chê. Essa demora um pouco.
+
+[marcio]
+E o pedido, Márcio? | É o quê? Show de bola! O pedido vai se umas par de raineken é oq? show de bola
+O Marcelo vem junto? | É o quê? Show de bola, vem sim! tá cortando a grama da casona depois ele vem
+Gostou do xis? | É o quê? Xizão top podre de chique, show de bola
+Hoje veio sozinho? | O marcelo ficou limpando o banheirão da casona
+Vai querer mais uma? | É o quê? Show de bola! mas só se tiver carnage
+Tudo certo por aí? | É o quê? Show de bola!
+Tem novidade? | É o quê? botamo os vidrão verde na casona, é mentirada que tão a venda
+E a partida? | É o quê? Showww de bola, só um recadinho ai pra brigada de erechim
+
+[marcelo]
+Bem-vindo, Marcelo! | É o quê? Show de bola! tá limpando o banherão podre de chique e já vem aí
+Márcio já pediu? | Umas reineken e carnage e o que? show de bola
+O que achou da casa? | podre de chique, casona podre de chique aí não é marcio? é oq?
+Vai um refrigerante? | É o quê? Show de bola! eu só tomo rainekem que tamo com os pila, é oq?
+Hoje tá quieto? | o portonzon não tá a venda! nem adianta vim pedi, é mentirada isso aí
+Vai de truco? | É o quê márcio? eu prefiro fica na carnage e na cervejada, show de bola
+Chegou sem o Márcio? | Hoje se pegamo sozinho mas amanha marcio e marcelo direto de erechim e o que? show de bola
+Mais salame? | É o quê? Show de bola! Vo leva uns pra guardar na bauzona quando der vontade
+
+[gremio]
+Vai começar o jogo! | Hoje eu só levanto dessa cadeira pra comemorar ou buscar petisco. Dá-lhe, Grêmio!
+Tá nervoso? | Nada! Só mexi o café umas quarenta vezes sem ter colocado açúcar.
+Vai um xis? | Capricha no lanche que o placar eu deixo pro Tricolor!
+Que lance foi esse? | Eu vi gol, o juiz viu impedimento e minha caneca quase viu o chão.
+Como tá a torcida? | A voz já foi embora no aquecimento. O otimismo continua aqui.
+Mais uma rodada? | No intervalo, sim! Durante o jogo eu não largo nem o braço da cadeira.
+E a prosa hoje? | Pode falar de tudo. Só não fica na frente da televisão, chê!
+Tá boa a TV? | Uma beleza! Agora consigo discordar do juiz em detalhes.
+
+[inter]
+Preparado pro jogo? | Colorado pronto! Já pedi o petisco pra não perder nenhum lance.
+Tá confiante? | Confiança eu trouxe de casa. A calma eu esqueci no portão.
+Vai um trago? | Depois desse lance, vai uma água primeiro que eu gritei até secar a garganta!
+O que achou do primeiro tempo? | Meu coração correu mais que os pontas. Vamos, Inter!
+Sai mais um petisco? | Sai! Pra cada escanteio eu pego uma codorna. Hoje o prato tá sofrendo.
+Quem ganha hoje? | O Inter, se depender de mim. Se depender do meu palpite, melhor não apostar.
+Como tá a imagem? | Boa demais. Até a bola parece saber que a gente tá olhando.
+Tudo tranquilo na mesa? | Tranquilo, chê. Posso discordar do gremista e dividir o salame. Só o último pedaço complica.
+
+[lucia]
+# Acrescente suas falas aqui.
+
+[anselmo]
+# Acrescente suas falas aqui.
+
+[rosa]
+# Acrescente suas falas aqui.
+
+[nair]
+# Acrescente suas falas aqui.
+
+[valter]
+# Acrescente suas falas aqui.
+
+[arlindo]
+# Acrescente suas falas aqui.
+
+[todos]
+# Acrescente suas falas aqui.
+
+
+
+# Novos fregueses: edite as falas abaixo ou acrescente outras no mesmo formato.
+
+[indavirus]
+Veio de longe? | Ô, alemon! Saí de Santa Catarina com o Lauro. A viagem era curta, mas a prosa fez três desvios.
+Vai sentar com o Lauro? | Ja! Guarda duas cadeiras. Lá na nossa colônia catarinense, amizade boa já chega trazendo companhia.
+Como anda a família? | Tudo firme em Santa Catarina! A oma guarda receita da família como quem guarda documento da imigração: ninguém mexe sem pedir.
+Tem causo da colônia? | Opa! O vô contava que a família chegou sem conhecer as estradas. Hoje nóis tem mapa e continua se perdendo na prosa.
+Trouxe fome? | Trouxe, alemon! A vó lá em Santa Catarina pergunta se já comeu enquanto serve outro prato. É pergunta sem direito de resposta.
+Que música toca na festa? | Lá na festa da colônia tem banda, dança e tio marcando o compasso na mesa. Até o copo entra no ritmo, ja!
+Vai um café? | Café combina com lembrança da cozinha da oma. Ela dizia que a família veio da Alemanha, mas o cheiro do café já era de casa aqui em Santa Catarina.
+Como aprendeu tanta história? | Escutando os mais velhos, alemon. Quando o vô puxava o causo da imigração, até o Lauro esquecia de interromper.
+E esse teu sotaque? | É bagagem de família, ja! Veio passando de boca em boca. Em Santa Catarina nóis bota um temperinho nosso na conversa.
+Vai pra bocha? | Vou, alemon! Na nossa colônia a bocha anda devagar; quem corre é a desculpa depois de errar o bolim.
+O Lauro demora? | Ele disse já tô chegando. Em idioma de visita catarinense, isso pode significar que ainda tá tomando café.
+Qual é o segredo da prosa? | Mesa comprida, ouvido aberto e café passando. A história da nossa família imigrante ganha um capítulo em cada encontro.
+
+[lauro]
+Quem veio contigo? | O Indavirus, alemon! Saímos de Santa Catarina juntos. Ele trouxe os causos e eu trouxe paciência pra escutar os mesmos de novo.
+Quer alguma coisa? | Um petisco e uma cadeira, ja! Lá na colônia catarinense, a conversa sempre começa com pode se servir.
+E a família alemã? | A oma ensinou: chegando visita, aumenta a mesa. Não aumenta a casa porque aí precisa de pedreiro, alemon!
+Lembra das histórias do vô? | Lembro dos relatos da vinda da família. Ele falava da saudade de lá e do trabalho pra fazer um lar em Santa Catarina.
+O que tem na festa da colônia? | Banda tocando, comida passando e gente dizendo só mais um pedacinho. Esse pedacinho dura a tarde toda, ja!
+Vai jogar truco? | Vou aprender contigo! Em casa o opa ensinou a contar as cartas. Só não ensinou a esconder minha cara de carta ruim.
+Trouxe receita de família? | Trouxe a ideia! A medida da oma era um tanto. Perguntei quanto era um tanto e ela disse tu vai vendo, alemon.
+Por que tu gosta de viajar? | Pra conhecer as mesas dos vizinhos! Nossa família cruzou um oceano; nóis cruza a divisa de Santa Catarina atrás de uma prosa boa.
+Como vai o Indavirus? | Vai contando história desde que saímos de Santa Catarina. Se a estrada fosse mais longa, ele começava a árvore genealógica de novo!
+Tem saudade de casa? | Do café da oma e da varanda depois da chuva. Nossa lembrança da imigração vive nessas coisas pequenas, ja.
+Já jogou bocha hoje? | Ainda não, alemon! Se minha bocha parar perto, é técnica da colônia. Se passar longe, foi o vento de Santa Catarina.
+Vai mais uma rodada? | Vai uma rodada de conversa primeiro. Conta tua história que nóis conta a da família, sem pressa de levantar da mesa.
+
+[peixinhonabrasa]
+Chegou de onde? | De Santa Catarina, alemon! Vim trazer prosa da colônia e conferir se essa chapa trabalha tão bem quanto fala.
+O peixe fica no ponto? | Fica, ja! Quem tem pressa vira duas vezes; quem tem prosa esquece na brasa. Hoje eu vou só conversar contigo.
+Tem história de imigrante? | Na minha família se conta muito da chegada dos alemães. O que eu mais gosto é ouvir como fizeram amizade com os vizinhos daqui de Santa Catarina.
+E esse teu nome? | Peixinho na Brasa, alemon! Mas se o peixe acabar, eu aceito salame. O apelido não pode limitar o cardápio.
+Quem ensinou a cozinhar? | Foi olhando a família na colônia catarinense. O opa cuidava do fogo e a oma cuidava pra ele não contar causo até queimar tudo.
+Que festa tu prefere? | A que junta o povo da colônia, ja! Banda de um lado, comida do outro e nóis no meio sem saber pra onde ir primeiro.
+Vai um petisco? | Vai, alemon! Lá em Santa Catarina um petisco vira almoço quando a visita encontra assunto.
+Como é a prosa lá? | Mistura palavra antiga da família com jeito catarinense de falar. Meu alemon vem da mesa de casa, ja!
+Indavirus e Lauro vêm também? | Se os dois vierem, pode aumentar a mesa. Um começa a história da colônia, o outro corrige, e nóis passa a noite nisso.
+Vai arriscar uma bocha? | Claro! A tradição de família é dar opinião na jogada dos outros. Na minha eu peço silêncio, alemon!
+Qual lembrança tu leva daqui? | Uma mesa boa e conversa nova. A família guardou tanta memória da imigração que eu aprendi a guardar as de cada viagem também.
+Tá com pressa pra voltar? | Santa Catarina não sai do lugar, ja! Posso terminar esse petisco e esse causo antes de pegar a estrada.
+
+[manolima]
+Como chegou por aqui? | Chegou o lobisome do Arvoredo! Deixei minha cadela baia descansando e vim buscar um mate e uma prosa.
+E a cadela baia? | A minha baia escuta mais que muita gente. O lobisome do Arvoredo conta um causo e ela já sabe se é hora de sair ou de dormir.
+Vai jogar bocha? | O lobisome do Arvoredo vai tentar! Se a cadela baia estivesse junto, ia querer buscar a bocha antes da medição.
+Puxa uma cadeira? | Puxo, sim. A cadela baia já tomou conta da minha lá em casa; o lobisome do Arvoredo teve que procurar outra querência.
+Como foi o passeio? | A baia escolheu o caminho. Eu sou o lobisome do Arvoredo, mas na hora de passear quem manda é aquela cadela.
+Vai um petisco? | Vai! A cadela baia me olha com uma cara quando tem salame... Até o lobisome do Arvoredo perde a pose e divide.
+Tá inspirado hoje? | O lobisome do Arvoredo acordou proseador. Falei tanto com a baia que ela foi deitar no outro lado do pátio.
+Uma partida de truco? | Aceito! A cadela baia conhece minha cara de blefe. Sorte do lobisome do Arvoredo que ela não sabe contar pros outros.
+Como vai a lida? | A baia fiscaliza tudo deitada na sombra. O lobisome do Arvoredo trabalha e ela aprova abanando o rabo.
+Vai mais um mate? | Manda o mate pro lobisome do Arvoredo. A cadela baia me espera, mas sabe que prosa boa não se termina no susto.
+Qual foi a novidade do dia? | A baia sumiu com meu chinelo de novo. O lobisome do Arvoredo botou as botas e veio reclamar aqui na bodega.
+Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo; depois a cadela baia recebe a versão completa lá em casa.
+*/ };

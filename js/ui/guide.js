@@ -1,0 +1,38 @@
+'use strict';
+
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function drawCharacterPortrait(context,sprite,x,y,height){
+ const custom=typeof sprite==='object',s=custom?{x:sprite.crop[0],y:sprite.crop[1],w:sprite.crop[2],h:sprite.crop[3]}:SPRITES[sprite%6];
+ const width=height*s.w/s.h;context.imageSmoothingEnabled=false;
+ context.drawImage(custom?clippedCharacter(sprite):peopleArt,s.x,s.y,s.w,s.h,x-width/2,y-height,width,height);
+}
+function selectableCharacters(){return PEOPLE.filter(p=>!p.team&&typeof p.sprite==='object');}
+function initializeCharacterChoice(){
+ const select=$('startingCharacter');select.innerHTML='<option value="sadi">Sadi · bodegueiro</option>'+selectableCharacters().map(p=>`<option value="${p.id}">${escapeHTML(p.name)}</option>`).join('');
+ const update=()=>{const p=PEOPLE.find(p=>p.id===select.value),c=$('avatarPreview'),context=c.getContext('2d');context.clearRect(0,0,c.width,c.height);drawCharacterPortrait(context,p?.sprite??0,c.width/2,c.height-6,166);$('avatarDescription').textContent=(p?.origin||'Cozinhe, atenda e jogue com este personagem.')+(p?.unique?' Enquanto você joga com ele, não chega outro igual.':'');};
+ select.addEventListener('change',update);update();
+}
+function contactsPanel(){
+ return `<div class="phone-intro"><h3>Contatos da bodega</h3><p>Cada entrega inicia uma conversa e dá afeto. Três atendimentos corretos rendem coração e gorjeta extra. O afeto libera mais prosa.</p></div>`+PEOPLE.map((p,i)=>`<article class="contact-card"><canvas width="64" height="90" data-contact="${i}" aria-label="${escapeHTML(p.name)}"></canvas><div><h3>${G.regulars[i]>=3?'♥ ':''}${escapeHTML(p.name)}</h3><p>Afeto ${G.friends[i]} / 100 · ${Math.min(3,G.regulars[i])}/3 atendimentos<br>Habitual: ${nameOf(p.retailFav)} / ${nameOf(p.fav)}</p><small>${p.origin|| (p.team?'Torcida '+(p.team==='gremio'?'do Grêmio':'do Inter'):'Freguês da região')}${p.partner?'<br>Costuma vir com '+PEOPLE.find(other=>other.id===p.partner).name:''}${p.unique?'<br>Um por vez na bodega':''}${G.regulars[i]>=3?'<br>Gorjeta extra: R$ 2,50':''}</small></div></article>`).join('');
+}
+function drawContactPortraits(){document.querySelectorAll('[data-contact]').forEach(c=>drawCharacterPortrait(c.getContext('2d'),PEOPLE[Number(c.dataset.contact)].sprite,32,88,86));}
+function upgradeCategory(u){if(u.goods||u.id==='cigarro_py')return 'Cardápio e mercadorias';if(u.id.startsWith('table'))return 'Salão';if(GEAR[u.id]||u.id.toLowerCase().includes('mate'))return 'Botas e chimarrão';return 'Cozinha e atendimento';}
+function upgradeCatalog(){
+ return ['Cardápio e mercadorias','Cozinha e atendimento','Salão','Botas e chimarrão'].map(category=>`<details class="upgrade-category" open><summary>${category}</summary>${UPGRADES.filter(u=>upgradeCategory(u)===category).map(u=>{
+  const missing=[];if(!tutorialUpgradeAllowed(u.id))missing.push('concluir a etapa do tutorial');if(G.rep<u.rep)missing.push('reputação '+u.rep);if(!hasCash(u.cost))missing.push(money(u.cost));if(u.requires&&!G.up[u.requires])missing.push(UPGRADES.find(v=>v.id===u.requires).name);
+  return `<div class="upgrade"><h3>${u.name}</h3><p>${u.desc}</p><p>Reputação ${u.rep} · ${money(u.cost)}${u.requires?' · requer '+UPGRADES.find(v=>v.id===u.requires).name:''}</p><button class="primary" data-act="upgrade" data-id="${u.id}" ${u.unavailable||G.up[u.id]||missing.length?'disabled':''}>${u.unavailable?'Temporariamente indisponível':G.up[u.id]?'Já é da casa':missing.length?'Falta: '+missing.join(' + '):u.cost===0?'Instalar grátis':'Comprar melhoria'}</button></div>`;
+ }).join('')}</details>`).join('');
+}
+function guideContent(){
+ const count=improvementCount(),next=[4,8,12].find(n=>n>count);
+ return `<div class="callout"><b>${escapeHTML(G.bodegaName)} · ${PEOPLE.find(p=>p.id===G.avatarId)?.name||'Sadi'}</b><br>${count} melhorias compradas · ${next?'faltam '+(next-count)+' para o próximo cenário':'todos os cenários liberados'}.<br>Dinheiro compra melhorias; reputação e compras anteriores liberam as opções. Os requisitos ficam visíveis no celular.</div>
+ <div class="callout"><b>Dificuldade por dias</b><br>Dia 1: tutorial, um freguês por vez e sem prazo.<br>Dia 2: mesas de 1 ou 2, um item por pessoa.<br>Dias 3–4: até 3 pessoas e pedidos duplos.<br>Dias 5–6: até 4 pessoas.<br>Dia 7 em diante: até 3 itens por freguês.<br>A mesa de truco atende como as outras. No campeonato, cada mesa recebe duas duplas fixas, que trocam de adversários durante o dia.</div><div class="guide-grid">
+ <article class="panel"><span class="tag">Desde o início</span><h3>Atendimento</h3><p>Balcão separado e mesas para até quatro. Cada freguês tem <b>${ORDER_WAIT} s</b> para receber seu pedido; no balcão, ${COUNTER_WAIT} s. A entrega na mesa atende primeiro quem tem menos tempo para aquele produto. Pagamento e gorjeta são individuais.</p></article>
+ <article class="panel"><span class="tag">Desde o início</span><h3>Cozinha e comércio</h3><p>Prepare xis, sirva bebidas e pese mercadorias. Comece com codorna, cigarro e erva; compre salame, pinhão, bergamota, café e mais no celular. A prensa também faz torrada após liberar salame.</p><button data-act="help">Receitas e controles</button></article>
+ <article class="panel"><span class="tag">A qualquer momento</span><h3>Truco e cacheta</h3><p>Aproxime-se da mesa fixa de truco: Y convida quem está sentado, e E abre cartas quando ela está livre. Truco aceita aposta e cacheta é livre.</p></article>
+ <article class="panel"><span class="tag">A qualquer momento</span><h3>Bocha</h3><p>Entre pela porta à direita do salão. Na cancha aparece Jogar bocha. Quatro bochas por lado, direção e força. Escolha dificuldade e aposta ou treine sem dinheiro. Truco e bocha <b>pausam todo o atendimento</b>; ao sair, você continua de onde parou.</p></article>
+ <article class="panel"><span class="tag">Cresça no seu ritmo</span><h3>Equipamentos e cenários</h3><p>Botas, bandeja, chapa, estoque, mesas e mates estão nas melhorias. Rooms 1 e 2 começam livres; rooms 3, 4 e 5 chegam com 4, 8 e 12 compras. O cavalo está temporariamente indisponível.</p><p>Troque em <b>Celular → Trocar cenário</b>.</p></article>
+ <article class="panel"><span class="tag">Todo dia tem prosa</span><h3>Contatos e eventos</h3><p>Entregas iniciam conversas e ganham afeto; três atendimentos corretos dão gorjeta extra. Acompanhe em <b>Celular → Contatos</b>. Confira o evento sorteado antes de abrir. O primeiro dia é tranquilo; os seguintes não repetem eventos consecutivos. Ao fechar o dia 1, você ganha uma TV em um sorteio. Brigas só em campeonatos ou a partir do dia 5.</p><button data-act="event">Programação do dia</button></article>
+ </div><div class="actions"><button class="primary" data-act="close">Voltar à bodega</button><button data-act="planBuy">Abrir fornecedor e melhorias</button></div>`;
+}
+function gameGuide(){if(G.game||G.bocce)return;openDialog('Guia e progresso',guideContent(),'guide');}
