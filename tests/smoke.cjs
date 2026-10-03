@@ -99,9 +99,9 @@ async function main() {
       await load(protocol === 'file' ? pathToFileURL(path.join(root, entry)).href : base + '/' + entry);
       assert(await evaluate(`G.day===1&&W===1280&&H===800&&canWalk(G.player.x,G.player.y)&&$('startLogo').naturalWidth>0`));
       assert(await evaluate(`[roomArt,peopleArt,horseArt,furnitureArt].every(i=>i.complete&&i.naturalWidth>0)`));
-      assert(await evaluate(`canvas.width>=canvas.clientWidth*1.49&&camera.zoom===1.2`), 'Desktop inicia ampliado com resolução interna maior');
+      assert(await evaluate(`canvas.width>=canvas.clientWidth*1.49&&camera.zoom===1`), 'Desktop inicia sem zoom com resolução interna maior');
       await evaluate(`action('zoomIn');draw()`);
-      assert(await evaluate(`Math.abs(camera.zoom-1.4)<.01&&$('viewZoom').textContent==='140%'`), 'Controle de zoom amplia e atualiza a indicação');
+      assert(await evaluate(`Math.abs(camera.zoom-1.2)<.01&&$('viewZoom').textContent==='120%'`), 'Controle de zoom amplia e atualiza a indicação');
       await evaluate(`action('zoomOut');draw()`);
       const itemArtResults = await evaluate(fs.readFileSync(path.join(__dirname, 'item-art-scenarios.js'), 'utf8'));
       assert(itemArtResults.length >= 50, 'Todos os itens têm sprites no cenário e na interface');
@@ -135,6 +135,8 @@ async function main() {
     await load(base+'/index.html');assert(await evaluate(`nextProse(6).reply!=='Fala nova editada no TXT'`));
     console.log('PASS TXT automático por file:// e HTTP, sem botão e sem cache de falas antigas');
 
+    const dialogue = await evaluate(fs.readFileSync(path.join(__dirname, 'dialogue-scenarios.js'), 'utf8'));
+    for (const result of dialogue) console.log('PASS ' + result);
     const tournament = await evaluate(fs.readFileSync(path.join(__dirname, 'tournament-scenarios.js'), 'utf8'));
     for (const result of tournament) console.log('PASS ' + result);
     const tutorial = await evaluate(fs.readFileSync(path.join(__dirname, 'tutorial-scenarios.js'), 'utf8'));

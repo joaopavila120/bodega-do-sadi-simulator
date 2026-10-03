@@ -1,13 +1,18 @@
 // Sistema de conversa com os fregueses e contação de causos
 'use strict';
 
+const ALWAYS_TALK = new Set(['badin','guri','marcio','marcelo','indavirus','lauro','peixinhonabrasa','manolima']);
+
 function deliveryConversation(person,actor,diner=null){
  G.conversations[person]++;G.friends[person]=Math.min(100,(G.friends[person]||0)+3);
- const line=nextProse(person),dialogue={name:PEOPLE[person].name,player:line.player,reply:line.reply,title:line.title||'Prosa de balcão',source:line.source||null,life:line.source?18:10};
- G.dialogueQueue??=[];if(G.dialogue)G.dialogueQueue.push(dialogue);else G.dialogue=dialogue;
+ G.dialogueQueue=[];
+ // Fregueses comuns falam em 20% das entregas; especiais sempre têm uma fala.
+ if(!ALWAYS_TALK.has(PEOPLE[person].id)&&Math.random()>=.2){save();return;}
+ const line=nextProse(person);
+ G.dialogue={name:PEOPLE[person].name,player:line.player,reply:line.reply,title:line.title||'Prosa de balcão',source:line.source||null,life:15};
  AudioEngine.heart();save();updateDialogue();
 }
-function advanceDialogue(){G.dialogue=G.dialogueQueue?.shift()||null;updateDialogue();save();}
+function advanceDialogue(){G.dialogue=null;G.dialogueQueue=[];updateDialogue();save();}
 
 function updateDialogue(){const d=G.dialogue;$('dialogueUI').classList.toggle('hidden',!d);if(!d)return;$('dialogueName').textContent=d.name+' · '+d.title;$('dialoguePlayer').textContent='Você: '+d.player;$('dialogueReply').textContent=d.reply;$('dialogueSource').innerHTML=d.source?'<a href="'+d.source+'" target="_blank" rel="noopener">Lenda adaptada · fonte</a>':'Diálogo original da bodega';}
 

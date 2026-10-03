@@ -2,7 +2,7 @@
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
  const reset=()=>{G=fresh();G.day=3;G.tutorial.complete=true;G.up.trago=true;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
  const advance=n=>{for(let t=0;t<n;t+=.05){for(const table of G.tables)if(table.fight)resolveFight(table,true);simulate(.05);}};
- reset();G.phase='open';const first=spawnGroup({size:2,targetTable:0});const second=spawnGroup({size:1,fixedOrders:['xis_salada','refri']});
+ reset();G.phase='open';const first=spawnGroup({size:2,targetTable:0,members:[0,1]});const second=spawnGroup({size:1,members:[PEOPLE.findIndex(p=>p.id==='badin')],fixedOrders:['xis_salada','refri']});
  check(first.table===0&&second.table===1&&second.state==='walkTable','fila ocupa a mesa de truco livre inclusive com xis e refrigerante');
  for(let i=0;i<250;i++)customersTick(.05);
  check(second.orders.includes('xis_salada')&&second.orders.includes('refri'),'mesa de truco aceita o mesmo cardápio das demais');
@@ -11,11 +11,11 @@
  G.hands[0]={kind:'product',pid:'xis_salada',key:'xis_salada',cost:8.5,ready:true};const patience=second.diners[0].patience;interactTable(1);
  check(G.conversations[second.person]===1&&G.friends[second.person]===3&&G.dialogue?.name===PEOPLE[second.person].name&&second.diners[0].patience===patience,'entrega parcial inicia prosa e dá afeto sem alterar o prazo');
  G.hands[0]={kind:'product',pid:'refri',key:'refri',cost:2.5,ready:true};interactTable(1);
- check(G.conversations[second.person]===2&&G.dialogueQueue.length===1,'cada item entregue conversa; diálogos sucessivos aguardam sua vez');
- action('dialogueClose');check(G.dialogue&&G.dialogueQueue.length===0,'fechar conversa mostra a próxima automaticamente');
+ check(G.conversations[second.person]===2&&G.dialogueQueue.length===0&&G.dialogue.life===15,'nova entrega substitui a conversa e renova seus 15 segundos');
+ action('dialogueClose');check(!G.dialogue&&G.dialogueQueue.length===0,'fechar conversa não revela diálogos acumulados');
  check(!$('talkButton')&&!document.querySelector('[data-act="talk"]'),'botão de prosear removido');
  const count=G.conversations.join();document.dispatchEvent(new KeyboardEvent('keydown',{key:'i'}));document.dispatchEvent(new KeyboardEvent('keyup',{key:'i'}));check(G.conversations.join()===count,'tecla I não inicia mais conversa');
- reset();G.phase='open';const c=spawnShop({pid:'cigarro'});readyProduct('cigarro');serveShop(c);
+ reset();G.phase='open';const c=spawnShop({pid:'cigarro'});c.person=PEOPLE.findIndex(p=>p.id==='badin');readyProduct('cigarro');serveShop(c);
  check(G.dialogue?.name===PEOPLE[c.person].name&&G.conversations[c.person]===1&&G.friends[c.person]===5,'entrega no balcão também inicia conversa com o cliente correto');
  for(const count of [2,3,4]){
   reset();if(count>=3)G.up.table3=true;if(count===4)G.up.table4=true;G.event={id:'campeonato',seen:true,fired:{}};openDay();

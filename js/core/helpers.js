@@ -8,7 +8,7 @@ const ctx = canvas ? canvas.getContext('2d') : null;
 const money = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const round = v => Math.round(v * 100) / 100;
-const camera = { zoom: innerWidth>=750?1.2:1, overview: false, x: 0, y: 0, scale: 1 };
+const camera = { zoom: 1, overview: false, x: 0, y: 0, scale: 1 };
 const held = () => G.hands[G.slot];
 const freeHand = () => !held();
 const pick = values => values[Math.floor(Math.random() * values.length)];
