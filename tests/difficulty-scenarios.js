@@ -26,7 +26,7 @@
  check(!document.querySelector('[data-act="map"]')&&!document.querySelector('[data-act="tableMode"]')&&!$('combo')&&!$('tableOrders'),'mapa, troca de mesa, combo e lista lateral foram removidos');
  check(!$('gameSidebar').querySelector('[data-act="rooms"]')&&$('phone').querySelector('[data-act="rooms"]'),'trocar cenário fica exclusivamente no celular');
  check(getComputedStyle($('gameSidebar')).overflowY==='hidden'&&$('dayNotice').textContent.split('\n').length===2,'faixa lateral fixa e cabeçalho do dia em duas linhas');
- check(itemArtKey('xis_salada',{kind:'assembled'})==='xis_montado'&&itemArtKey('xis_salada',{ready:true})==='xis_prensado'&&xisArt('xis_montado')!==xisArt('xis_prensado'),'xis muda de desenho entre montagem e prensa');
+ check(itemArtKey('xis_salada',{kind:'assembled'})==='xis_montado'&&itemArtKey('xis_salada',{ready:true})==='xis_prensado'&&ITEM_ART.xis_montado.src!==ITEM_ART.xis_prensado.src,'xis muda de desenho entre montagem e prensa');
  const originalBar=bar;try{
   for(const type of ['mate','clean']){let bars=0;bar=(...args)=>{bars++;originalBar(...args);};G.task={type,target:type==='mate'?'mate':'table:1',time:.5};G.boost=5;if(type==='clean')G.tables[1].dirty=true;draw();check(bars===1,'somente uma barra de ação durante '+type);}
  }finally{bar=originalBar;G.task=null;G.boost=0;G.tables[1].dirty=false;}

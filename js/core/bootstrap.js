@@ -27,6 +27,7 @@ async function initializeGame() {
 
     await Promise.all([
       waitForImage(roomArt, ROOM_DATA),
+      ...Object.entries(ITEM_ART).map(([key,image])=>waitForImage(image,"assets/images/items/"+key+".png")),
       waitForImage(peopleArt, PEOPLE_DATA),
       waitForImage(furnitureArt, FURNITURE_DATA),
       waitForImage(horseArt, HORSE_DATA),

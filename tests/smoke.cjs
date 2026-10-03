@@ -99,6 +99,8 @@ async function main() {
       await load(protocol === 'file' ? pathToFileURL(path.join(root, entry)).href : base + '/' + entry);
       assert(await evaluate(`G.day===1&&W===1280&&H===800&&canWalk(G.player.x,G.player.y)&&$('startLogo').naturalWidth>0`));
       assert(await evaluate(`[roomArt,peopleArt,horseArt,furnitureArt].every(i=>i.complete&&i.naturalWidth>0)`));
+      const itemArtResults = await evaluate(fs.readFileSync(path.join(__dirname, 'item-art-scenarios.js'), 'utf8'));
+      assert(itemArtResults.length >= 50, 'Todos os itens têm sprites no cenário e na interface');
       await evaluate('localStorage.clear()');
       await click('#start [data-act="new"]'); await click('#overlay [data-act="close"]');
       await waitUntil(() => evaluate('AudioEngine.tracks.every(t=>!t.audio.error&&t.audio.duration>0)'), 'As músicas externas não carregaram');

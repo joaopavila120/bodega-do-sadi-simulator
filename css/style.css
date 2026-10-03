@@ -119,3 +119,6 @@
  .game-sidebar.focused-task{display:flex;max-height:390px}.game-sidebar .weigh-ui p{margin:5px 0}.phone{top:112px;bottom:8px;right:8px;max-height:calc(100dvh - 120px)}
 }
 @media(max-width:750px){.bocce-screen{grid-template-columns:1fr;grid-template-rows:min(48dvh,360px) auto;overflow:auto}.bocce-sidebar{border-left:0;border-top:2px solid #976c39;overflow:visible;padding:14px}.bocce-sidebar h1{font-size:23px;margin:0 0 9px}.bocce-score{font-size:32px;padding:3px}.bocce-sidebar h2{margin-top:14px}.bocce-move{margin:8px 0}.bocce-sidebar p{margin:8px 0}.bocce-remaining{min-height:0}.bocce-court{position:sticky;top:0;background:#20180f;z-index:1}}
+:root .pixel-item{position:relative;display:inline-block;width:100%;height:100%;vertical-align:middle}
+.pixel-item img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.pixel-item img.pixel-item-extra{position:absolute;right:-3%;bottom:-3%;width:46%;height:46%}
