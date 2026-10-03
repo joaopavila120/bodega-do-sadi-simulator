@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <header class="hud"><div class="brand" aria-label="Bodega Do Sadi Simulator"><img id="brandLogo" src="assets/images/logo.png" width="44" height="44" alt=""><div><b id="bodegaBrand">Bodega Do Sadi</b><small>Simulator</small></div></div><div class="hud-stats"><div class="stat"><i>●</i><span id="cash">R$ 248</span><small id="paymentFeedback" role="status"></small></div><div class="stat"><i>◷</i><span id="clock">03:00</span></div><div class="stat"><i>♥</i><span id="reputation">60</span><small>reputação</small></div></div><div class="hud-tools"><button data-act="sound" id="soundButton" aria-label="Ligar som">♫</button><button data-act="help" aria-label="Como jogar">?</button><button data-act="pause" aria-label="Pausar">Ⅱ</button></div></header>
+  <header class="hud"><div class="brand" aria-label="Bodega Do Sadi Simulator"><img id="brandLogo" src="assets/images/logo.png" width="44" height="44" alt=""><div><b id="bodegaBrand">Bodega Do Sadi</b><small>Simulator</small></div></div><div class="hud-stats"><div class="stat"><i>●</i><span id="cash">R$ 248</span><small id="paymentFeedback" role="status"></small></div><div class="stat"><i>◷</i><span id="clock">03:00</span></div><div class="stat"><i>♥</i><span id="reputation">60</span><small>reputação</small></div></div><div class="hud-tools"><div class="view-controls" aria-label="Tamanho da visualização"><button data-act="zoomOut" aria-label="Diminuir zoom" title="Diminuir zoom">−</button><span id="viewZoom">120%</span><button data-act="zoomIn" aria-label="Aumentar zoom" title="Aumentar zoom">+</button></div><button data-act="full" aria-label="Tela cheia" title="Tela cheia">⛶</button><button data-act="sound" id="soundButton" aria-label="Ligar som">♫</button><button data-act="help" aria-label="Como jogar">?</button><button data-act="pause" aria-label="Pausar">Ⅱ</button></div></header>
 <main class="viewport"><section class="playfield"><canvas id="scene" width="1280" height="800" tabindex="0" aria-label="Bodega: cozinha à esquerda, mesas à direita e comércio perto da entrada. Ande com WASD, interaja com E, solte com Q e abra o celular com C."></canvas></section><aside id="gameSidebar" class="game-sidebar" aria-label="Controles e conversas">
 <button class="top-notice" data-act="event" id="dayNotice">DIA 1</button><button class="open compact-open" data-act="open" id="openButton">Abrir bodega</button>
 <div class="hands" id="hands"></div>
@@ -96,6 +96,7 @@
   <script src="js/render/order-bubbles.js"></script>
 
   <!-- 8. Entrada e Loop Principal -->
+  <script src="js/render/view-controls.js"></script>
   <script src="js/core/input.js"></script>
   <script src="js/core/game.js"></script>
   <!-- Inicializa estado, imagens e loop somente depois de todas as definições. -->

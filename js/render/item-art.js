@@ -7,6 +7,31 @@ const ITEM_ART = Object.fromEntries(ITEM_SPRITE_KEYS.map(key => {
   return [key, image];
 }));
 
+// Redução progressiva: preserva as cores e o contorno sem descartar pixels
+// aleatoriamente ao reduzir os originais de 1254 px para ícones pequenos.
+const ITEM_LEVELS = new Map();
+function itemImageForSize(key, pixels) {
+  const original = ITEM_ART[key];
+  if (!original?.complete || !original.naturalWidth) return null;
+  if (!ITEM_LEVELS.has(key)) {
+    const levels = [original];
+    let source = original;
+    for (let side=512;side>=32;side/=2) {
+      const level=document.createElement('canvas');
+      const ratio=side/Math.max(source.width,source.height);
+      level.width=Math.max(1,Math.round(source.width*ratio));
+      level.height=Math.max(1,Math.round(source.height*ratio));
+      const context=level.getContext('2d');
+      context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+      context.drawImage(source,0,0,level.width,level.height);
+      levels.push(level);source=level;
+    }
+    ITEM_LEVELS.set(key,levels);
+  }
+  const levels=ITEM_LEVELS.get(key);
+  return [...levels].reverse().find(level=>Math.max(level.width,level.height)>=pixels)||original;
+}
+
 function itemArtKey(key, item) {
   if (key?.startsWith('xis_') && !['xis_montado','xis_prensado'].includes(key)) return item && !item.ready ? 'xis_montado' : 'xis_prensado';
   if (key === 'cigarro' && G?.up.cigarro_py) return 'cigarro_py';
@@ -29,13 +54,15 @@ function itemIconHTML(key, item=null) {
 }
 
 function food(key,x,y,size=40,item=null) {
-  const image = ITEM_ART[itemArtKey(key,item)];
+  const transform=ctx.getTransform();
+  const image = itemImageForSize(itemArtKey(key,item),size*Math.hypot(transform.a,transform.b));
   ctx.save();
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.filter = itemFilter(item);
-  if (image?.complete && image.naturalWidth) {
-    const scale = size / Math.max(image.naturalWidth,image.naturalHeight);
-    const w=image.naturalWidth*scale,h=image.naturalHeight*scale;
+  if (image) {
+    const scale = size / Math.max(image.width,image.height);
+    const w=image.width*scale,h=image.height*scale;
     ctx.drawImage(image,Math.round(x-w/2),Math.round(y-h/2),w,h);
   }
   ctx.restore();

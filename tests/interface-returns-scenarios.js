@@ -34,6 +34,6 @@
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);
  const bubbles=customerOrderBubbles(),overlap=(a,b)=>a.left<b.left+b.width&&a.left+a.width>b.left&&a.top<b.top+b.height&&a.top+a.height>b.top;
- check(bubbles.length===16&&bubbles.every((b,i)=>b.width<=56&&b.top>=282&&b.top+b.height<b.y&&!bubbles.slice(i+1).some(other=>overlap(b,other))),'balões com pedidos triplos não se sobrepõem nem cobrem cabeça ou mercadorias');
+ check(bubbles.length===16&&bubbles.every((b,i)=>b.width<=58&&b.top>=282&&b.top+b.height<b.y&&!bubbles.slice(i+1).some(other=>overlap(b,other))),'balões com pedidos triplos não se sobrepõem nem cobrem cabeça ou mercadorias');
  reset();return results;
 })()

@@ -120,5 +120,19 @@
 }
 @media(max-width:750px){.bocce-screen{grid-template-columns:1fr;grid-template-rows:min(48dvh,360px) auto;overflow:auto}.bocce-sidebar{border-left:0;border-top:2px solid #976c39;overflow:visible;padding:14px}.bocce-sidebar h1{font-size:23px;margin:0 0 9px}.bocce-score{font-size:32px;padding:3px}.bocce-sidebar h2{margin-top:14px}.bocce-move{margin:8px 0}.bocce-sidebar p{margin:8px 0}.bocce-remaining{min-height:0}.bocce-court{position:sticky;top:0;background:#20180f;z-index:1}}
 :root .pixel-item{position:relative;display:inline-block;width:100%;height:100%;vertical-align:middle}
-.pixel-item img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.pixel-item img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto}
 .pixel-item img.pixel-item-extra{position:absolute;right:-3%;bottom:-3%;width:46%;height:46%}
+
+/* Mais área para a bodega e controles de leitura fora do cenário. */
+.view-controls{display:flex;align-items:center;gap:3px}
+#viewZoom{font:11px Arial,sans-serif;min-width:35px;text-align:center;color:#efd8ae}
+.hud-tools .view-controls button{min-width:30px;width:30px;padding:4px}
+@media(min-width:751px){
+ .hud{height:58px;min-height:58px;padding-top:6px;padding-bottom:6px}
+ .viewport{height:calc(100dvh - 58px);grid-template-columns:minmax(0,1fr) 200px}
+ .brand b{font-size:24px}.brand img{width:36px;height:36px}
+ .hud-tools{gap:4px}.hud-tools button{min-height:32px;padding:4px 8px}
+ .game-sidebar{padding:8px;gap:8px}
+}
+@media(min-width:751px) and (max-width:1050px){.brand b{font-size:18px}.hud-stats{gap:4px}.stat{font-size:14px;padding:4px}.stat small{display:none}}
+@media(max-width:750px){.view-controls{display:none}.hud-tools button{padding:4px 7px}}
