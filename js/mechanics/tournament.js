@@ -25,15 +25,16 @@ function startTournament(){
 }
 function tournamentRest(g){g.state='chat';g.chat=8;g.paid=true;syncGroupOrders(g);}
 function renewTournamentOrders(g){
+ if(G.tournament?.finished){g.chat=999;return;}
  const table=G.tables.find(t=>t.id===g.table);table.dirty=false;table.plates=0;
  seatDiners(g);g.state='seated';g.round++;g.paid=false;
 }
 function tournamentTick(){
  if(championshipActive()&&!G.tournament)startTournament();
- const tour=G.tournament;if(!championshipActive()||!tour||G.elapsed<tour.nextRotation)return;
+ const tour=G.tournament;if(tour?.finished)return;if(G.elapsed>=DAY-25){finishHouseTournament();return;}if(!championshipActive()||!tour||G.elapsed<tour.nextRotation)return;
  const groups=G.groups.filter(g=>g.tournament);
  if(!groups.length||groups.some(g=>!['seated','chat'].includes(g.state))||G.tables.some(t=>t.fight))return;
- const snapshots=new Map();
+ scoreHouseRound();const snapshots=new Map();
  for(const g of groups){ensureDiners(g);g.pairs.forEach((id,i)=>snapshots.set(id,{members:g.members.slice(i*2,i*2+2),diners:g.diners.slice(i*2,i*2+2),positions:[groupSeatPosition(g,i*2),groupSeatPosition(g,i*2+1)]}));}
  // Rodízio circular: parceiros permanecem juntos, adversários mudam a cada rodada.
  const rotation=tour.rotation;rotation.splice(1,0,rotation.pop());

@@ -18,7 +18,7 @@ function ensureDiners(g){
 function seatDiners(g){
  const fixed=g.fixedOrders;delete g.fixedOrders;
  g.diners=Array.from({length:g.size},(_,i)=>({person:groupPerson(g,i),orders:fixed?fixed.filter((_,j)=>j%g.size===i):tableOrders({...g,person:groupPerson(g,i),size:1}),delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:'waiting'}));
- g.diners.forEach(d=>{if(!d.orders.length)d.status='served';});syncGroupOrders(g);
+ g.diners.forEach(d=>{if(!d.orders.length)d.status='served';});syncGroupOrders(g);if(g.celebrationTeam){const team=g.celebrationTeam;delete g.celebrationTeam;alcoholRound(g,team);}
 }
 function addDinerRound(g){
  ensureDiners(g);
@@ -53,7 +53,7 @@ function deliverToDiner(g,item,table){
  takeHeld();d.orders.splice(d.orders.indexOf(item.pid),1);d.delivered.push(item);table.plates++;G.tutorial.table=true;
  if(RECIPES[item.pid])G.tutorial.xis=true;AudioEngine.tick();
  if(!d.orders.length){pay(d.delivered,d.person,d.patience/d.maxPatience,true,g.x,g.y);d.delivered=[];d.status='served';}
- deliveryConversation(d.person,g,d);tutorialDelivered(g,item.pid);completeDinerRound(g);save();
+ finishToastLesson(g,item);deliveryConversation(d.person,g,d);tutorialDelivered(g,item.pid);completeDinerRound(g);save();
 }
 function renderTableOrders(){
  const host=$('tableOrders');if(!host)return;

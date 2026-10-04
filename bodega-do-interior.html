@@ -23,7 +23,7 @@
 <section id="bocceScreen" class="bocce-screen hidden" aria-label="Cancha de bocha">
   <div class="bocce-court"><canvas id="bocceCanvas" width="1672" height="941" tabindex="0" aria-label="Cancha: A e D escolhem a posição; Espaço trava a direção e depois lança."></canvas></div>
   <aside class="bocce-sidebar">
-    <div id="canchaLobby"><div class="eyebrow">Atendimento pausado</div><h1>Cancha da bodega</h1><p>Escolha uma aposta ou jogue uma partida de treino.</p><button id="bocceButton" class="primary" data-act="bocce">Jogar bocha · E</button><button data-act="leaveCancha">Voltar à bodega</button></div><div id="bocceMatchUI" class="hidden"><div class="eyebrow">Cancha de bocha · atendimento pausado</div><h1>Bocha gaúcha</h1>
+    <div id="canchaLobby"><div class="eyebrow">Atendimento pausado</div><h1>Cancha da bodega</h1><p>Escolha uma aposta ou jogue uma partida de treino.</p><button id="bocceButton" class="primary" data-act="bocce">Jogar bocha · E</button><p id="bocceReputation"></p><button data-act="sportTournament" data-id="bocha">Organizar campeonato de bocha</button><button data-act="sportBracket">Ver chave salva</button><button data-act="learnBocce">Aprender bocha com Mano Lima</button><button data-act="leaveCancha">Voltar à bodega</button></div><div id="bocceMatchUI" class="hidden"><div class="eyebrow">Cancha de bocha · atendimento pausado</div><h1>Bocha gaúcha</h1>
     <div class="bocce-score-label"><span>Você · azul</span><span>Adversário · vermelho</span></div><strong id="bocceScore" class="bocce-score">0 × 0</strong>
     <p id="bocceRound"></p><p id="bocceWallet"></p><p id="bocceRemaining" class="bocce-remaining"></p>
     <h2 id="bocceStage" aria-live="polite"></h2><p id="bocceResult" role="status"></p>
@@ -31,7 +31,7 @@
     <div class="bocce-move"><button data-bocce-move="a" aria-label="Mover lançador para esquerda">← A</button><span>Posição inicial</span><button data-bocce-move="d" aria-label="Mover lançador para direita">D →</button></div>
     <button id="bocceConfirm" class="primary">Travar direção · Espaço</button>
     <p class="bocce-help">Escolha a posição com A/D ou os botões. Trave a seta e depois a força com Espaço ou clique. A linha mostra só o início do lançamento.</p>
-    <p id="bocceMeasurements" class="bocce-help"></p><div class="bocce-actions"><button id="boccePause">Pausar</button><button id="bocceExit">Sair da partida</button></div>
+    <div id="bocceSocial"></div><p id="bocceMeasurements" class="bocce-help"></p><div class="bocce-actions"><button id="boccePause">Pausar</button><button id="bocceExit">Sair da partida</button></div>
   </div></aside>
 </section>
 <div class="overlay hidden" id="overlay"><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-head"><div><div class="eyebrow">Bodega Do Sadi Simulator</div><h2 id="dialogTitle"></h2></div><button class="close" data-act="close" aria-label="Fechar">×</button></div><div id="dialogContent"></div></section></div>
@@ -80,6 +80,8 @@
   <script src="js/mechanics/day-progression.js"></script>
   <script src="js/mechanics/tournament.js"></script>
   <script src="js/mechanics/tutorial.js"></script>
+  <script src="js/mechanics/sports.js"></script>
+  <script src="js/mechanics/celebrations.js"></script>
 
   <!-- 6. Interface de Usuário -->
   <script src="js/ui/hud.js"></script>

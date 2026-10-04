@@ -1,0 +1,112 @@
+'use strict';
+
+const SPORT_ACTIONS={bocha:['inicio','direcao','forca','lancamento','aproximacao','rodada','vitoria','derrota'],truco:['inicio','carta','truco','aceitar','correr','rodada','vitoria','derrota']};
+function specialOpponent(person){return ALWAYS_TALK.has(PEOPLE[person]?.id);}
+function sportPeople(){return PEOPLE.map((p,i)=>i).filter(i=>specialOpponent(i)&&PEOPLE[i].id!==G.avatarId);}
+function sportState(state=G){return state.sports??={bocha:{reputation:0,wins:0,matches:0,titles:0},truco:{reputation:0,wins:0,matches:0,titles:0},bracket:null,challenge:null,challengeDay:0,tutorialDone:false,tutorialOffered:false};}
+function sportName(person){return person===-1?'Você':PEOPLE[person]?.name||'Convidado';}
+function sportTitle(type){return type==='bocha'?'bocha':'truco';}
+function sportStanding(type){const s=sportState()[type],rank=s.reputation<20?'Aprendiz':s.reputation<50?'Conhecido na comunidade':s.reputation<80?'Respeitado na região':'Lenda da comunidade';return rank+' · reputação '+s.reputation+'/100 · '+s.wins+' vitórias / '+s.matches+' partidas · '+s.titles+' títulos';}
+function sportLine(person,type,action){
+ const lines=customDialogues[PEOPLE[person].id+'.'+type+'.'+action];
+ return lines?.length?pick(lines):nextProse(person);
+}
+function sportTalk(match,type,action){
+ if(!match)return;
+ if(!specialOpponent(match.opponent))match.opponent=pick(sportPeople());
+ const spectator=match.spectator??(match.spectator=pick(sportPeople().filter(i=>i!==match.opponent)));
+ match.talk=[match.opponent,spectator].map(person=>{const line=sportLine(person,type,action);return {person,player:line.player,reply:line.reply};});
+ match.talkLife=15;match.talkSequence=(match.talkSequence||0)+1;
+}
+function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<p><b>'+escapeHTML(sportName(line.person))+'</b><small>Você: '+escapeHTML(line.player)+'</small>'+escapeHTML(line.reply)+'</p>').join('')+'</div>':'';}
+function sportTalkTick(dt){
+ const match=G.bocce||G.game;if(!match||document.hidden||match.paused||!match.talkLife)return;
+ match.talkLife=Math.max(0,match.talkLife-dt);
+ if(!match.talkLife){match.talk=[];if(G.bocce)updateBocceSocial();else document.querySelector('#dialogContent .sport-talk')?.remove();}
+}
+function updateBocceSocial(){
+ const b=G.bocce,host=$('bocceSocial');if(!b||!host)return;
+ $('bocceMatchUI').classList.toggle('guided',!!b.tutorial);
+ const token=(b.talkLife>0?b.talkSequence:0)+':'+b.phase+':'+b.paused+':'+b.tutorial;
+ if(host.dataset.token===token)return;host.dataset.token=token;
+ const tips={jack:'1 · A bolinha pequena é o bolim. Ganha quem deixar suas bochas mais perto dele.',direction:'2 · Mova com A/D. Quando a mira apontar para o bolim, aperte Espaço para travar a direção.',power:'3 · A força está subindo. Aperte Espaço para lançar. Aproximadamente 70% alcança o fundo da cancha.',rolling:'4 · Observe onde sua bocha para. Na próxima, ajuste a direção e a força.',ai:'Agora observe o lançamento do Mano Lima. Cada lado tem quatro bochas.',between:'5 · Pontuam as bochas mais próximas que a melhor do rival. Aperte Próxima rodada. A partida vai até 6 pontos.',over:'Tutorial concluído! Você pode apostar e organizar campeonatos na cancha.'};
+ host.innerHTML='<p><b>Contra '+escapeHTML(sportName(b.opponent))+'</b></p>'+(b.tutorial?'<div class="callout">'+tips[b.phase]+'</div>':'')+sportTalkHTML(b);
+}
+function settleSport(type,match,won){
+ if(match.sportSettled)return;match.sportSettled=true;
+ const s=sportState()[type];s.matches++;if(won)s.wins++;s.reputation=clamp(s.reputation+(won?10:-3),0,100);
+ if(specialOpponent(match.opponent))G.friends[match.opponent]=clamp((G.friends[match.opponent]||0)+2,0,100);
+ sportTalk(match,type,won?'vitoria':'derrota');
+ if(match.tutorial)sportState().tutorialDone=true;
+ if(match.bracket)recordSportMatch(won);
+}
+function prepareAfterHours(){
+ const s=sportState();if(s.challengeDay===G.day)return;s.challengeDay=G.day;
+ if(G.day===1&&G.tutorial.complete&&!s.tutorialDone&&!s.tutorialOffered){s.tutorialOffered=true;s.challenge={person:PEOPLE.findIndex(p=>p.id==='manolima'),wager:0,tutorial:true};}
+ else if(G.day>1&&Math.random()<.25)s.challenge={person:pick(sportPeople()),wager:pick([5,10,25]),tutorial:false};
+}
+function showSportChallenge(){
+ const challenge=sportState().challenge;if(!challenge)return false;
+ openDialog(challenge.tutorial?'Mano Lima te ensina a jogar bocha':'Desafio depois do expediente',`<p><b>${sportName(challenge.person)}</b> apareceu na bodega!</p><p>${challenge.tutorial?'“Bora pra cancha! O lobisome do Arvoredo te ensina a mirar, escolher a força e contar os pontos.” O treino é gratuito e guiado, uma etapa por vez.':'“Vamos tirar uma bocha valendo '+money(challenge.wager)+' por lado?” Vitória devolve o dobro; derrota perde a entrada. Recusar custa 3 pontos de amizade.'}</p><div class="actions"><button class="primary" data-act="sportAccept" ${hasCash(challenge.wager)?'':'disabled'}>${challenge.tutorial?'Aprender com Mano Lima':'Aceitar · '+money(challenge.wager)}</button><button data-act="sportDecline">${challenge.tutorial?'Aprender depois':'Recusar · −3 amizade'}</button></div>`,'sportChallenge');return true;
+}
+function answerSportChallenge(accept){
+ const s=sportState(),c=s.challenge;if(!c)return;
+ if(accept&&!hasCash(c.wager))return;
+ s.challenge=null;
+ if(!accept){if(!c.tutorial)G.friends[c.person]=Math.max(0,(G.friends[c.person]||0)-3);save();closeDialog(true);showReport();return;}
+ closeDialog(true);G.atCancha=true;
+ launchSport('bocha',c.person,{wager:c.wager,tutorial:c.tutorial});
+}
+function launchSport(type,opponent,options={}){
+ if(G.bocce||G.game||G.task)return false;
+ if(type==='bocha'){
+  bocceMenu();if(modal!=='bocceSetup')return false;
+  $('bocceWager').value=String(options.wager||0);$('bocceLevel').value=options.tutorial?'easy':'normal';$('bocceOpponent').value=String(opponent);
+  startBocceGame();if(!G.bocce)return false;
+  Object.assign(G.bocce,{tutorial:!!options.tutorial,bracket:!!options.bracket});updateBocceSocial();
+ }else{
+  cardsMenu();$('opponent').value=String(opponent);$('trucoWager').value='0';startTruco();if(!G.game)return false;G.game.bracket=!!options.bracket;showCards();
+ }
+ save();return true;
+}
+function sportTournamentMenu(type){
+ if(!started||G.bocce||G.game||G.task)return;
+ const b=sportState().bracket;
+ if(b&&!b.finished){showSportBracket();return;}
+ openDialog('Organizar campeonato de '+sportTitle(type),`<p>${sportStanding(type)}</p><p>Oito participantes: você e sete personagens especiais. Quartas de final, semifinal e final. Você joga suas partidas; as outras são simuladas e ficam registradas na chave. Uma derrota elimina o participante.</p><p>Inscrição: <b>R$ 10</b>. Prêmio do campeão: <b>R$ 80</b> e +20 reputação. Não há cobrança por rodada. Você pode sair e retomar a chave salva.</p><button data-act="sportCreate" data-id="${type}" ${hasCash(10)?'':'disabled'}>Inscrever e sortear a chave</button><button data-act="close">Voltar</button>`,'sportTournament');
+}
+function createSportTournament(type){
+ if(!['bocha','truco'].includes(type)||!hasCash(10)||G.game||G.bocce||G.task||sportState().bracket&&!sportState().bracket.finished)return;
+ const people=[...sportPeople()];for(let i=people.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[people[i],people[j]]=[people[j],people[i]];}
+ spendCash(10);const stat=type==='bocha'?'bocceStakes':'cardStakes';G.stats[stat]+=10;
+ const participants=[-1,...people.slice(0,7)];
+ sportState().bracket={type,rounds:[Array.from({length:4},(_,i)=>({a:participants[i*2],b:participants[i*2+1],winner:null}))],finished:false,paid:false,champion:null};
+ syncBocceReport();syncCardReport();save();showSportBracket();
+}
+function currentSportMatch(){const b=sportState().bracket;return b?.rounds.at(-1).find(m=>m.winner===null&&(m.a===-1||m.b===-1));}
+function advanceSportBracket(){
+ const b=sportState().bracket;if(!b||b.finished)return;
+ const matches=b.rounds.at(-1);
+ for(const m of matches)if(m.winner===null&&m.a!==-1&&m.b!==-1)m.winner=pick([m.a,m.b]);
+ if(matches.some(m=>m.winner===null))return;
+ if(matches.length===1){b.finished=true;b.champion=matches[0].winner;if(b.champion===-1&&!b.paid){b.paid=true;G.cash=round(G.cash+80);G.stats[b.type==='bocha'?'bocceReturns':'cardReturns']+=80;const s=sportState()[b.type];s.titles++;s.reputation=clamp(s.reputation+20,0,100);syncBocceReport();syncCardReport();}return;}
+ const winners=matches.map(m=>m.winner);b.rounds.push(Array.from({length:winners.length/2},(_,i)=>({a:winners[i*2],b:winners[i*2+1],winner:null})));advanceSportBracket();
+}
+function recordSportMatch(won){
+ const m=currentSportMatch();if(!m)return;m.winner=won?-1:(m.a===-1?m.b:m.a);advanceSportBracket();save();
+}
+function showSportBracket(){
+ const b=sportState().bracket;if(!b){say('Ainda não há chave. Escolha Organizar campeonato para inscrever os participantes.');return;}advanceSportBracket();save();
+ openDialog('Campeonato de '+sportTitle(b.type),`<p>${sportStanding(b.type)}</p><div class="sport-bracket">${b.rounds.map((r,i)=>'<section><h3>'+['Quartas de final','Semifinais','Final'][i]+'</h3>'+r.map(m=>'<p>'+escapeHTML(sportName(m.a))+' × '+escapeHTML(sportName(m.b))+'<br><b>'+(m.winner===null?'A jogar':'Venceu: '+escapeHTML(sportName(m.winner)))+'</b></p>').join('')+'</section>').join('')}</div>${b.finished?'<div class="callout">Campeão: <b>'+escapeHTML(sportName(b.champion))+'</b>'+(b.champion===-1?' · R$ 80 no caixa!':' · campeão da chave.')+'</div>':'<button class="primary" data-act="sportNext">Jogar minha próxima partida</button>'}<button data-act="close">Voltar · chave salva</button>`,'sportBracket');
+}
+function playSportBracket(){
+ const b=sportState().bracket,m=currentSportMatch();if(!b||b.finished||!m||G.bocce||G.game)return;
+ closeDialog(true);launchSport(b.type,m.a===-1?m.b:m.a,{bracket:true});
+}
+function sportsAction(act,id){
+ if(act==='sportAccept')answerSportChallenge(true);else if(act==='sportDecline')answerSportChallenge(false);
+ else if(act==='sportTournament')sportTournamentMenu(id);else if(act==='sportCreate')createSportTournament(id);
+ else if(act==='sportNext')playSportBracket();else if(act==='sportBracket')showSportBracket();
+ else if(act==='learnBocce'){sportState().challenge={person:PEOPLE.findIndex(p=>p.id==='manolima'),wager:0,tutorial:true};showSportChallenge();}
+ else return false;return true;
+}

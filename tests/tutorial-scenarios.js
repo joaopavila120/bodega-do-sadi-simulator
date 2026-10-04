@@ -33,7 +33,7 @@
  use('table:0');keys.add('e');advance(1.1);keys.delete('e');advance(2);
  check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===5&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
  check(G.tv&&G.up.trago&&!G.tables[0].dirty,'TV, melhoria e limpeza permanecem após tutorial');
- action('tvAwardClose');nextDay('automatic');closeDialog(true);G.event.seen=true;openDay();advance(25);
+ action('tvAwardClose');check(modal==='sportChallenge'&&sportState().challenge.tutorial,'Mano Lima convida para tutorial de bocha depois da TV');answerSportChallenge(false);nextDay('normal');closeDialog(true);G.event.seen=true;openDay();advance(25);
  check(G.day===2&&G.elapsed>0&&G.groups.length>0&&G.shop.length>0,'dia 2 retoma tempo e chegadas normais ao salão e balcão');
  const legacy=fresh();legacy.version=11;legacy.day=3;legacy.stock.cachaca=7;const migrated=normalizeSave(legacy);
  check(migrated.up.trago&&migrated.stock.cachaca===7&&!migrated.tutorial.guided,'partidas antigas preservam a estação e o estoque de tragos');

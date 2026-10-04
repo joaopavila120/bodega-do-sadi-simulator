@@ -135,6 +135,8 @@ async function main() {
     await load(base+'/index.html');assert(await evaluate(`nextProse(6).reply!=='Fala nova editada no TXT'`));
     console.log('PASS TXT automático por file:// e HTTP, sem botão e sem cache de falas antigas');
 
+    const sports = await evaluate(fs.readFileSync(path.join(__dirname, 'sports-scenarios.js'), 'utf8'));
+    for (const result of sports) console.log('PASS ' + result);
     const dialogue = await evaluate(fs.readFileSync(path.join(__dirname, 'dialogue-scenarios.js'), 'utf8'));
     for (const result of dialogue) console.log('PASS ' + result);
     const tournament = await evaluate(fs.readFileSync(path.join(__dirname, 'tournament-scenarios.js'), 'utf8'));

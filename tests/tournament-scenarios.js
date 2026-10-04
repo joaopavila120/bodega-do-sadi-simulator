@@ -1,7 +1,7 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
  const reset=()=>{G=fresh();G.day=3;G.tutorial.complete=true;G.up.trago=true;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
- const advance=n=>{for(let t=0;t<n;t+=.05){for(const table of G.tables)if(table.fight)resolveFight(table,true);simulate(.05);}};
+ const advance=n=>{for(let t=0;t<n;t+=.05){for(const table of G.tables)if(table.fight)resolveFight(table,true);simulate(.05);if(modal==='celebration')closeDialog(true);}};
  reset();G.phase='open';const first=spawnGroup({size:2,targetTable:0,members:[0,1]});const second=spawnGroup({size:1,members:[PEOPLE.findIndex(p=>p.id==='badin')],fixedOrders:['xis_salada','refri']});
  check(first.table===0&&second.table===1&&second.state==='walkTable','fila ocupa a mesa de truco livre inclusive com xis e refrigerante');
  for(let i=0;i<250;i++)customersTick(.05);
@@ -19,7 +19,7 @@
  check(G.dialogue?.name===PEOPLE[c.person].name&&G.conversations[c.person]===1&&G.friends[c.person]===5,'entrega no balcão também inicia conversa com o cliente correto');
  for(const count of [2,3,4]){
   reset();if(count>=3)G.up.table3=true;if(count===4)G.up.table4=true;G.event={id:'campeonato',seen:true,fired:{}};openDay();
-  const roster=G.groups.flatMap(g=>g.members).sort((a,b)=>a-b).join(),pairs=JSON.stringify(G.tournament.pairs),initialCash=G.cash;
+  const roster=G.groups.flatMap(g=>g.members).sort((a,b)=>a-b).join(),pairs=JSON.stringify(G.tournament.pairs.map(p=>({id:p.id,members:p.members}))),initialCash=G.cash;
   check(G.groups.length===count&&G.groups.every(g=>g.size===4&&g.pairs.length===2)&&G.tournament.pairs.length===count*2,'campeonato preenche '+count+' mesas com duas duplas por mesa');
   advance(15);check(G.groups.every(g=>g.state==='seated')&&!G.shop.length,'todos sentam e não chegam clientes de balcão no campeonato de '+count+' mesas');
   for(const table of G.tables)if(table.fight)resolveFight(table,true);
@@ -32,7 +32,7 @@
   check(g.diners.some(d=>d.status==='waiting')&&g.orders.length>0,'mesmos participantes fazem novos pedidos após a pausa');
   const t=G.tables.find(t=>t.id===g.table);triggerFight(t);if(t.fight)resolveFight(t,false);
   check(g.table===t.id&&t.group===g.id&&g.state!=='leave','prejuízo de briga não remove a dupla do campeonato');
-  advance(90);check(G.groups.length===count&&G.groups.flatMap(g=>g.members).sort((a,b)=>a-b).join()===roster&&JSON.stringify(G.tournament.pairs)===pairs&&!G.shop.length,'campeonato mantém exatamente o elenco inscrito durante o expediente');
+  advance(90);check(G.groups.length===count&&G.groups.flatMap(g=>g.members).sort((a,b)=>a-b).join()===roster&&JSON.stringify(G.tournament.pairs.map(p=>({id:p.id,members:p.members})))===pairs&&!G.shop.length,'campeonato mantém exatamente o elenco inscrito durante o expediente');
   check(G.tournament.round>=3,'rodízio continua por várias rodadas');
   spawnShop();spawnGroup();check(!G.shop.length&&G.groups.length===count,'nenhuma chegada extra entra após a inscrição');
   G.phase='closing';advance(180);check(G.phase==='closed'&&G.groups.length===0,'fechar interrompe novos pedidos e todos deixam o campeonato');

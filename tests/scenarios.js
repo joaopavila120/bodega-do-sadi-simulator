@@ -31,7 +31,7 @@
   const group = spawnGroup({ size: 1, fixedOrders: ['xis_salada'] });
   advance(12, customersTick); const balance = G.cash; interactTable(group.table);
   check(!held() && G.cash > balance && group.state === 'chat', 'cliente chega à mesa, recebe o xis e paga');
-  spawnShop(); advance(12, customersTick); readyProduct('cigarro'); approach('service');
+  spawnShop({pid:'cigarro'}); advance(12, customersTick); readyProduct('cigarro'); approach('service');
   const retailBalance = G.cash; interact();
   check(!held() && G.cash > retailBalance, 'balcão comercial acessível e venda de cigarro funcional');
   G.phase = 'prep'; G.rep = 100; G.cash = 10000;
@@ -49,7 +49,7 @@
   const stock = G.stock.burger; orderGoods('burger'); advance(8.1, deliveryTick);
   check(G.stock.burger > stock, 'fornecedor entrega e repõe o estoque');
   check(PROSE.length >= 100 && nextProse(0).reply, 'repertório de diálogos carregado');
-  G.phase = 'closed'; nextDay('campeonato'); closeDialog(true); G.event.seen = true; openDay();
+  G.toastLesson.done=true; G.phase = 'closed'; nextDay('campeonato'); closeDialog(true); G.event.seen = true; openDay();
   check(availableTables().every(isTableTruco), 'planejamento e campeonato de truco');
   G.spawnShop = G.spawnGroup = 999; G.groups = []; G.shop = [];
   for (const t of G.tables) { t.group = null; t.dirty = false; t.fight = null; }

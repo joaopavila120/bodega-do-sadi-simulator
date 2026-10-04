@@ -13,7 +13,7 @@ const DAY = 180, ORDER_WAIT = 110, COUNTER_WAIT = 95;
 const KEY = 'bodega-interior-v3', TEST_KEY = 'bodega-interior-tests';
 const BASE_SPEED=280;
 
-const COOK={burger:11,ovo:7,bacon:8,coracao:10};
+const COOK={torrada:6,burger:11,ovo:7,bacon:8,coracao:10};
 
 const SPRITES=[{x:190,y:26,w:244,h:483},{x:670,y:25,w:226,h:481},{x:1127,y:18,w:252,h:491},{x:188,y:526,w:247,h:474},{x:671,y:528,w:229,h:478},{x:1123,y:524,w:250,h:477}];
 

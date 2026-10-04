@@ -153,4 +153,393 @@ Como vai a lida? | A baia fiscaliza tudo deitada na sombra. O lobisome do Arvore
 Vai mais um mate? | Manda o mate pro lobisome do Arvoredo. A cadela baia me espera, mas sabe que prosa boa não se termina no susto.
 Qual foi a novidade do dia? | A baia sumiu com meu chinelo de novo. O lobisome do Arvoredo botou as botas e veio reclamar aqui na bodega.
 Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo; depois a cadela baia recebe a versão completa lá em casa.
+
+# FALAS POR AÇÃO — opcionais. Se vazio, usa o diálogo normal do personagem.
+# Formato: pergunta do jogador | resposta do personagem
+# Exemplo: Boa jogada? | Essa ficou encostada no bolim!
+
+[badin.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[badin.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[guri.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[marcio.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[marcelo.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[indavirus.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[lauro.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[peixinhonabrasa.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+
+[manolima.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+
 */ };

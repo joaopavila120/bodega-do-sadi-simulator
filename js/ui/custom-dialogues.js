@@ -1,11 +1,11 @@
 'use strict';
 let customDialogues={};
-const dialogueKeys=()=>new Set([...PEOPLE.map(p=>p.id),'gremio','inter','todos']);
+const dialogueKeys=()=>new Set([...PEOPLE.map(p=>p.id),'gremio','inter','todos',...PEOPLE.flatMap(p=>Object.entries(SPORT_ACTIONS).flatMap(([type,actions])=>actions.map(action=>p.id+'.'+type+'.'+action)))]);
 function parseDialogueText(text){
   const result={},allowed=dialogueKeys();let section=null;
   for(const [index,raw] of text.replace(/^\uFEFF/,'').split(/\r?\n/).entries()){
     const line=raw.trim();if(!line||line.startsWith('#'))continue;
-    const heading=line.match(/^\[([\w]+)\]$/);
+    const heading=line.match(/^\[([\w.]+)\]$/);
     if(heading){section=heading[1].toLowerCase();if(!allowed.has(section))throw Error('Personagem desconhecido na linha '+(index+1)+': '+section);result[section]??=[];continue;}
     if(!section)throw Error('Informe [personagem] antes da linha '+(index+1));
     const parts=line.split('|').map(p=>p.trim());

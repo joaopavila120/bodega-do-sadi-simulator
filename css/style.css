@@ -136,3 +136,13 @@
 }
 @media(min-width:751px) and (max-width:1050px){.brand b{font-size:18px}.hud-stats{gap:4px}.stat{font-size:14px;padding:4px}.stat small{display:none}}
 @media(max-width:750px){.view-controls{display:none}.hud-tools button{padding:4px 7px}}
+
+.sport-talk{background:#f7ebce;color:#45331f;padding:10px;border:1px solid #b99c65;border-radius:7px;font-size:13px;line-height:1.45}.sport-talk p{font-size:13px;margin:5px 0 12px}.sport-talk b,.sport-talk small{display:block}.sport-talk small{color:#776345;font-size:11px}.sport-bracket{display:flex;gap:14px;overflow:auto}.sport-bracket section{min-width:180px;flex:1}.sport-bracket p{padding:9px;background:#f0e3c0;border-radius:5px}.bocce-sidebar{overflow-y:auto}#bocceSocial .callout{font-size:13px}
+.bocce-sidebar #bocceMatchUI h1{font-size:23px;margin:4px 0 9px}
+.bocce-sidebar #bocceMatchUI h2{font-size:17px;margin:10px 0 5px}
+.bocce-sidebar #bocceMatchUI p{margin:6px 0;font-size:13px}
+.bocce-sidebar .bocce-score{font-size:34px;padding:4px;margin:5px 0}
+#bocceMatchUI.guided>p.bocce-help:not(#bocceMeasurements){display:none}
+#bocceSocial .callout{margin:8px 0;padding:10px}
+#bocceSocial .sport-talk{margin-top:8px}
+@media(min-width:901px){.bocce-screen{grid-template-columns:minmax(0,1fr) 320px}}

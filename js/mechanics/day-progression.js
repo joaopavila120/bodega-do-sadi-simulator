@@ -22,6 +22,7 @@ function enterCancha(){
  if(phoneOpen)togglePhone(false);G.atCancha=true;G.player.walk=false;keys.clear();pointerHold=false;modal=null;paused=false;$('overlay').classList.add('hidden');showCanchaLobby();save();
 }
 function showCanchaLobby(){
+ $('bocceReputation').textContent=sportStanding('bocha');
  $('bocceScreen').classList.remove('hidden');document.body.classList.add('playing-bocce');
  $('canchaLobby').classList.remove('hidden');$('bocceMatchUI').classList.add('hidden');bocceCanvas.focus();drawCanchaLobby();
 }
@@ -30,7 +31,7 @@ function drawCanchaLobby(){
  if(bocceCanvas.width!==Math.round(cw*dpr)||bocceCanvas.height!==Math.round(ch*dpr)){bocceCanvas.width=Math.round(cw*dpr);bocceCanvas.height=Math.round(ch*dpr);}
  c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#20180f';c.fillRect(0,0,cw,ch);
  const scale=Math.min(cw/1672,ch/941);c.translate((cw-1672*scale)/2,(ch-941*scale)/2);c.scale(scale,scale);c.drawImage(bocceArt,0,0,1672,941);
- drawCharacterPortrait(c,avatarSprite(),250,886,240);drawCharacterPortrait(c,2,1410,820,205);
+ drawCharacterPortrait(c,avatarSprite(),250,886,240);drawCharacterPortrait(c,PEOPLE[sportPeople()[0]].sprite,1410,820,205);
 }
 function leaveCancha(){if(G.bocce)return;G.atCancha=false;$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');closeDialog(true);save();refreshHUD();}
 function drawCanchaDoor(){
@@ -46,7 +47,8 @@ function updateContextActions(){
  $('refillMateContext').classList.toggle('hidden',!refill||!!G.task);
  $('hint').classList.toggle('hidden',!G.task&&!n&&!refill&&!nearCanchaDoor()&&G.day>1);
  if(refill&&!G.task)$('hint').innerHTML='<strong>F</strong> Encher sua cuia de erva';
- $('tutorialHint').classList.toggle('hidden',G.day!==1||phoneOpen||!!G.task||!!G.dialogue);
+ const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
+ $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||phoneOpen||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';
  if(G.day===1)$('tutorialHint').innerHTML=tutorialHint();
  $('gameSidebar').classList.toggle('focused-task',['weigh','pour'].includes(G.task?.type)||G.fightTarget!==null);
 }
