@@ -27,7 +27,7 @@ const CAMPO_FIXED=[
  {id:'lenha',x:96,y:688,w:124,h:78,label:'Pilha de lenha e cepo'},
  {id:'tabua',x:820,y:560,w:100,h:62,label:'Tábua de corte'},
  {id:'maionese',x:958,y:560,w:86,h:62,label:'Tigela da maionese'},
- {id:'bin:ovo',x:1066,y:560,w:72,h:57,label:'Ovos'},{id:'bin:azeite',x:1150,y:560,w:72,h:57,label:'Azeite'},
+ {id:'bin:ovo',x:1066,y:560,w:72,h:57,label:'Ovos'},{id:'bin:azeite',x:1150,y:560,w:72,h:57,label:'Óleo vegetal'},
  {id:'bottle:refri',x:1262,y:530,w:62,h:88,label:'Caixa térmica · refrigerante'},
  {id:'mate',x:860,y:740,w:66,h:54,label:'Chimarrão · segure E'},
  {id:'service',x:1150,y:770,w:200,h:55,label:'Balcão do costelão'},
@@ -84,13 +84,13 @@ function useTabua(){
 function useMaionese(){
  const b=campoState().bowl,h=held();
  if(h){
-  if(h.key==='ovo'&&!h.ready&&!h.burned){if(b.ovo){say('O ovo já está na tigela. Agora o azeite.');return;}takeHeld();b.ovo=true;b.cost+=h.cost;AudioEngine.tick();save();return;}
-  if(h.key==='azeite'){if(b.azeite){say('O azeite já está na tigela. Agora o ovo.');return;}takeHeld();b.azeite=true;b.cost+=h.cost;AudioEngine.tick();save();return;}
-  say('Na tigela vão ovo e azeite.');return;
+  if(h.key==='ovo'&&!h.ready&&!h.burned){if(b.ovo){say('O ovo já está na tigela. Agora o óleo.');return;}takeHeld();b.ovo=true;b.cost+=h.cost;AudioEngine.tick();save();return;}
+  if(h.key==='azeite'){if(b.azeite){say('O óleo já está na tigela. Agora o ovo.');return;}takeHeld();b.azeite=true;b.cost+=h.cost;AudioEngine.tick();save();return;}
+  say('Na tigela vão ovo e óleo.');return;
  }
  if(b.ovo&&b.azeite){startMix();return;}
  if(G.stock.maionese>0){readyProduct('maionese');return;}
- say(b.ovo||b.azeite?'Falta '+(b.ovo?'o azeite':'o ovo')+' na tigela.':'Traga um ovo e o azeite para a tigela.');
+ say(b.ovo||b.azeite?'Falta '+(b.ovo?'o óleo':'o ovo')+' na tigela.':'Traga um ovo e o óleo para a tigela.');
 }
 function startMix(){G.task={type:'mix',target:'maionese',progress:0,last:null,time:0};$('mixUI').classList.remove('hidden');updateMixUI();}
 // Depois de começar com E, cada toque em A ou E bate a maionese.
@@ -106,7 +106,7 @@ function finishMix(){
  G.avg.maionese=(G.avg.maionese*units+b.cost)/(units+n);G.stock.maionese+=n;b.ovo=b.azeite=false;b.cost=0;
  G.task=null;$('mixUI').classList.add('hidden');AudioEngine.scaleDone();effect('Maionese pronta · 3 porções',G.player.x,G.player.y-100,'#fff2b0');costelaoTutorialEvent('maionese');save();
 }
-function cancelMix(){if(G.task?.type!=='mix')return;G.task=null;$('mixUI').classList.add('hidden');say('Ovo e azeite continuam na tigela.');}
+function cancelMix(){if(G.task?.type!=='mix')return;G.task=null;$('mixUI').classList.add('hidden');say('Ovo e óleo continuam na tigela.');}
 
 // ---------- Lenha: rachar no cepo (3 golpes no ponto) e levar ao fogo ----------
 function startChop(){if(!freeHand()){say('Libere as mãos para pegar o machado.');return;}G.task={type:'chop',target:'lenha',time:0,hits:0,swinging:false};$('chopUI').classList.remove('hidden');updateChopUI();}
@@ -165,7 +165,7 @@ function campoHint(n){
  if(id==='espeto'){const e=campoState().espetos[Number(arg)];if(!e)return '<strong>E</strong> colocar manta de costela crua';if(e.burned)return '<strong>E</strong> retirar costela queimada';if(espetoReady(e))return '<strong>E</strong> retirar a costela no ponto';return '<strong>E</strong> virar a manta · lado no fogo: '+Math.round(Math.min(1,e.heat[e.fire])*100)+'%';}
  if(id==='costela_crua')return '<strong>E</strong> pegar manta crua · '+G.stock.costela_crua+' mantas';
  if(id==='tabua'){const c=G.shop.find(c=>c.state==='queue'&&c.pid==='costela');return held()?.key==='costela_assada'?'<strong>E</strong> apoiar a costela na tábua':'<strong>Segure E</strong> cortar '+(c?formatWeight(c.grams):'costela')+' · '+formatWeight(G.stock.costela)+' na tábua';}
- if(id==='maionese'){const b=campoState().bowl;return b.ovo&&b.azeite?'<strong>E</strong> bater a maionese (depois A e E repetidamente)':G.stock.maionese>0&&!held()?'<strong>E</strong> pegar maionese · '+G.stock.maionese+' porções':'Tigela: '+(b.ovo?'ovo ✓':'falta ovo')+' · '+(b.azeite?'azeite ✓':'falta azeite');}
+ if(id==='maionese'){const b=campoState().bowl;return b.ovo&&b.azeite?'<strong>E</strong> bater a maionese (depois A e E repetidamente)':G.stock.maionese>0&&!held()?'<strong>E</strong> pegar maionese · '+G.stock.maionese+' porções':'Tigela: '+(b.ovo?'ovo ✓':'falta ovo')+' · '+(b.azeite?'óleo ✓':'falta óleo');}
  if(id==='fogo')return held()?.key==='lenha'?'<strong>E</strong> colocar lenha no fogo':'Fogo de chão · '+Math.round(fireFuel())+'% de lenha'+(fireFuel()<25?' · traga lenha!':'');
  if(id==='lenha')return '<strong>E</strong> rachar lenha · segure e solte na faixa verde · '+CHOP_HITS+' golpes';
  return null;
@@ -245,7 +245,7 @@ const COSTELAO_STEPS=[
  {id:'retirar',title:'No ponto: retire',text:'Com os dois lados no ponto, aperte E para retirar. Não demore: passando da marca, queima.'},
  {id:'tabua',title:'Para a tábua',text:'Leve a costela assada à tábua de corte e aperte E. Cada manta rende 2 kg.'},
  {id:'cortar',title:'Corte no peso',text:'Chegou o primeiro freguês. Segure E na tábua, solte no peso pedido e entregue no balcão.'},
- {id:'maionese',title:'Maionese da casa',text:'Leve um ovo e o azeite até a tigela. Depois aperte E uma vez e bata apertando A e E repetidamente até dar o ponto.'},
+ {id:'maionese',title:'Maionese da casa',text:'Leve um ovo e o óleo até a tigela. Depois aperte E uma vez e bata apertando A e E repetidamente até dar o ponto.'},
  {id:'servir',title:'Maionese no balcão',text:'Pegue uma porção na tigela com E e entregue ao freguês no balcão.'}
 ];
 function costelaoTutorial(){return campoState().tutorial;}
@@ -264,7 +264,7 @@ function costelaoTutorialHint(){const t=costelaoTutorial(),s=costelaoStep();retu
 function costelaoWelcome(){
  const first=!G.costelaoTaught;
  if(first){campoState().tutorial={step:0,done:false,actor:null};campoState().fuel=22;if(G.stock.costela_crua<2){G.stock.costela_crua=2;G.avg.costela_crua=BOI_COST/MANTAS_PER_BOI;}}
- openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<div class="event-card"><span class="event-symbol">🔥</span><div><h3>Fogo de chão aceso no campo</h3><p>Hoje a bodega vai para fora: costela no fogo de chão, maionese caseira e chimarrão. A freguesia vem comprar costela por peso.</p></div></div><div class="callout"><b>Como funciona</b><br>Manta crua no espeto · mantenha o fogo com lenha rachada no cepo · vire quando o lado no fogo ficar verde · com os dois lados no ponto, retire e leve à tábua · segure E para cortar no peso pedido. Maionese: ovo + azeite na tigela, E para começar e depois A e E repetidamente.</div><p>${first?'Hoje vamos passo a passo: os fregueses só chegam quando você estiver pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
+ openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<div class="event-card"><span class="event-symbol">🔥</span><div><h3>Fogo de chão aceso no campo</h3><p>Hoje a bodega vai para fora: costela no fogo de chão, maionese caseira e chimarrão. A freguesia vem comprar costela por peso.</p></div></div><div class="callout"><b>Como funciona</b><br>Manta crua no espeto · mantenha o fogo com lenha rachada no cepo · vire quando o lado no fogo ficar verde · com os dois lados no ponto, retire e leve à tábua · segure E para cortar no peso pedido. Maionese: ovo + óleo na tigela, E para começar e depois A e E repetidamente.</div><p>${first?'Hoje vamos passo a passo: os fregueses só chegam quando você estiver pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
 }
 
 // ---------- Laçada de sábado ----------
@@ -302,7 +302,7 @@ function lassoTick(dt){
   const t=L.throw;t.time+=dt;
   if(t.time>=t.total&&!t.done){
    t.done=true;const hit=L.bois.filter(b=>b.state==='free').map(b=>({b,d:Math.hypot(b.x-t.tx,b.y-28-t.ty)})).filter(o=>o.d<52).sort((a,b)=>a.d-b.d)[0];
-   if(hit){hit.b.state='caught';L.caught++;AudioEngine.heart();burst(hit.b.x,hit.b.y-40,'leaf');effect('Laçou! '+L.caught+'/'+L.need,hit.b.x,hit.b.y-90,'#e1ff9e');gainXP(8);}
+   if(hit){hit.b.state='caught';L.caught++;AudioEngine.heart();AudioEngine.moo(.11,fxRand(.85,1.1));burst(hit.b.x,hit.b.y-40,'leaf');effect('Laçou! '+L.caught+'/'+L.need,hit.b.x,hit.b.y-90,'#e1ff9e');gainXP(8);}
    else{AudioEngine.bad();effect('Errou o laço',t.tx,t.ty-20,'#ffc0a0');}
    updateLassoUI();save();
   }

@@ -3,7 +3,7 @@
 
 const GOODS={
  pao_xis:{name:'Pão de xis',cost:1.5,initial:12,cat:'Cozinha'},burger:{name:'Hambúrguer',cost:3,initial:12,cat:'Cozinha'},ovo:{name:'Ovo',cost:1,initial:12,cat:'Cozinha'},queijo:{name:'Queijo',cost:1.5,initial:12,cat:'Cozinha'},salada:{name:'Salada completa',cost:1.5,initial:12,cat:'Cozinha'},bacon:{name:'Bacon',cost:2.5,initial:0,cat:'Cozinha',unlock:'bacon'},coracao:{name:'Coração',cost:3,initial:0,cat:'Cozinha',unlock:'coracao'},refri:{name:'Refrigerante',cost:2.5,price:6,initial:10,cat:'Bebidas',sealed:true},cerveja:{name:'Cerveja na caneca',cost:3.5,price:8,initial:6,cat:'Bebidas',sealed:false},cachaca:{name:'Dose de cachaça',cost:1.5,price:5,initial:0,starter:10,cat:'Bebidas',unlock:'trago'},cigarro:{name:'Maço de cigarros',cost:6,price:12,initial:6,cat:'Balcão',sealed:true},codorna:{name:'Ovos de codorna',cost:3,price:7,initial:6,cat:'Balcão',sealed:true},pepino:{name:'Pepino em conserva',cost:2.5,price:6,initial:0,cat:'Balcão',sealed:true,unlock:'pepino'},erva:{name:'Erva-mate a granel',cost:.006,price:7,initial:6000,cat:'Balcão',sealed:true,pack:2000},salame:{name:'Salame de colônia',cost:4,price:10,initial:0,cat:'Balcão',unlock:'salame'},amendoim:{name:'Amendoim torrado',cost:2,price:6,initial:0,cat:'Balcão',unlock:'amendoim',sealed:true},pinhao:{name:'Pinhão a granel',cost:.006,price:12,initial:0,cat:'Balcão',unlock:'pinhao',pack:4000,starter:6000},bergamota:{name:'Bergamota',cost:.0025,price:6.5,initial:0,cat:'Balcão',unlock:'bergamota',pack:6000,starter:12000},cafe:{name:'Café passado',cost:1,price:4,initial:0,cat:'Bebidas',unlock:'coffee',starter:12},bitter:{name:'Dose de bitter',cost:3,price:9,initial:0,cat:'Bebidas',unlock:'bitter'},
- azeite:{name:'Azeite de oliva',cost:1.5,initial:6,cat:'Cozinha'},
+ azeite:{name:'Óleo vegetal',cost:1.5,initial:6,cat:'Cozinha'},
  // Costelão: as mantas vêm da laçada de sábado; costela e maionese são preparadas no campo.
  costela_crua:{name:'Manta de costela crua',cost:40,initial:0,cat:'Campo',noSupplier:true},
  costela:{name:'Costela assada',cost:.02,price:22,initial:0,cat:'Campo',noSupplier:true},
@@ -58,5 +58,5 @@ Object.assign(EVENTS, {
 });
 Object.assign(EVENTS,{
 });
-EVENTS.costelao={name:'Costelão de domingo',icon:'🔥',desc:'A bodega vai para o campo: costela no fogo de chão, maionese caseira e chimarrão. A freguesia compra costela por peso.',prep:'As mantas vêm da laçada de sábado. Separe ovos e azeite para a maionese e refrigerante na caixa térmica.'};
+EVENTS.costelao={name:'Costelão de domingo',icon:'🔥',desc:'A bodega vai para o campo: costela no fogo de chão, maionese caseira e chimarrão. A freguesia compra costela por peso.',prep:'As mantas vêm da laçada de sábado. Separe ovos e óleo para a maionese e refrigerante na caixa térmica.'};
 EVENTS.chuva.desc='Clientes molhados deixam poças pelo caminho até as mesas e o balcão. O chão molhado reduz sua velocidade por 8 segundos.';
