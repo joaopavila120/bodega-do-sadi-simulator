@@ -158,7 +158,7 @@ function bocceTick(dt){
 }
 function updateBocceUI(){
  const b=G.bocce;if(!b)return;updateBocceSocial();
- $('bocceScore').textContent=b.score[0]+' × '+b.score[1];$('bocceRound').textContent='Rodada '+b.round+' · melhor de 3 (vence quem ganhar 2)';
+ $('bocceScore').textContent=b.score[0]+' × '+b.score[1];$('bocceRound').textContent='Rodada '+b.round+' · melhor de 3';
  $('bocceRemaining').textContent='Você: '+('🔵 '.repeat(4-b.used[0])||'nenhuma')+'\n'+sportName(b.opponent)+': '+('🔴 '.repeat(4-b.used[1])||'nenhuma');
  $('bocceWallet').textContent=walletText()+' · '+BOCCE_LEVELS[b.level].name+' · '+(b.wager?'aposta '+money(b.wager):'sem aposta');
  const stages={jack:'O bolim está sendo lançado',direction:'1 · Escolha a direção',power:'2 · Escolha a força',ai:'O adversário prepara o lançamento',rolling:'Bocha rolando…',settling:'Medindo a aproximação…',between:'Rodada encerrada',over:b.winner===0?'Você venceu!':'Fim da partida'};
@@ -167,7 +167,7 @@ function updateBocceUI(){
  const button=$('bocceConfirm');button.disabled=!b.paused&&!['direction','power','between','over'].includes(b.phase);button.textContent=b.paused?'Retomar':({direction:'Travar direção · Espaço',power:'Lançar · Espaço',between:'Próxima rodada',over:'Voltar à bodega'}[b.phase]||'Aguarde o lançamento');
  $('boccePause').textContent=b.paused?'Retomar':'Pausar';$('bocceExit').textContent=b.settled?'Voltar à bodega':'Sair da partida';
  document.querySelectorAll('[data-bocce-move]').forEach(button=>button.disabled=b.paused||b.phase!=='direction');
- $('bocceMeasurements').textContent=b.measurements&&['between','over'].includes(b.phase)?'Distâncias ao bolim · azul: '+b.measurements[0].map(n=>Math.round(n)).join(', ')+' · vermelho: '+b.measurements[1].map(n=>Math.round(n)).join(', '):'';
+ $('bocceMeasurements').textContent=b.measurements&&['between','over'].includes(b.phase)?'Distância ao bolim · você: '+b.measurements[0].map(n=>Math.round(n)).join(', ')+' · '+sportName(b.opponent)+': '+b.measurements[1].map(n=>Math.round(n)).join(', '):'';
 }
 // Projeta a cancha retangular no trapézio da arte fornecida (1672 × 941).
 function projectBocce(x,y){const t=clamp(y/BOCCE.length,0,1),width=420+1240*t;return{x:870-34*t+(x/BOCCE.width-.5)*width,y:315+626*t,scale:width/BOCCE.width};}

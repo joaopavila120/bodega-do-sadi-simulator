@@ -6,7 +6,7 @@
  const sunday=()=>{reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.costelaoTaught=true;G.stock.costela_crua=9;G.avg.costela_crua=40;campoState().fuel=100;campoState().lit=true;};
  const roast=()=>{for(let t=0;t<COOK_SIDE+.2;t+=.05){campoState().fuel=100;campoTick(.05);}};
  const chop=()=>{use('lenha');for(let k=0;k<CHOP_HITS;k++){keys.add('e');holdTick(.05);for(let t=0;t<CHOP_TIME*.7;t+=.05)holdTick(.05);keys.delete('e');holdTick(.05);}};
- const approach=id=>{const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);for(let x=f.x-60;x<=f.x+f.w+60;x+=6)for(let y=f.y-60;y<=f.y+f.h+60;y+=6){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);};
+ const approach=id=>{if(modal==='costelaoStep')closeDialog(true);const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);for(let x=f.x-60;x<=f.x+f.w+60;x+=6)for(let y=f.y-60;y<=f.y+f.h+60;y+=6){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);};
  const use=id=>{approach(id);interact();};
  const tick=(s,fn)=>{for(let t=0;t<s;t+=.05)fn(.05);};
  const weigh=()=>{approach('tabua');interact();keys.add('e');holdTick(G.task.requested/G.task.maxWeight*2.5);keys.delete('e');finishWeigh();};
@@ -65,7 +65,7 @@
   // tutorial do primeiro costelão
   reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.stock.costela_crua=0;openDay();
   check(modal==='costelao'&&costelaoTutorialActive()&&G.stock.costela_crua>=2,'primeiro costelão abre com tutorial e mantas de treino');closeDialog(true);
-  simulate(1);check(!G.shop.length,'no tutorial ninguém chega antes da hora');
+  simulate(1);check(!G.shop.length,'no tutorial ninguém chega antes da hora');check(modal==='costelaoStep'&&$('dialogTitle').textContent.includes('passo 1'),'cada etapa do costelão para o jogo e mostra a orientação');closeDialog(true);
   check(costelaoStep().id==='rachar'&&!fireLit()&&campoState().fuel===0,'o costelão começa com o fogo apagado: rachar lenha');
   chop();check(costelaoStep().id==='fogo','etapa: lenha no fogo');use('fogo');check(costelaoStep().id==='acender','etapa: acender o fogo');
   approach('fogo');keys.add('e');interact();tick(LIGHT_TIME+.1,holdTick);keys.clear();check(fireLit()&&costelaoStep().id==='espeto','etapa: costela no espeto');

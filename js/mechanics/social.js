@@ -84,7 +84,8 @@ function socialCheck(){
   if(f>=MAX_FRIENDSHIP&&!G.playable[id]){G.playable[id]=G.day;showBanner(PEOPLE[i].name+' é teu parceiro de verdade','Agora dá para jogar com '+PEOPLE[i].name+': Celular → Contatos.','friend');}
  }
 }
-function finishBocceTutorial(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');unlockContact(mano);giveGift(mano,GIFTS.manolima[0]);}
+// Depois da bocha do tutorial, o Mano Lima volta para a bodega com você e entrega a bandeira em pessoa.
+function finishBocceTutorial(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');unlockContact(mano);queueGift(mano,GIFTS.manolima[0]);G.giftQueue.sort((a,b)=>(b.key==='manolima:tutorial')-(a.key==='manolima:tutorial'));}
 
 // Primeira visita de um especial: aviso grande. Depois, só uma notinha.
 function announceArrivals(people){

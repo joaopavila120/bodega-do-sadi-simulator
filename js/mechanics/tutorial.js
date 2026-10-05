@@ -58,4 +58,4 @@ function tutorialHint(){
  const text=G.phase==='prep'?'Abra a bodega no botão do menu lateral para receber seu primeiro freguês.':G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
  return '<b>'+(G.tutorial.step+1)+' / '+TUTORIAL_STEPS.length+' · '+s.title+'</b><p>'+text+'</p>';
 }
-function tutorialWelcome(){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje vamos atender um freguês por vez: cigarro, cerveja e xis. Depois você ganha sua primeira melhoria e aprende a servir trago, pesar erva, vender fiado e tomar mate. No domingo tem costelão no campo!</p><p>As instruções acompanham cada etapa. Não há prazo para entregar nem encerramento pelo relógio neste dia. Amanhã começam os eventos e os pedidos com tempo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
+function tutorialWelcome(){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa. Amanhã começam os eventos e os pedidos com prazo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}

@@ -238,3 +238,6 @@
 .volume-row input{width:100%;accent-color:#7a5a2a}
 .volume-row output{text-align:right;font-weight:bold}
 @media(max-width:520px){.game-menu{grid-template-columns:1fr}.volume-row{grid-template-columns:96px 1fr 40px}}
+
+.phone-sub{margin:4px 2px 8px;font-size:13px;opacity:.75}
+.phone-event{display:flex;align-items:center;justify-content:space-between;gap:8px}

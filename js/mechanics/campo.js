@@ -7,7 +7,7 @@ const campoArt=campoImage('campo.png'),fogoArt=campoImage('fogo.png'),espetoArt=
 const CAMPO_ART=[[campoArt,'campo.png'],[fogoArt,'fogo.png'],[espetoArt,'espeto.png'],[boisArt,'bois.png'],[lenhaArt,'lenha.png'],[queroArt,'queroquero.png']];
 const BOI_COATS=['angus','colorado','holandes','hereford','charoles','crioulo'],BOI_W=72,BOI_H=52,ESPETO_W=44,ESPETO_H=96;
 // Basta laçar um boi: cada laço certeiro enche a barra e com LASSO_HITS laços ele está laçado.
-const BOI_COST=120,MANTAS_PER_BOI=4,MANTA_GRAMS=2000,MIN_LASSO=1,LASSO_HITS=6,MANTA_BUY_COST=95;
+const BOI_COST=120,MANTAS_PER_BOI=6,MANTA_GRAMS=2000,MIN_LASSO=1,LASSO_HITS=6,MANTA_BUY_COST=95;
 // Cada lado da manta leva COOK_SIDE s (com o fogo forte) para chegar ao ponto; passa do ponto e queima em BURN_AT.
 const COOK_SIDE=18,BURN_AT=1.8,PERFECT_MAX=1.35,ESPETO_SCALE=1.95;
 // O fogo de chão gasta lenha: sem lenha sobram só brasas e a costela quase não assa.
@@ -244,12 +244,14 @@ function costelaoTutorial(){return campoState().tutorial;}
 function costelaoTutorialActive(){const t=costelaoTutorial();return isCampo()&&!G.lasso&&!!t&&!t.done&&G.phase==='open';}
 function costelaoStep(){return COSTELAO_STEPS[costelaoTutorial()?.step||0];}
 function costelaoTutorialEvent(id){const t=costelaoTutorial();if(!costelaoTutorialActive()||costelaoStep()?.id!==id)return;costelaoAdvance();}
-function costelaoAdvance(){const t=costelaoTutorial();t.step++;t.actor=null;if(t.step>=COSTELAO_STEPS.length){t.done=true;G.costelaoTaught=true;showBanner('Costelão liberado!','Agora a freguesia chega à vontade. Bom domingo!','level');}save();}
+function costelaoAdvance(){const t=costelaoTutorial();t.step++;t.actor=null;t.introduced=false;if(t.step>=COSTELAO_STEPS.length){t.done=true;G.costelaoTaught=true;showBanner('Costelão liberado!','Agora a freguesia chega à vontade. Bom domingo!','level');}save();}
 function costelaoTutorialTick(){
  const t=costelaoTutorial(),s=costelaoStep();if(!s)return;
  if(['cortar','servir'].includes(s.id)&&!t.actor&&!G.shop.some(c=>c.state==='queue')){
   const c=spawnShop(s.id==='cortar'?{pid:'costela',grams:500,training:true}:{pid:'maionese',training:true});if(c)t.actor=c.id;
  }
+ // Como no primeiro dia: cada etapa para o jogo e explica o que fazer.
+ if(!t.introduced&&!phoneOpen){t.introduced=true;openDialog('Costelão · passo '+(t.step+1)+' de '+COSTELAO_STEPS.length+' · '+s.title,`<p>${s.text}</p><button class="primary" data-act="close">Vamos lá</button>`,'costelaoStep');save();}
 }
 function costelaoTutorialDelivered(c){const t=costelaoTutorial();if(costelaoTutorialActive()&&c.id===t.actor){t.actor=null;costelaoAdvance();}}
 function costelaoTutorialHint(){const t=costelaoTutorial(),s=costelaoStep();return s?'<b>Costelão '+(t.step+1)+' / '+COSTELAO_STEPS.length+' · '+s.title+'</b><p>'+s.text+'</p>':'';}
@@ -258,14 +260,14 @@ function costelaoWelcome(){
  // Cada domingo começa do zero: fogo apagado, espetos vazios e tigela limpa.
  {const c=campoState();c.fuel=0;c.lit=false;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
  if(first){campoState().tutorial={step:0,done:false,actor:null};if(G.stock.costela_crua<2){G.stock.costela_crua=2;G.avg.costela_crua=BOI_COST/MANTAS_PER_BOI;}}
- openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<div class="event-card"><span class="event-symbol">🔥</span><div><h3>Fogo de chão apagado no campo</h3><p>Hoje a bodega vai para fora: costela no fogo de chão, maionese caseira e chimarrão. A freguesia vem comprar costela por peso.</p></div></div><div class="callout"><b>Como funciona</b><br>Rache lenha no cepo, coloque no fogo e segure E para acender · manta crua no espeto · mantenha o fogo com lenha · vire quando o lado no fogo ficar verde · com os dois lados no ponto, retire e leve à tábua · segure E para cortar no peso pedido. Maionese: ovo + óleo na tigela, E para começar e depois A e D alternados.</div><p>${first?'Hoje vamos passo a passo: os fregueses só chegam quando você estiver pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
+ openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<p>A bodega vai para o campo: costela no fogo de chão, maionese caseira e chimarrão.</p><div class="callout">Rache lenha · ponha no fogo e segure E para acender · manta no espeto · vire quando ficar verde · retire, leve à tábua e corte no peso. Maionese: ovo + óleo, A e D alternados.</div><p>${first?'Hoje é passo a passo: os fregueses esperam você ficar pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
 }
 
 // ---------- Laçada de sábado ----------
 function lassoNeeded(){return G.phase==='closed'&&calendar().weekday===5&&G.lassoDay!==G.day&&!tutorialActive();}
 function lassoIntro(){
  const herd=G.herd||0,need=Math.min(MIN_LASSO,herd);
- openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão. Vá ao campo e lace <b>pelo menos um boi</b> do teu rebanho: cada laço certeiro enche a barra do boi e com <b>${LASSO_HITS} laços</b> ele está laçado. Cada boi rende ${MANTAS_PER_BOI} mantas de costela.</p><div class="callout"><b>Como laçar</b><br>WASD anda pelo campo · <b>segure E</b> (ou Espaço) para girar o laço: o alvo vai e volta · <b>solte</b> quando o círculo estiver em cima de um boi. Chegar muito perto espanta o gado, e cada laço faz o boi disparar.</div><div class="callout"><b>Cuidado com os quero-queros!</b><br>Eles não dão sossego no campo e dão rasantes de tempos em tempos: quando aparecer o <b>alvo vermelho no chão</b>, saia dele ou aperte <b>Q</b> (ou Shift) para esquivar. Cada rasante joga o peão para trás e faz soltar o laço.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
+ openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão: lace <b>pelo menos um boi</b>. Cada laço certeiro enche a barra; com <b>${LASSO_HITS} laços</b> o boi está laçado e rende ${MANTAS_PER_BOI} mantas.</p><div class="callout"><b>Segure E</b> para girar o laço e <b>solte</b> com o círculo sobre o boi. Quando aparecer um <b>alvo vermelho</b> no chão, é rasante de quero-quero: saia dele ou aperte <b>Q</b>.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
 }
 function buyBoi(){if(!hasCash(BOI_COST)){say('Um boi custa '+money(BOI_COST)+'.');AudioEngine.bad();return;}spendCash(BOI_COST);G.stats.purchases+=BOI_COST;G.herd=(G.herd||0)+1;AudioEngine.heart();say('Boi comprado! Rebanho: '+G.herd+'.');save();if(phoneOpen)renderPhone();else if(modal==='lassoIntro')lassoIntro();}
 function startLasso(){
