@@ -18,6 +18,7 @@ Na abertura, aguarde o carregamento das imagens. Se faltar algum arquivo, a tela
 - **1 / 2**: Alternar entre os espaços da bandeja (após desbloquear melhoria)
 - **C**: Abrir o Celular (Fornecedor, Melhorias e Contatos)
 - **F**: Reabastecer a cuia junto ao balcão de erva-mate, com as mãos livres
+- **X**: Recusar o fiado do freguês no balcão
 - **Y**: Jogar truco perto da mesa fixa de carteado. Com a mesa vazia, E também abre cartas. Cacheta está nesse menu.
 - **Esc**: Pausar / Fechar janelas
 
@@ -25,7 +26,7 @@ Na abertura, aguarde o carregamento das imagens. Se faltar algum arquivo, a tela
 
 ## Cenários, torcida e novos fregueses
 
-Um jogo novo permite escolher **nome da bodega, cenário e personagem jogável**: Sadi, Badin, Guri, Márcio, Marcelo, Indavirus, Lauro, Peixinho na Brasa ou Mano Lima. Os fregueses comuns e torcedores continuam como clientes, mas não aparecem na seleção. A escolha é salva e aparece também na cancha de bocha. A entrada apresenta os recursos disponíveis e o botão **Guia e progresso** reúne atendimento, cozinha, lazer, contatos, eventos e os requisitos dos desbloqueios. O botão **Abrir bodega** fica no menu lateral direito.
+Um jogo novo permite escolher **nome da bodega e personagem jogável**: Sadi, Badin, Guri, Márcio, Marcelo, Indavirus, Lauro, Peixinho na Brasa ou Mano Lima. Os fregueses comuns e torcedores continuam como clientes, mas não aparecem na seleção. A escolha é salva e aparece também na cancha de bocha. A entrada apresenta os recursos disponíveis e o botão **Guia e progresso** reúne atendimento, cozinha, lazer, contatos, eventos e os requisitos dos desbloqueios. O botão **Abrir bodega** fica no menu lateral direito.
 
 **Dificuldade progressiva:** o primeiro dia é guiado, com um freguês por vez. O dia 2 traz uma ou duas pessoas por mesa de restaurante, com um item por freguês. Nos dias 3–4 chegam até três pessoas e pedidos duplos. Do dia 5 em diante vêm grupos de até quatro e podem ocorrer brigas. A partir do dia 7, os pedidos podem ter três itens. Fora do tutorial, cada pessoa mantém seu prazo de 110 s, pagamento e gorjeta independentes. **Balões pequenos sobre cada freguês** mostram seus itens e prazo, mantendo as cabeças e mercadorias visíveis. No balcão, aparece o pedido do primeiro cliente que já chegou, incluindo o peso solicitado. Não há faixa de pedidos no topo. Os avisos ficam na lateral e os pagamentos aparecem junto ao caixa na HUD. Entregar na mesa atende primeiro quem pediu aquele produto e tem menos tempo. Uma desistência não cancela os outros pedidos.
 
@@ -43,7 +44,9 @@ A **Mesa de tragos começa ausente**. A primeira melhoria, apresentada no celula
 
 O celular separa **Fornecedor**, **Melhorias** e **Contatos**. As melhorias são agrupadas por cardápio, cozinha, salão e botas/mate. Contatos reúne retratos, afeto, preferências e gorjetas. O **cavalo está temporariamente indisponível**; compras antigas continuam guardadas, mas o salvamento equipa as melhores botas disponíveis e não aplica velocidade de montaria.
 
-Na tela inicial, escolha **Room 1** (`room.png`) ou **Room 2**. As Rooms 3, 4 e 5 são liberadas com **4, 8 e 12 melhorias diferentes compradas** na partida. Use **Celular → Trocar cenário** antes de abrir ou depois de fechar, sem perder estoque, mesas ou progresso. Os cenários usam a mesma disposição das estações e rotas.
+**Decoração (Celular → Estética):** a bodega começa como um galpão vazio (`room2.png`). Ao lado de Melhorias, a aba **Estética** vende 21 peças em pixel art recortadas da arte original: bandeira do Rio Grande, fogão a lenha, bancada com lenha, cômoda campeira, kit do chimarrão, gaita ponto, chapéu, poncho, laço, três lampiões, plantas, prateleiras, frigideiras, ervas, réstia de alho e cabaça. Cada peça volta ao lugar exato da arte. Compre, exponha ou guarde a qualquer hora; peças apoiadas em outra (kit do chimarrão, gaita, frigideiras, tábuas) exigem a base, e guardar a base guarda o que está em cima. Lampiões e fogão ganham brilho animado. Os itens são só estéticos e entram no relatório como investimento. Os sprites ficam em `assets/images/decor/`.
+
+**Janela:** nos dias de **Chuva forte**, a paisagem vira um temporal cinzento com pingos e relâmpagos, e o salão escurece um pouco.
 
 A cuia começa com **500 g**, consome **100 g por uso** e mantém a capacidade com as melhorias. Ao esvaziar, aparece “Acabou seu mate, traga mais erva para sua cuia”. Vá ao saco de erva, libere as mãos e use **F · Encher sua cuia de erva**, disponível somente por perto. O refil desconta do estoque. A lateral não mantém medidor ou botão permanente da cuia; beber mate e limpar exibem uma única barra de ação.
 
@@ -51,9 +54,26 @@ Os pedidos das mesas têm **110 segundos**, tanto simples quanto duplos; os do b
 
 **Devolver produtos:** volte à caixa, prateleira, geladeira ou saco de origem e aperte E. A devolução usa somente o espaço selecionado da bandeja, preserva custo e estado dos ingredientes e repõe o peso real dos produtos a granel. Café, cachaça, bitter e cerveja de caneca não podem ser devolvidos. Itens queimados/estragados devem ser descartados; se a estação estiver cheia, use o apoio. A bandeja aparece mais alta, na altura das mãos do personagem.
 
-A TV ganha após o primeiro dia libera **Jogo do Grêmio**, **Jogo do Inter** e **Gre-Nal** no sorteio dos eventos. Nos eventos de um time, só entram seus torcedores; no Gre-Nal, as torcidas se misturam e, a partir do dia 5, podem brigar também nas mesas de restaurante. O intervalo traz outra rodada. Torcedores aparecem ocasionalmente em dias comuns.
+A TV ganha após o primeiro dia libera **Jogo do Grêmio**, **Jogo do Inter** e **Gre-Nal** no sorteio dos eventos. Ela só aparece na parede nesses dias de jogo; nos demais fica guardada. Nos eventos de um time, só entram seus torcedores; no Gre-Nal, as torcidas se misturam e, a partir do dia 5, podem brigar também nas mesas de restaurante. O intervalo traz outra rodada. Torcedores aparecem ocasionalmente em dias comuns.
 
 Badin, Guri, Márcio e Marcelo têm falas próprias. A dupla costuma chegar junta, mas pode visitar separadamente. Os três arquivos de torcida oferecem seis fregueses cada. As imagens originais ficam preservadas em `assets/images`; os recortes e contornos usados pelo Canvas estão em `js/config/characters.js`.
+
+## Progressão, economia e vida social (atualização)
+
+- **Nível da bodega:** 7 níveis, de *Bodega de esquina* a *Bodega lendária*. Sobe com atendimentos, lucro do dia (+1 XP a cada R$ 4), jogos, fiado recebido e conquistas. Várias melhorias pedem nível mínimo. Nível e barra de XP ficam na HUD.
+- **Metas e conquistas:** 18 conquistas com XP, listadas no *Guia e progresso* junto com os níveis.
+- **Economia:** todo fim de dia há aluguel (R$ 15 + R$ 8 por nível, grátis no dia 1), luz e querosene dos lampiões acesos. Na virada da noite, salada, pão, carnes, cerveja, café e bergamota perdem parte do estoque; o **Freezer da bodega** corta a perda pela metade.
+- **Caderninho de fiado (Celular → Fiado):** fregueses comuns pedem fiado (📒 no balão). E entrega e anota; **X** recusa (às vezes o freguês paga à vista, às vezes vai embora). Contas vencidas são pagas com 10% de juros de amizade; algumas viram calote. Dá para cobrar uma vez por dia ou perdoar (+1 reputação). O limite cresce com o nível.
+- **Personagens especiais:** são raros (cerca de 12% das chegadas), têm um anel dourado aos pés e, na primeira visita, aparece um aviso em destaque (“Mano Lima entrou na bodega!”). Só eles somam afeto. Com 15 você ganha o **contato**; com 50, um **presente** de decoração; com 100, pode **jogar com eles** (Celular → Contatos). O jogo sempre começa com o Sadi.
+- **Truco e bocha só com contatos:** os menus convidam apenas quem está na agenda; desafios depois do expediente também vêm de contatos. Concluir o tutorial de bocha dá o contato do Mano Lima e a **bandeira do Rio Grande**. Na bocha, só o adversário fala.
+- **Dia e noite:** o expediente vai das 14h às 23h. Depois das 18h escurece; os lampiões da Estética acendem de verdade e clareiam o salão. A janela mostra céu estrelado.
+- **Calendário gaúcho:** cada dia é um dia da semana e cada semana, um mês (começa em março). Domingo tem futebol (Gre-Nal a cada três semanas), sexta é noite do truco e sábado tem baile, campeonato ou **rodeio de CTG** (jan, fev, out, nov). Em junho há **festa junina** (a cachaça vira quentão a R$ 8 e sai muito pinhão) e em setembro, a **Semana Farroupilha** (gorjeta extra, maior com a bandeira exposta). Geada só no inverno.
+- **Modo de testes:** no fim do dia é possível escolher o evento do dia seguinte.
+- **Cavalo removido** do jogo. Saves antigos equipam as melhores botas.
+
+## Cenário ampliado
+
+O mundo lógico agora é **1600 × 900 (16:9)**, o mesmo formato da arte: o fundo não é mais achatado. A imagem preenche a área útil sem barras laterais (corta no máximo cerca de 25% em telas de outro formato, com a câmera acompanhando o jogador). O botão **−** a partir de 100% mostra a bodega inteira (“Tudo”). Cozinha, comércio, mesas e balcão foram reorganizados no espaço maior. A **porta da cancha de bocha** está pintada no cenário, em pixel art e em perspectiva, na parede direita, com a tabuleta CANCHA DE BOCHA; o laço da decoração passou para baixo da prateleira de conservas.
 
 ## Como editar os diálogos
 
@@ -101,8 +121,8 @@ jogo-bodega/
 │   └── style.css                # Folha de estilos completa (HUD, diálogos, cartas, telas)
 ├── assets/
 │   ├── images/                  # Imagens e spritesheets extraídos do base64
-│   │   ├── room.png             # Cenário da bodega
-│   │   ├── room2.png ... room5.png # Cenários de progressão
+│   │   ├── room2.png            # Cenário da bodega (galpão vazio)
+│   │   ├── decor/               # Peças de decoração e janela de chuva
 │   │   ├── badin.png / guri.png / marciomarcelo.png # Novos fregueses
 │   │   ├── gremio.png / gremio2.png / inter.png # Torcidas
 │   │   ├── people.png           # Sprites dos fregueses e cozinheiro
@@ -135,7 +155,8 @@ jogo-bodega/
     │   ├── kitchen.js           # Chapa, prensador de xis, bancadas, balança de secos e preparo
     │   ├── service.js           # Atendimento no balcão, entregas nas mesas e pagamentos
     │   ├── card-game.js         # Minijogos de cartas: Truco Gaúcho, Cacheta, IA e apostas
-    │   ├── world.js             # Cenários, reserva de mate, rastros de chuva e futebol
+    │   ├── world.js             # Reserva de mate, rastros de chuva, cancha e futebol
+    │   ├── decor.js             # Aba Estética, decoração, janela de chuva e luzes
     │   ├── bocce.js             # Física, IA, apostas e interface da bocha
     │   └── fight.js             # Minijogo de contenção de brigas nas mesas (QTE)
     ├── render/                  # Gráficos e desenho
@@ -176,7 +197,7 @@ Não é necessário instalar pacotes npm. Se o navegador estiver em outro local,
 
 O teste usa um perfil temporário separado e verifica os dois HTMLs por arquivo local e por HTTP, imagens e músicas externas, cliques e teclado, salvamento, cozinha, vendas, fornecedor, melhorias, balança, eventos, brigas, truco e interface móvel. Também simula arquivos ausentes para verificar o aviso de falha na abertura.
 
-`tests/expansion-scenarios.js` cobre os desbloqueios de cenários, queijo direto no pão, reposição e consumo do mate, poças geradas por movimento, torcidas exclusivas, brigas do Gre-Nal, dupla de fregueses e migração dos salvamentos antigos. O teste lê o TXT automaticamente por `file://` e HTTP e verifica a atualização das falas ao recarregar.
+`tests/expansion-scenarios.js` cobre o cenário único, a compra e exibição da decoração, a TV só em dias de jogo, queijo direto no pão, reposição e consumo do mate, poças geradas por movimento, torcidas exclusivas, brigas do Gre-Nal, dupla de fregueses e migração dos salvamentos antigos. O teste lê o TXT automaticamente por `file://` e HTTP e verifica a atualização das falas ao recarregar.
 
 `tests/bocce-scenarios.js` verifica lançamentos alternados, uma rodada completa com física, colisões, bolim, força, perspectiva, pontuação, empate, três dificuldades, pausa, salvamento e liquidação das apostas. O teste de navegador exercita ainda os comandos reais e a retomada da bocha após recarregar.
 

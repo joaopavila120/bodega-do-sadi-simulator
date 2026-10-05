@@ -27,17 +27,11 @@
 .game-sidebar .touch{order:3;flex-wrap:wrap}
 .mate-supply{border:1px solid #75804e;border-radius:6px;padding:9px;font-size:13px;color:#dbe9b0}
 .mate-supply button{margin-top:7px;width:100%;font-size:13px;min-height:34px;padding:5px}
-.room-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}
-.room-choice{text-align:left;min-width:0;padding:7px;background:#f3e6bf;display:flex;flex-direction:column;gap:5px}
-.room-choice img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px}
-.room-choice b{font-size:14px}.room-choice small{font-size:12px;font-weight:normal}
-.room-choice.selected{outline:3px solid #60844b;background:#e4edcb}
-.start-rooms .room-choice:nth-child(n+3){display:none}
 .landing .start-logo{max-height:25dvh;width:210px;margin-bottom:5px}
 .landing .sub{margin-top:10px;padding-top:8px}
 @media(min-width:1800px){.viewport{grid-template-columns:minmax(0,1fr) 370px}}
 @media(max-width:950px) and (min-width:751px){.viewport{grid-template-columns:minmax(0,1fr) 285px}.game-sidebar{padding:9px}}
-@media(max-width:750px){body{overflow:auto}.viewport{height:auto;min-height:calc(100dvh - 91px);grid-template-columns:1fr;grid-template-rows:52dvh auto;overflow:visible}.game-sidebar{border-left:0;border-top:2px solid #80582f;overflow:visible;padding:10px}.game-sidebar .bottom-bar{order:4;display:grid;grid-template-columns:1fr;gap:8px}.game-sidebar .touch{display:flex;justify-content:center}.game-sidebar .bottom-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.game-sidebar .bottom-actions #interactButton{display:block}.game-sidebar .dialogue-ui{max-height:none}.game-sidebar .phone{height:70dvh}.game-sidebar .action-hint{min-height:40px}.game-sidebar .hand-slot{height:56px}.game-sidebar .mate-supply{display:flex;align-items:center;gap:8px}.mate-supply button{margin:0;width:auto;flex:1}.room-choice b{font-size:12px}.landing .start-logo{max-height:19dvh;width:150px}.landing p{font-size:14px}.landing .actions{margin-top:12px}}
+@media(max-width:750px){body{overflow:auto}.viewport{height:auto;min-height:calc(100dvh - 91px);grid-template-columns:1fr;grid-template-rows:52dvh auto;overflow:visible}.game-sidebar{border-left:0;border-top:2px solid #80582f;overflow:visible;padding:10px}.game-sidebar .bottom-bar{order:4;display:grid;grid-template-columns:1fr;gap:8px}.game-sidebar .touch{display:flex;justify-content:center}.game-sidebar .bottom-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.game-sidebar .bottom-actions #interactButton{display:block}.game-sidebar .dialogue-ui{max-height:none}.game-sidebar .phone{height:70dvh}.game-sidebar .action-hint{min-height:40px}.game-sidebar .hand-slot{height:56px}.game-sidebar .mate-supply{display:flex;align-items:center;gap:8px}.mate-supply button{margin:0;width:auto;flex:1}.landing .start-logo{max-height:19dvh;width:150px}.landing p{font-size:14px}.landing .actions{margin-top:12px}}
 
 /* Cancha livre; placar e comandos permanecem fora da imagem. */
 .bocce-screen{position:fixed;inset:0;z-index:15;display:grid;grid-template-columns:minmax(0,1fr) 330px;background:#20180f;color:#fff0cf}
@@ -105,7 +99,7 @@
 .game-sidebar.focused-task #openButton,.game-sidebar.focused-task .toasts{display:none}
 .game-sidebar .touch{order:6;justify-content:center;gap:4px}.game-sidebar .touch button{width:34px;height:34px;min-height:34px;padding:3px}
 .compact-open{font-size:12px;min-height:34px;padding:7px 10px;background:#38523a;color:#f1e3c4;border-color:#708663}
-.phone{position:fixed;right:15px;top:85px;bottom:15px;width:min(350px,calc(100vw - 24px));z-index:13;max-height:calc(100dvh - 100px)}.phone-room{margin:4px 12px 10px;font-size:12px;min-height:31px;padding:6px;background:#e4e8d2;border-color:#a8b58b;color:#3e5935}
+.phone{position:fixed;right:15px;top:85px;bottom:15px;width:min(350px,calc(100vw - 24px));z-index:13;max-height:calc(100dvh - 100px)}
 #scene{image-rendering:auto}.bocce-screen{grid-template-columns:minmax(0,1fr) 255px}.bocce-sidebar{padding:16px 12px}.bocce-sidebar h1{font-size:24px}#canchaLobby button{display:block;width:100%;margin:12px 0;font-size:14px}
 @media(min-width:751px) and (max-height:680px){.game-sidebar{gap:6px}.game-sidebar .hands{display:none}.tutorial-hint{font-size:11px}.game-sidebar .action-hint{font-size:11px}.game-sidebar .dialogue-ui{max-height:180px}}
 @media(max-width:750px){
@@ -146,3 +140,61 @@
 #bocceSocial .callout{margin:8px 0;padding:10px}
 #bocceSocial .sport-talk{margin-top:8px}
 @media(min-width:901px){.bocce-screen{grid-template-columns:minmax(0,1fr) 320px}}
+/* Aba Estética do celular */
+.decor-card{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;padding:10px;margin-bottom:9px;border:1px solid #c9c5a3;border-radius:7px;background:#fffdf2}
+.decor-card.shown{border-color:#7e9c5c;background:#f3f7e3}
+.decor-thumb{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:5px;background:#6b4526;box-shadow:inset 0 0 0 2px #4a2f1a}
+.decor-thumb img{max-width:56px;max-height:56px;image-rendering:pixelated}
+.decor-card h3{font-size:15px;margin:0 0 3px}
+.decor-card p{font-size:12px;color:#647151;margin:0 0 4px;line-height:1.35}
+.decor-card small{display:block;font-size:12px;color:#816031;margin-bottom:6px}
+.decor-card button{font-size:12px;min-height:34px;width:100%;padding:6px}
+/* Avisos em destaque: chegada de especiais, nível, conquistas e presentes */
+.playfield{position:relative}
+.banner{position:absolute;z-index:6;left:50%;top:14px;transform:translateX(-50%);min-width:min(420px,86%);max-width:92%;padding:11px 18px;border-radius:9px;background:#2b1c10ee;border:2px solid #d9b25e;color:#fff2cf;text-align:center;box-shadow:0 10px 30px #0008;animation:banner-in .45s ease-out;pointer-events:none}
+.banner b{display:block;font-size:19px;letter-spacing:.02em}
+.banner small{display:block;font-size:13px;margin-top:4px;color:#ecd9ac}
+.banner-special{border-color:#f2c75a;background:linear-gradient(#4a2d12f2,#2b1c10f2)}
+.banner-special b{color:#ffd56a}
+.banner-level{border-color:#9cc967}.banner-level b{color:#cdf09a}
+.banner-achievement{border-color:#e7a64a}
+.banner-gift{border-color:#e98fa2}.banner-friend{border-color:#7fc0d8}
+.banner-bad{border-color:#c65b39}
+@keyframes banner-in{from{opacity:0;transform:translate(-50%,-12px) scale(.96)}to{opacity:1;transform:translate(-50%,0)}}
+.stat small#clockLeft{display:block;font-size:10px;opacity:.8}
+.level-stat{position:relative}
+.level-stat small{max-width:112px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.level-bar{position:absolute;left:8px;right:8px;bottom:3px;height:3px;background:#0005;border-radius:2px;overflow:hidden}
+.level-bar span{display:block;height:100%;background:#9cc967}
+.phone-tabs{flex-wrap:wrap}
+.phone-tabs button{flex:1 1 28%;min-width:0}
+/* Metas, contatos e fiado */
+.goals h3{margin:14px 0 6px}
+.xp-track{height:8px;border-radius:4px;background:#d8cfae;overflow:hidden;margin:6px 0}
+.xp-track>div{height:100%;background:linear-gradient(90deg,#73934c,#a8cf70)}
+.xp-track.small{height:5px}
+.level-steps{display:flex;flex-wrap:wrap;gap:4px;font-size:12px}
+.level-steps span{padding:3px 7px;border-radius:10px;background:#e7e2c8;color:#77705a}
+.level-steps span.done{background:#406442;color:#fff7df}
+.achievements{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.achievement{padding:7px 9px;border-radius:6px;background:#efe9d2;color:#8b8468}
+.achievement.got{background:#fff3c8;color:#4a3a1f;border:1px solid #d9b25e}
+.achievement small{display:block;font-size:12px}
+.contact-card.locked h3{color:#8c8466}
+.contact-actions{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.contact-actions button{font-size:12px;padding:4px 7px;min-height:30px}
+.fiado-line{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px;margin-bottom:6px;border:1px solid #d8cfae;border-radius:6px;background:#fffdf2}
+.fiado-line.late{border-color:#d7754b;background:#fff1e7}
+.fiado-line.done{opacity:.75}
+.fiado-line small{display:block;font-size:12px;color:#6d6a52}
+.fiado-line div:last-child{display:flex;gap:4px}
+.fiado-line button{font-size:12px;padding:4px 7px;min-height:30px}
+.muted{color:#8b8468;font-size:13px}
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:10px 0}
+.week-strip div{padding:5px 3px;border-radius:5px;background:#efe9d2;text-align:center;font-size:11px;color:#4a3a1f}
+.week-strip div.today{outline:2px solid #60844b;background:#e4edcb}
+.week-strip div.past{opacity:.55}
+.week-strip span{display:block;font-size:18px}
+.week-strip small{display:block;font-size:10px;line-height:1.15}
+.test-event{margin:10px 0}
+.test-event select{width:100%;margin:6px 0}

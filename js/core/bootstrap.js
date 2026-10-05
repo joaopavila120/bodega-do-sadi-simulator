@@ -30,15 +30,15 @@ async function initializeGame() {
       ...Object.entries(ITEM_ART).map(([key,image])=>waitForImage(image,"assets/images/items/"+key+".png")),
       waitForImage(peopleArt, PEOPLE_DATA),
       waitForImage(furnitureArt, FURNITURE_DATA),
-      waitForImage(horseArt, HORSE_DATA),
       waitForImage(bocceArt, 'assets/images/bocha.png'),
       waitForImage($('startLogo'), 'assets/images/logo.png'),
-      ...roomImages.map((im,i)=>waitForImage(im,ROOMS[i].file)),
+      ...DECOR.map(d=>waitForImage(DECOR_ART[d.id],'assets/images/decor/'+d.id+'.png')),
+      waitForImage(rainWindowArt, RAIN_WINDOW_DATA),
       ...Object.entries(CHARACTER_ART).map(([name,im])=>waitForImage(im,name+'.png'))
     ]);
 
     await restoreDialogues();
-    selectStartingRoom(1);initializeCharacterChoice();
+    initializeCharacterChoice();
     refreshHUD();
     draw();
     $('continue').disabled = !readSave();

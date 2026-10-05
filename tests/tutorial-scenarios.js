@@ -41,7 +41,7 @@
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});
  for(let i=0;i<300;i++)customersTick(.05);refreshHUD();draw();
  const bubbles=customerOrderBubbles();
- check(!$('orderRail')&&bubbles.length===16&&bubbles.every(b=>b.top>=282&&b.top+b.height<b.y),'dezesseis balões individuais ficam acima das cabeças e abaixo das mercadorias');
+ check(!$('orderRail')&&bubbles.length===16&&bubbles.every(b=>b.top>=414&&b.top+b.height<b.y),'dezesseis balões individuais ficam acima das cabeças e abaixo das mercadorias');
  showPaymentFeedback(10,1);showPaymentFeedback(12,2);check($('paymentFeedback').textContent.includes('22')&&!sparks.some(s=>s.text.includes('gorjeta')),'pagamentos simultâneos agrupados no caixa sem textos sobre fregueses');
  G=fresh();paused=false;modal=null;phoneOpen=false;return results;
 })()

@@ -8,14 +8,16 @@ const ctx = canvas ? canvas.getContext('2d') : null;
 const money = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const round = v => Math.round(v * 100) / 100;
-const camera = { zoom: 1, overview: false, x: 0, y: 0, scale: 1 };
+// fit=false preenche a área do jogo (sem barras); fit=true mostra a bodega inteira.
+const camera = { zoom: 1, fit: false, x: 0, y: 0, scale: 1 };
 const held = () => G.hands[G.slot];
 const freeHand = () => !held();
 const pick = values => values[Math.floor(Math.random() * values.length)];
 const unlocked = key => !GOODS[key]?.unlock || !!G.up[GOODS[key].unlock];
 const capacity = () => G.up.capacity ? 30 : 18;
-const price = key => key === 'cigarro' && G.up.cigarro_py ? 18 : RECIPES[key]?.price || GOODS[key]?.price || 0;
-const nameOf = key => key === 'cigarro' && G.up.cigarro_py ? 'Cigarro do Paraguai' : RECIPES[key]?.name || GOODS[key]?.name || key;
+const isQuentao = key => key === 'cachaca' && G?.event?.id === 'junina';
+const price = key => isQuentao(key) ? 8 : key === 'cigarro' && G.up.cigarro_py ? 18 : RECIPES[key]?.price || GOODS[key]?.price || 0;
+const nameOf = key => isQuentao(key) ? 'Quentão' : key === 'cigarro' && G.up.cigarro_py ? 'Cigarro do Paraguai' : RECIPES[key]?.name || GOODS[key]?.name || key;
 
 function bulk(k){return BULK[k]||null;}
 
@@ -27,7 +29,7 @@ function stockText(k,n=G.stock[k]){return bulk(k)?formatWeight(n):Math.floor(n)+
 
 function salePrice(i){return bulk(i.pid)?round(price(i.pid)*(i.weight||bulk(i.pid).unit)/bulk(i.pid).unit):price(i.pid);}
 
-function movementBonus(){return G.gear==='horse'?0:GEAR[G.gear]?.bonus||0;}
+function movementBonus(){return GEAR[G.gear]?.bonus||0;}
 
 function mateLevel(){return G.up.mateLendario?3:G.up.mateTopetudo?2:G.up.mateCuiudo?1:0;}
 

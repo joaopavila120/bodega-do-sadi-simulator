@@ -4,7 +4,7 @@
 const ALWAYS_TALK = new Set(['badin','guri','marcio','marcelo','indavirus','lauro','peixinhonabrasa','manolima']);
 
 function deliveryConversation(person,actor,diner=null){
- G.conversations[person]++;G.friends[person]=Math.min(100,(G.friends[person]||0)+3);
+ G.conversations[person]++;addFriendship(person,3);
  G.dialogueQueue=[];
  // Fregueses comuns falam em 20% das entregas; especiais sempre têm uma fala.
  if(!ALWAYS_TALK.has(PEOPLE[person].id)&&Math.random()>=.2){save();return;}

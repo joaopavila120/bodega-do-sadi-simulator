@@ -1,0 +1,126 @@
+// Personagens especiais: raridade, chegada, amizade, contatos, presentes e
+// troca de personagem. Também o caderninho de fiado do balcão.
+'use strict';
+
+const SPECIAL_CHANCE=.12;     // chance de um visitante ser personagem especial
+const CONTACT_AT=15;          // afeto para ganhar o contato
+const GIFT_AT=50;             // afeto para ganhar o presente
+const MAX_FRIENDSHIP=100;     // afeto para poder jogar com o personagem
+const GIFTS={
+ manolima:[{at:'tutorial',decor:['bandeira'],text:'“Pra tua bodega ter cara de galpão de verdade.”'},{at:GIFT_AT,decor:['prateleira','gaita'],text:'“Essa gaita já tocou muito baile no Arvoredo.”'}],
+ badin:[{at:GIFT_AT,decor:['chapeu'],text:'“Um chapéu campeiro pra receber a freguesia.”'}],
+ guri:[{at:GIFT_AT,decor:['laco'],text:'“Laço trançado pelo meu avô. Cuida bem.”'}],
+ marcio:[{at:GIFT_AT,decor:['poncho'],text:'“Pro inverno da bodega.”'}],
+ marcelo:[{at:GIFT_AT,decor:['cabaca'],text:'“Porongo da roça lá de casa.”'}],
+ indavirus:[{at:GIFT_AT,decor:['alho'],text:'“Réstia da colônia. Espanta até mau-olhado.”'}],
+ lauro:[{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
+ peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]
+};
+
+function isSpecial(i){return ALWAYS_TALK.has(PEOPLE[i]?.id);}
+function specialPeople(){return PEOPLE.map((p,i)=>i).filter(i=>isSpecial(i)&&PEOPLE[i].id!==G.avatarId);}
+function hasContact(i){return !!G.contacts?.[PEOPLE[i]?.id];}
+function contactPeople(){return specialPeople().filter(hasContact);}
+function addFriendship(person,n){if(!isSpecial(person))return;G.friends[person]=clamp((G.friends[person]||0)+n,0,MAX_FRIENDSHIP);}
+function unlockContact(person,silent=false){
+ const id=PEOPLE[person]?.id;if(!id||G.contacts[id])return;G.contacts[id]=G.day;
+ if(!silent)showBanner('Novo contato: '+PEOPLE[person].name,'Agora dá para convidar para truco e bocha.','friend');
+}
+function giveGift(person,gift){
+ const id=PEOPLE[person].id,key=id+':'+gift.at;if(G.giftsGiven[key])return;G.giftsGiven[key]=G.day;
+ const names=[];let cash=0;
+ for(const d of gift.decor){const item=DECOR.find(x=>x.id===d);if(decorOwned(d))cash+=item.cost;else{decorState()[d]=true;names.push(item.name);}}
+ if(cash){G.cash=round(G.cash+cash);G.stats.aid+=cash;}
+ showBanner(PEOPLE[person].name+' te deu um presente!',(names.length?names.join(' e '):'')+(cash?(names.length?' · ':'')+money(cash)+' (a peça já era tua)':'')+' · '+gift.text,'gift');AudioEngine.heart();save();
+}
+function socialCheck(){
+ G.contacts??={};G.giftsGiven??={};G.playable??={};
+ for(const i of specialPeople()){
+  const id=PEOPLE[i].id,f=G.friends[i]||0;
+  if(f>=CONTACT_AT)unlockContact(i);
+  for(const gift of GIFTS[id]||[])if(typeof gift.at==='number'&&f>=gift.at)giveGift(i,gift);
+  if(f>=MAX_FRIENDSHIP&&!G.playable[id]){G.playable[id]=G.day;showBanner(PEOPLE[i].name+' é teu parceiro de verdade','Agora dá para jogar com '+PEOPLE[i].name+': Celular → Contatos.','friend');}
+ }
+}
+function finishBocceTutorial(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');unlockContact(mano);giveGift(mano,GIFTS.manolima[0]);}
+
+// Primeira visita de um especial: aviso grande. Depois, só uma notinha.
+function announceArrivals(people){
+ G.metSpecial??={};
+ for(const i of new Set(people)){
+  if(!isSpecial(i))continue;const p=PEOPLE[i];
+  if(!G.metSpecial[p.id]){G.metSpecial[p.id]=G.day;showBanner(p.name+' entrou na bodega!',p.origin||'Um personagem especial. Atenda bem para ganhar o contato.','special');AudioEngine.heart();}
+  else say(p.name+' chegou na bodega.');
+ }
+}
+function specialRing(x,y){ctx.save();ctx.strokeStyle='#f2c75a';ctx.lineWidth=2.5;ctx.globalAlpha=.7+.3*Math.sin(frameClock*4);ctx.beginPath();ctx.ellipse(x,y+1,24,9,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
+
+function canPlayAs(id){if(id==='sadi')return true;const i=PEOPLE.findIndex(p=>p.id===id);return i>=0&&isSpecial(i)&&!!G.playable?.[id];}
+function playAs(id){
+ if(!canPlayAs(id)||G.avatarId===id)return;
+ if(!['prep','closed'].includes(G.phase)||G.shop.length||G.groups.length){say('Troque de personagem com a bodega vazia, antes de abrir ou depois de fechar.');return;}
+ G.avatarId=id;save();renderPhone();say('Agora você joga com '+(PEOPLE.find(p=>p.id===id)?.name||'Sadi')+'.');
+}
+function inviteContact(person,sport){
+ if(!hasContact(person)||G.bocce||G.game||G.task)return;
+ togglePhone(false);
+ if(sport==='truco'){cardsMenu();const s=$('opponent');if(s)s.value=String(person);}
+ else{G.atCancha=true;showCanchaLobby();bocceMenu();const s=$('bocceOpponent');if(s)s.value=String(person);}
+}
+
+function contactsPanel(){
+ const people=PEOPLE.map((p,i)=>i).filter(isSpecial);
+ return `<div class="phone-intro"><h3>Contatos da bodega</h3><p>Só os personagens especiais viram amigos. Atenda e jogue com eles: com ${CONTACT_AT} de afeto você ganha o contato e pode convidá-los para truco e bocha; com ${GIFT_AT}, eles trazem presentes; com ${MAX_FRIENDSHIP}, dá para jogar com eles.</p>${G.avatarId!=='sadi'?'<button data-act="playAs" data-id="sadi">Voltar a jogar com Sadi</button>':''}</div>`+people.map(i=>{
+  const p=PEOPLE[i],f=G.friends[i]||0,contact=hasContact(i),met=G.metSpecial?.[p.id],me=p.id===G.avatarId;
+  const next=!contact?CONTACT_AT:f<GIFT_AT?GIFT_AT:MAX_FRIENDSHIP;
+  return `<article class="contact-card ${contact?'':'locked'}"><canvas width="64" height="90" data-contact="${i}" aria-label="${escapeHTML(met?p.name:'Desconhecido')}"></canvas><div><h3>${contact?'☎ ':''}${escapeHTML(met||contact?p.name:'???')}</h3><div class="xp-track small"><div style="width:${f}%"></div></div><p>Afeto ${f} / ${MAX_FRIENDSHIP}${f<MAX_FRIENDSHIP?' · próximo marco: '+next:''}</p><small>${me?'É você agora.':contact?(p.origin||'Personagem especial'):met?'Atenda mais vezes para ganhar o contato.':'Ainda não apareceu na bodega.'}</small>${contact&&!me?`<div class="contact-actions"><button class="small" data-act="invite" data-id="${i}:truco">Convidar · truco</button><button class="small" data-act="invite" data-id="${i}:bocha">Convidar · bocha</button>${G.playable?.[p.id]?`<button class="small" data-act="playAs" data-id="${p.id}">Jogar com ${escapeHTML(p.name)}</button>`:''}</div>`:''}</div></article>`;
+ }).join('');
+}
+function drawContactPortraits(){document.querySelectorAll('[data-contact]').forEach(c=>{const i=Number(c.dataset.contact),context=c.getContext('2d');drawCharacterPortrait(context,PEOPLE[i].sprite,32,88,86);if(!hasContact(i)){context.globalCompositeOperation='source-atop';context.fillStyle=G.metSpecial?.[PEOPLE[i].id]?'#3a2b1ccc':'#2a1f15';context.fillRect(0,0,c.width,c.height);context.globalCompositeOperation='source-over';}});}
+function noContactsHTML(sport){return `<p>Tua agenda ainda está vazia. Os personagens especiais aparecem de vez em quando na bodega: atenda bem e converse para ganhar o contato (${CONTACT_AT} de afeto).</p>${sport==='bocha'&&!sportState().tutorialDone?'<p>O Mano Lima ensina bocha de graça: use <b>Aprender bocha com Mano Lima</b> na cancha.</p>':''}<div class="actions"><button data-act="close">Voltar</button></div>`;}
+
+// ---------- Caderninho de fiado ----------
+function fiadoState(){G.fiado??=[];return G.fiado;}
+function fiadoOpen(){return fiadoState().filter(e=>e.status==='open');}
+function fiadoTotal(){return round(fiadoOpen().reduce((n,e)=>n+e.amount,0));}
+// Cada freguês tem um jeito de pagar: uns são pontuais, outros somem.
+function reliability(person){return .5+((person*37+11)%45)/100;}
+function wantsFiado(person){return G.day>=2&&!tutorialActive()&&!isSpecial(person)&&!PEOPLE[person].team&&Math.random()<.18;}
+function fiadoFirst(){const c=G.shop.find(c=>c.state==='queue');return c?.fiado?c:null;}
+function recordFiado(person,amount){
+ const e={id:G.next++,person,amount:round(amount),day:G.day,due:G.day+2+Math.floor(Math.random()*3),status:'open',charged:0};
+ fiadoState().push(e);G.stats.credit=round((G.stats.credit||0)+amount);
+ effect('Anotado no caderninho · '+money(amount),G.player.x,G.player.y-90,'#f0dc9a');
+}
+function refuseFiado(){
+ const c=fiadoFirst();if(!c)return;
+ if(Math.random()<.6){c.fiado=false;say(PEOPLE[c.person].name+': “Tá, tá… pago à vista então.”');}
+ else{c.state='leave';c.dest=null;setDestination(c,EXIT);G.rep=clamp(G.rep-1,0,100);G.stats.lost++;resetQueuePaths();say(PEOPLE[c.person].name+' foi embora sem levar nada.');}
+ save();refreshHUD();
+}
+function settleFiado(e,amount,why){e.status='paid';e.paidDay=G.day;e.paid=round(amount);G.cash=round(G.cash+amount);G.stats.fiadoIn=round((G.stats.fiadoIn||0)+amount);G.fiadoPaid=(G.fiadoPaid||0)+1;gainXP(5);return why;}
+// Roda na virada do dia: quem vence paga com “juros de amizade”; alguns somem.
+function processFiado(){
+ const paid=[],lost=[];
+ for(const e of fiadoOpen()){
+  const r=reliability(e.person),late=G.day-e.due;
+  if(late>=0&&Math.random()<r*.65){settleFiado(e,e.amount*1.1+(Math.random()<.3?2:0),'');paid.push(e);}
+  else if(late>=5&&Math.random()<(1-r)*.6){e.status='lost';e.lostDay=G.day;G.stats.fiadoLost=round((G.stats.fiadoLost||0)+e.amount);lost.push(e);}
+ }
+ if(paid.length)showBanner('Fiado acertado','Pagaram com juros de amizade: '+paid.map(e=>PEOPLE[e.person].name.split(' ·')[0]+' '+money(e.paid)).join(', ')+'.','gift');
+ if(lost.length)showBanner('Calote no caderninho',lost.map(e=>PEOPLE[e.person].name.split(' ·')[0]).join(', ')+' sumiu sem pagar ('+money(lost.reduce((n,e)=>n+e.amount,0))+').','bad');
+}
+function chargeFiado(id){
+ const e=fiadoOpen().find(e=>e.id===Number(id));if(!e||e.charged===G.day)return;e.charged=G.day;
+ if(Math.random()<reliability(e.person)*.5){settleFiado(e,e.amount);say(PEOPLE[e.person].name+' pagou '+money(e.amount)+' na hora.');AudioEngine.coins();}
+ else{e.due=Math.max(e.due,G.day+2);say(PEOPLE[e.person].name+': “Semana que vem eu acerto, palavra!”');}
+ save();renderPhone();
+}
+function forgiveFiado(id){const e=fiadoOpen().find(e=>e.id===Number(id));if(!e)return;e.status='forgiven';e.paidDay=G.day;G.rep=clamp(G.rep+1,0,100);say('Conta perdoada. A vizinhança comenta tua bondade.');save();renderPhone();}
+function fiadoPanel(){
+ const open=fiadoOpen(),closed=fiadoState().filter(e=>e.status!=='open').slice(-8).reverse(),total=fiadoTotal(),limit=creditLimit();
+ const status={paid:'pago',lost:'sumiu',forgiven:'perdoado'};
+ return `<div class="phone-intro"><h3>Caderninho de fiado</h3><p>Alguns fregueses pedem para anotar (📒 no balão). Entregar com E anota no caderno; <b>X</b> recusa o fiado. Quem paga em dia traz juros de amizade (10%); alguns somem.</p><div class="xp-track small"><div style="width:${Math.min(100,total/limit*100)}%"></div></div><p><b>${money(total)}</b> em aberto · limite ${money(limit)} (sobe com o nível)</p></div>`+
+ (open.length?open.map(e=>{const late=G.day-e.due;return `<div class="fiado-line ${late>0?'late':''}"><div><b>${escapeHTML(PEOPLE[e.person].name)}</b><small>${money(e.amount)} · anotado no dia ${e.day} · ${late>0?late+' dia(s) de atraso':'vence no dia '+e.due}</small></div><div><button class="small" data-act="fiadoCharge" data-id="${e.id}" ${e.charged===G.day?'disabled':''}>${e.charged===G.day?'Cobrado hoje':'Cobrar'}</button><button class="small" data-act="fiadoForgive" data-id="${e.id}">Perdoar</button></div></div>`;}).join(''):'<p class="muted">Nenhuma conta em aberto.</p>')+
+ (closed.length?'<h4>Últimas contas</h4>'+closed.map(e=>`<div class="fiado-line done"><div><b>${escapeHTML(PEOPLE[e.person].name)}</b><small>${money(e.paid??e.amount)} · ${status[e.status]}</small></div></div>`).join(''):'');
+}

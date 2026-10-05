@@ -1,15 +1,19 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
- const reset=()=>{G=fresh();started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;AudioEngine.on=false;['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;AudioEngine.on=false;['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
  const index=id=>PEOPLE.findIndex(p=>p.id===id);
  reset();
  check(['indavirus','lauro','peixinhonabrasa','manolima'].every(id=>index(id)>=0&&CHARACTER_ART[PEOPLE[index(id)].sprite.file].naturalWidth>0),'quatro novos personagens carregam suas artes');
- check($('startingCharacter').options.length===9&&[...$('startingCharacter').options].every(o=>o.value==='sadi'||selectableCharacters().some(p=>p.id===o.value)),'seleção contém apenas Sadi e os oito personagens especiais');
- $('startingCharacter').value='indavirus';$('startingName').value='Bodega do teste';
+ check(!$('startingCharacter'),'tela inicial não oferece escolha de personagem');
+ $('startingName').value='Bodega do teste';
  const confirmBefore=window.confirm;try{window.confirm=()=>true;startGame(true);}finally{window.confirm=confirmBefore;}
- check(G.avatarId==='indavirus'&&G.bodegaName==='Bodega do teste'&&modal==='welcome','novo jogo aplica personagem, nome e apresenta o guia');
- check($('dialogTitle').textContent.includes('Um passo de cada vez')&&$('dialogContent').textContent.includes('um freguês por vez'),'boas-vindas apresentam tutorial sequencial');gameGuide();check(['Bocha','Truco','Contatos','4, 8 e 12'].every(text=>$('dialogContent').textContent.includes(text)),'guia apresenta lazer, contatos e caminho de progressão');
- closeDialog(true);G.phase='open';
+ check(G.avatarId==='sadi'&&G.bodegaName==='Bodega do teste'&&modal==='welcome','novo jogo começa com Sadi, aplica nome e apresenta o guia');
+ check($('dialogTitle').textContent.includes('Um passo de cada vez')&&$('dialogContent').textContent.includes('um freguês por vez'),'boas-vindas apresentam tutorial sequencial');gameGuide();check(['Bocha','Truco','Contatos','Estética'].every(text=>$('dialogContent').textContent.includes(text)),'guia apresenta lazer, contatos e caminho de progressão');
+ closeDialog(true);G.xp=99999;G.levelSeen=7;
+ playAs('indavirus');check(G.avatarId==='sadi','sem amizade máxima não dá para jogar com Indavirus');
+ G.friends[index('indavirus')]=100;socialCheck();check(G.playable.indavirus&&hasContact(index('indavirus'))&&decorState().alho===true,'amizade máxima libera contato, presente e personagem');
+ G.phase='prep';playAs('indavirus');check(G.avatarId==='indavirus','jogar como Indavirus pelo contato');
+ G.phase='open';
  check(!visitorAvailable(index('indavirus')),'personagem único escolhido pelo jogador não chega como cliente');
  const lauro=spawnGroup({person:index('lauro'),size:4});
  check(!lauro.members.includes(index('indavirus'))&&lauro.size===4,'parceiro indisponível não é duplicado ao formar quatro pessoas');
@@ -45,10 +49,10 @@
  reset();G.phase='open';const truco=spawnGroup({size:4,targetTable:1});for(let t=0;t<12;t+=.05)customersTick(.05);
  check(truco.orders.length===4&&truco.orders.every(k=>GOODS[k]||RECIPES[k]),'mesa de truco usa pedidos individuais do cardápio comum');
  reset();G.up.horse=true;G.up.bootsBagual=true;G.gear='horse';const migrated=normalizeSave(JSON.parse(JSON.stringify(G)));
- check(migrated.gear==='bootsBagual'&&migrated.up.horse,'montaria antiga fica guardada e equipa botas ao migrar');
+ check(migrated.gear==='bootsBagual'&&!migrated.up.horse&&!GEAR.horse&&!UPGRADES.some(u=>u.id==='horse'),'cavalo removido: saves antigos equipam as melhores botas');
  G=migrated;const cash=G.cash;buyUpgrade('horse');equipGear('horse');check(G.gear==='bootsBagual'&&G.cash===cash,'cavalo não pode ser comprado nem equipado');
- G.gear='horse';check(movementBonus()===0,'montaria inativa não concede velocidade');G.gear='feet';
- phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Contatos da bodega')&&document.querySelectorAll('[data-contact]').length===PEOPLE.length,'aba Contatos lista retratos, afeto e preferências');
+
+ phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Contatos da bodega')&&document.querySelectorAll('[data-contact]').length===ALWAYS_TALK.size,'aba Contatos lista só os especiais, com retratos e afeto; preferências');
  phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&$('phoneContent').querySelectorAll('.upgrade-category').length===4,'melhorias separadas em categorias sem relações');
  for(const id of ['indavirus','lauro','peixinhonabrasa']){const p=index(id);G.friends[p]=100;G.conversations[p]=4;check(!!personalizedProse(p)&&nextProse(p).id?.includes(id),'voz própria permanece com afinidade alta: '+id);}
  const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!/baia/i.test(line.reply)||!/lobisome do Arvoredo/i.test(line.reply))throw Error('Mano perdeu a voz própria');}check(true,'Mano mantém falas da baia e do lobisome sem cair nas genéricas');

@@ -26,7 +26,7 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
  heart(){[523,659,784,1046].forEach((f,i)=>this.note(f,.22,'triangle',.065,i*.12));},
  phone(){[880,1174,880,1174].forEach((f,i)=>this.note(f,.075,'sine',.055,i*.09));},
  crowd(){[196,246,294].forEach((f,i)=>this.note(f,.4,'triangle',.03,i*.08));},
- update(dt){this.syncMusic();if(G.bocce)return;if(!this.on||!started||paused||modal||document.hidden)return;this.stepClock+=dt;this.hissClock+=dt;if(G.player.walk&&this.stepClock>(G.boost>0?.14:.19)){this.stepClock=0;this.note(G.gear==='horse'?130:G.boost>0?125:95,.04,'triangle',G.gear==='horse'?.06:.025);if(G.gear==='horse')this.note(100,.04,'triangle',.035,.065);if(G.boost>0)G.visual.push({x:G.player.x,y:G.player.y,dx:0,dy:5,life:.4,total:.4,type:'leaf'});}if(this.hissClock>.6){this.hissClock=0;const hot=G.kitchen.grill.some(i=>i&&!i.burned);if(hot)this.noise(.25,G.player.x<450?.025:.008,2400);if(G.event.id==='chuva'&&G.phase==='open')this.noise(.5,.025,1900);}}
+ update(dt){this.syncMusic();if(G.bocce)return;if(!this.on||!started||paused||modal||document.hidden)return;this.stepClock+=dt;this.hissClock+=dt;if(G.player.walk&&this.stepClock>(G.boost>0?.14:.19)){this.stepClock=0;this.note(G.boost>0?125:95,.04,'triangle',.025);if(G.boost>0)G.visual.push({x:G.player.x,y:G.player.y,dx:0,dy:5,life:.4,total:.4,type:'leaf'});}if(this.hissClock>.6){this.hissClock=0;const hot=G.kitchen.grill.some(i=>i&&!i.burned);if(hot)this.noise(.25,G.player.x<600?.025:.008,2400);if(G.event.id==='chuva'&&G.phase==='open')this.noise(.5,.025,1900);}}
 };
 
 function saveAudio(){try{localStorage.setItem('bodega-music',String(AudioEngine.music));localStorage.setItem('bodega-sound',String(AudioEngine.on));}catch(e){}}

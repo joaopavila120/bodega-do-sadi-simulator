@@ -1,13 +1,16 @@
 (() => {
  const results=[],check=(v,m)=>{if(!v)throw Error(m);results.push(m);};
  const random=Math.random,visitor=pickVisitor,dialogues=customDialogues;
- const reset=()=>{G=fresh();G.day=2;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=1000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();cardInvite=null;['start','overlay','phone','bocceScreen'].forEach(id=>$(id).classList.add('hidden'));document.body.classList.remove('playing-bocce');};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.day=2;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=1000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();cardInvite=null;['start','overlay','phone','bocceScreen'].forEach(id=>$(id).classList.add('hidden'));document.body.classList.remove('playing-bocce');};
  try{
-  reset();cardsMenu();check([...$('opponent').options].every(o=>specialOpponent(Number(o.value))),'truco oferece somente personagens especiais');closeDialog(true);
-  bocceMenu();check([...$('bocceOpponent').options].every(o=>specialOpponent(Number(o.value))),'bocha oferece somente personagens especiais');startBocceGame();
-  check(specialOpponent(G.bocce.opponent)&&G.bocce.talk.length===2,'bocha inicia com especial e dois interlocutores');
+  reset();cardsMenu();check(!$('opponent')&&$('dialogContent').textContent.includes('agenda ainda está vazia'),'sem contatos não há convite para truco');closeDialog(true);
+  bocceMenu();check(!$('bocceOpponent'),'sem contatos não há convite para bocha');closeDialog(true);
+  const badin=PEOPLE.findIndex(p=>p.id==='badin'),mano=PEOPLE.findIndex(p=>p.id==='manolima');G.contacts={badin:2,manolima:2};
+  cardsMenu();check([...$('opponent').options].map(o=>Number(o.value)).sort().join()===[badin,mano].sort().join(),'truco convida apenas contatos da agenda');closeDialog(true);
+  bocceMenu();check([...$('bocceOpponent').options].every(o=>hasContact(Number(o.value))),'bocha convida apenas contatos da agenda');startBocceGame();
+  check(specialOpponent(G.bocce.opponent)&&G.bocce.talk.length===1&&G.bocce.talk[0].person===G.bocce.opponent,'bocha só tem a fala do adversário, sem torcida');
   G.bocce.phase='direction';G.bocce.turn=0;confirmBocce();G.bocce.power=.7;const sequence=G.bocce.talkSequence;confirmBocce();
-  check(G.bocce.used[0]===1&&G.bocce.talkSequence>sequence&&G.bocce.talk.length===2,'lançamento real gera duas falas novas');
+  check(G.bocce.used[0]===1&&G.bocce.talkSequence>sequence&&G.bocce.talk.length===1,'lançamento real gera nova fala do adversário');
   const person=G.bocce.opponent,key=PEOPLE[person].id+'.bocha.lancamento';customDialogues={...customDialogues,[key]:[{player:'Como foi?',reply:'Fala por ação de teste'}]};sportTalk(G.bocce,'bocha','lancamento');
   check(G.bocce.talk[0].reply==='Fala por ação de teste','fala específica da ação tem prioridade');
   customDialogues[key]=[];sportTalk(G.bocce,'bocha','lancamento');check(G.bocce.talk[0].reply!=='Fala por ação de teste','seção vazia usa diálogo normal');
@@ -17,9 +20,11 @@
   reset();G.day=1;G.phase='closed';prepareAfterHours();check(sportState().challenge.tutorial&&PEOPLE[sportState().challenge.person].id==='manolima','fim do tutorial garante convite de Mano Lima');showSportChallenge();answerSportChallenge(true);
   check(G.bocce.tutorial&&G.bocce.wager===0&&G.bocce.level==='easy'&&$('bocceSocial').textContent.includes('bolim'),'aceitar Mano inicia lição gratuita e contextual');
   G.bocce.phase='direction';updateBocceUI();check($('bocceSocial').textContent.includes('A/D'),'tutorial ensina posicionamento e mira');confirmBocce();check($('bocceSocial').textContent.includes('força'),'tutorial avança para força por ação real');settleBocce(0);check(sportState().tutorialDone,'partida do tutorial concluída persiste');
-  reset();G.phase='closed';Math.random=()=>.24;prepareAfterHours();const challenge=sportState().challenge;check(challenge&&!challenge.tutorial&&specialOpponent(challenge.person)&&challenge.wager>0,'sorteio inferior a 25% cria desafio apostado');prepareAfterHours();check(sportState().challenge===challenge,'fechar relatório não sorteia outro desafio');
+  check(hasContact(PEOPLE.findIndex(p=>p.id==='manolima'))&&decorState().bandeira===true&&G.giftsGiven['manolima:tutorial'],'Mano Lima vira contato e presenteia a bandeira após o tutorial');
+  reset();G.contacts={badin:2,guri:2};G.phase='closed';Math.random=()=>.24;prepareAfterHours();const challenge=sportState().challenge;check(challenge&&!challenge.tutorial&&hasContact(challenge.person)&&challenge.wager>0,'sorteio inferior a 25% cria desafio apostado de um contato');prepareAfterHours();check(sportState().challenge===challenge,'fechar relatório não sorteia outro desafio');
   G.friends[challenge.person]=10;answerSportChallenge(false);check(G.friends[challenge.person]===7&&!sportState().challenge,'recusar desafio reduz amizade em três pontos');
-  reset();Math.random=()=>.25;prepareAfterHours();check(!sportState().challenge,'sorteio de 25% ou mais não cria desafio');Math.random=random;
+  reset();G.contacts={badin:2};Math.random=()=>.25;prepareAfterHours();check(!sportState().challenge,'sorteio de 25% ou mais não cria desafio');
+  reset();G.phase='closed';Math.random=()=>.1;prepareAfterHours();check(!sportState().challenge,'sem contatos ninguém liga para desafiar');Math.random=random;
   reset();G.phase='closed';sportState().challenge={person:PEOPLE.findIndex(p=>p.id==='badin'),wager:25,tutorial:false};save();G=readSave();showSportChallenge();const wagerCash=G.cash;answerSportChallenge(true);check(G.cash===wagerCash-25&&G.bocce.wager===25&&!sportState().challenge,'desafio salvo cobra uma entrada ao aceitar');settleBocce(0);settleBocce(0);check(G.cash===wagerCash+25,'vitória no desafio paga o dobro uma única vez');
   for(const type of ['bocha','truco']){
    reset();createSportTournament(type);const b=sportState().bracket;check(b.rounds[0].length===4&&new Set(b.rounds[0].flatMap(m=>[m.a,m.b])).size===8,'chave de oito participantes únicos: '+type);

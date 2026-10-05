@@ -19,7 +19,7 @@ function startTournament(){
  const groups=G.groups.filter(g=>g.tournament);
  // Salvamentos antigos entram no novo formato sem cancelar pedidos já sentados.
  for(const g of G.groups.filter(g=>!g.tournament&&g.state!=='leave'))departGroup(g);
- for(const c of G.shop){if(c.state==='leave')continue;c.state='leave';c.dest=null;setDestination(c,{x:884,y:769});}
+ for(const c of G.shop){if(c.state==='leave')continue;c.state='leave';c.dest=null;setDestination(c,EXIT);}
  G.tournament.rotation=[...groups.map(g=>g.pairs[0]),...groups.map(g=>g.pairs[1]).reverse()];
  say('Campeonato: '+G.tournament.pairs.length+' duplas inscritas. Elas ficam até fechar e trocam de adversários durante o dia.');save();
 }

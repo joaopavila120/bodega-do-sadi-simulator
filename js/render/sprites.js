@@ -8,8 +8,6 @@ peopleArt.src = PEOPLE_DATA;
 const furnitureArt = new Image();
 furnitureArt.src = FURNITURE_DATA;
 
-const horseArt = new Image();
-horseArt.src = HORSE_DATA;
 
 function rect(x,y,w,h,c,r=0,stroke=null){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=c;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;ctx.stroke();}}
 
@@ -30,7 +28,6 @@ function drawDining(f,cards){cards=cards||isTableTruco(G.tables[Number(f.id.spli
 
 function personDraw(index,x,y,walking=false,chef=false,dx=1,seated=false){const custom=typeof index==='object'?index:null,art=custom?CHARACTER_ART[custom.file]:peopleArt,s=custom?{x:custom.crop[0],y:custom.crop[1],w:custom.crop[2],h:custom.crop[3]}:SPRITES[index%6],height=chef?130:124,bob=walking?Math.sin(frameClock*13)*2:0;ellipse(x,y+1,seated?22:18,7,'#271c1755');ctx.save();ctx.translate(x,y+bob);if(dx<-.05)ctx.scale(-1,1);if((custom&&art.complete&&art.naturalWidth)||(!custom&&peopleArt.complete&&peopleArt.naturalWidth)){ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';if(seated){const dw=height*s.w/s.h;ctx.drawImage(custom?clippedCharacter(custom):art,s.x,s.y,s.w,s.h*.72,-dw/2,-height+15,dw,height*.72);ctx.drawImage(custom?clippedCharacter(custom):art,s.x,s.y+s.h*.72,s.w,s.h*.28,-dw/2,-height*.28+15,dw,height*.28-15);}else if(walking){const dw=height*s.w/s.h,swing=Math.sin(frameClock*(chef&&G.boost>0?19:13));ctx.save();ctx.rotate(swing*.025);ctx.drawImage(custom?clippedCharacter(custom):art,s.x,s.y,s.w,s.h*.7,-dw/2,-height,dw,height*.7);ctx.restore();for(let leg=0;leg<2;leg++){const shift=swing*(leg?1:-1)*4;ctx.drawImage(custom?clippedCharacter(custom):art,s.x+leg*s.w/2,s.y+s.h*.7,s.w/2,s.h*.3,-dw/2+leg*dw/2+shift*.3,-height*.3-Math.max(0,shift),dw/2,height*.3);}}else ctx.drawImage(custom?clippedCharacter(custom):art,s.x,s.y,s.w,s.h,-height*s.w/s.h/2,-height,height*s.w/s.h,height);ctx.imageSmoothingEnabled=true;}else{rect(-13,-60,26,48,chef?'#e6d6ac':'#688657',5);ellipse(0,-72,12,15,'#c9935d');}ctx.restore();if(chef&&['bootsGaucho','bootsBagual'].includes(G.gear)){const color=G.gear==='bootsBagual'?'#42382b':'#b58147';rect(x-15,y-10,10,7,color,3,'#44341f');rect(x+5,y-9,10,7,color,3,'#44341f');}if(chef&&G.task?.type==='mate'){food('mate',x+17,y- 70,34);}if(chef&&G.boost>0&&!['mate','clean','mop'].includes(G.task?.type)){bar(x-24,y+10,48,G.boost/mateStats().duration,'#b8e67a');txt(Math.ceil(G.boost)+'s',x,y+27,12,'#e1ffae');}if(chef){const a=G.hands.filter(Boolean);if(a.length){ellipse(x,y-65,31,10,'#ddc290');for(let j=0;j<G.hands.length;j++){const i=G.hands[j];if(i)food(i.pid||i.key,x+(G.up.tray?(j?13:-13):0),y-70, 38,i);}}if(G.cosmetic)txt('★',x,y-106,17,'#ffd36b');}}
 
-function drawMounted(x,y,walking,dx){if(!horseArt.complete||!horseArt.naturalWidth)return false;const frame=walking?1+Math.floor(frameClock*7)%2:0,[sx,sy,sw,sh]=HORSE_CROPS[frame],height=126,width=height*sw/sh,bob=walking?Math.sin(frameClock*14):0;ellipse(x,y+2,42,10,'#211b1766');ctx.save();ctx.translate(x,y+bob);if(dx<-.05)ctx.scale(-1,1);ctx.imageSmoothingEnabled=false;ctx.drawImage(horseArt,sx,sy,sw,sh,-width/2,-height,width,height);ctx.restore();if(G.hands.some(Boolean)){ellipse(x,y-79,29,8,'#d9c48e');for(let j=0;j<G.hands.length;j++){const i=G.hands[j];if(i)food(i.pid||i.key,x+(G.up.tray?(j?13:-13):0),y-84,31,i);}}if(G.task?.type==='mate')food('mate',x+5,y-103,27);if(G.boost>0){bar(x-26,y+12,52,G.boost/mateStats().duration,'#bade70');txt(Math.ceil(G.boost)+'s',x,y+28,12,'#eaffb5');}return true;}
 
 function bubble(items,x,y,ratio=1,waiting=false){const width=items.length*43+20,left=x-width/2;ctx.save();ctx.shadowColor='#39230b66';ctx.shadowBlur=5;ctx.shadowOffsetY=3;rect(left,y-60,width,57,'#fff1c9',7,'#71512a');ctx.shadowBlur=0;ctx.shadowOffsetY=0;ctx.fillStyle='#fff1c9';ctx.beginPath();ctx.moveTo(x-6,y-4);ctx.lineTo(x,y+4);ctx.lineTo(x+6,y-4);ctx.fill();if(waiting){txt('⌛',x,y-34,25,'#e8be62');}else items.forEach((k,i)=>food(k,left+30+i*43,y-35,39));bar(left+9,y-14,width-18,ratio,ratio<.25?'#d7754b':ratio<.5?'#d2b44e':'#83a94c');ctx.restore();}
 
@@ -54,9 +51,4 @@ function clippedCharacter(sprite){
  if(characterCanvases.has(sprite))return characterCanvases.get(sprite);
  const art=CHARACTER_ART[sprite.file],canvas=document.createElement('canvas');canvas.width=art.naturalWidth;canvas.height=art.naturalHeight;
  const c=canvas.getContext('2d'),[x,y]=sprite.crop;c.beginPath();sprite.outline.forEach(([px,py],i)=>i?c.lineTo(x+px,y+py):c.moveTo(x+px,y+py));c.closePath();c.clip();c.drawImage(art,0,0);characterCanvases.set(sprite,canvas);return canvas;
-}
-function drawRoomSign(){
- // A pequena lousa substitui visualmente a cuia decorativa embutida nos fundos novos.
- const r=ROOMS[(G.room||1)-1];if(!r.cover)return;const [sx,sy,sw,sh]=r.cover,x=sx/1672*W,y=sy/350*198,w=sw/1672*W,h=sh/350*198;
- wood(x-3,y-3,w+6,h+6,true);rect(x,y,w,h,'#304332',2);txt('PROSA',x+w/2,y+h*.36,8,'#eddfb8');txt('E CAFÉ',x+w/2,y+h*.72,8,'#eddfb8');
 }

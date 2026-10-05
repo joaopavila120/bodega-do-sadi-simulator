@@ -34,14 +34,14 @@ function finishFootball(){
  e.result=result;e.fired.result=true;
  const celebrating=result==='gremio'||result==='inter';
  if(e.id==='grenal'&&celebrating){
-  for(const c of G.shop)if(c.state!=='leave'&&PEOPLE[c.person].team!==result){c.state='leave';setDestination(c,{x:884,y:769});}
+  for(const c of G.shop)if(c.state!=='leave'&&PEOPLE[c.person].team!==result){c.state='leave';setDestination(c,EXIT);}
   for(const g of [...G.groups]){
    if(g.state==='leave')continue;ensureDiners(g);
    const keep=[];
    g.diners.forEach((d,i)=>{
     if(PEOPLE[d.person].team===result){keep.push(d);return;}
     const p=groupSeatPosition(g,i),actor={id:G.next++,person:d.person,state:'leave',...p,path:[],dest:null};
-    setDestination(actor,{x:884,y:769});G.shop.push(actor);
+    setDestination(actor,EXIT);G.shop.push(actor);
     G.stats.waste+=d.delivered.reduce((sum,item)=>sum+(item.cost||0),0);
    });
    g.diners=keep;g.members=keep.map(d=>d.person);g.size=keep.length;

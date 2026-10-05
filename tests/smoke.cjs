@@ -97,8 +97,8 @@ async function main() {
     await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
     for (const entry of entries) for (const protocol of ['file', 'http']) {
       await load(protocol === 'file' ? pathToFileURL(path.join(root, entry)).href : base + '/' + entry);
-      assert(await evaluate(`G.day===1&&W===1280&&H===800&&canWalk(G.player.x,G.player.y)&&$('startLogo').naturalWidth>0`));
-      assert(await evaluate(`[roomArt,peopleArt,horseArt,furnitureArt].every(i=>i.complete&&i.naturalWidth>0)`));
+      assert(await evaluate(`G.day===1&&W===1600&&H===900&&canWalk(G.player.x,G.player.y)&&$('startLogo').naturalWidth>0`));
+      assert(await evaluate(`[roomArt,peopleArt,furnitureArt].every(i=>i.complete&&i.naturalWidth>0)`));
       assert(await evaluate(`canvas.width>=canvas.clientWidth*1.49&&camera.zoom===1`), 'Desktop inicia sem zoom com resolução interna maior');
       await evaluate(`action('zoomIn');draw()`);
       assert(await evaluate(`Math.abs(camera.zoom-1.2)<.01&&$('viewZoom').textContent==='120%'`), 'Controle de zoom amplia e atualiza a indicação');
@@ -121,14 +121,13 @@ async function main() {
     // O TXT é carregado automaticamente, também ao abrir o HTML sem servidor.
     await load(pathToFileURL(path.join(root, 'index.html')).href);
     await evaluate('localStorage.clear()');
-    await click('#startingRooms [data-id="2"]');
     await click('#start [data-act="new"]');await click('#overlay [data-act="close"]');
-    assert(await evaluate('G.room===2'));
+    assert(await evaluate('G.room===1&&!$("startingRooms")'));
     assert(await evaluate(`(()=>{const c=canvas.getBoundingClientRect(),s=$('gameSidebar').getBoundingClientRect();return c.right<=s.left+1;})()`));
     assert(await evaluate(`customDialogues.badin?.length>0&&!document.querySelector('[data-act="importDialogues"]')&&!$('dialogueFile')`));
     await evaluate(`localStorage.setItem('bodega-dialogues-txt',${JSON.stringify('[badin]\nAntiga | Fala antiga de teste')})`);
     await load(pathToFileURL(path.join(root, 'index.html')).href);
-    assert(await evaluate(`customDialogues.badin.length>0&&customDialogues.badin[0].reply!=='Fala antiga de teste'&&readSave().room===2`));
+    assert(await evaluate(`customDialogues.badin.length>0&&customDialogues.badin[0].reply!=='Fala antiga de teste'&&readSave().room===1`));
     dialogueOverride='[badin]\nComo vai? | Fala nova editada no TXT';
     await load(base+'/index.html');assert(await evaluate(`nextProse(6).reply==='Fala nova editada no TXT'`));
     dialogueOverride=null;
@@ -149,6 +148,8 @@ async function main() {
     for (const result of expanded) console.log('PASS ' + result);
     const social = await evaluate(fs.readFileSync(path.join(__dirname, 'social-scenarios.js'), 'utf8'));
     for (const result of social) console.log('PASS ' + result);
+    const progression = await evaluate(fs.readFileSync(path.join(__dirname, 'progression-scenarios.js'), 'utf8'));
+    for (const result of progression) console.log('PASS ' + result);
     const difficulty = await evaluate(fs.readFileSync(path.join(__dirname, 'difficulty-scenarios.js'), 'utf8'));
     for (const result of difficulty) console.log('PASS ' + result);
     await load(base + '/index.html');
@@ -179,7 +180,7 @@ async function main() {
     console.log('PASS teclado, lançamento em duas etapas e retomada real da bocha após recarregar');
 
     await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
-    await evaluate(`G.player={x:1220,y:735,dx:1,dy:0};enterCancha()`);
+    await evaluate(`G.player={x:1525,y:432,dx:1,dy:0};enterCancha()`);
     await click('#bocceButton');await click('[data-act="startBocce"]');
     await waitUntil(()=>evaluate(`G.bocce.phase==='direction'`),'O bolim não chegou no celular');
     await click('#bocceConfirm');assert(await evaluate(`G.bocce.phase==='power'`));
@@ -206,10 +207,10 @@ async function main() {
     await send('Page.navigate', { url: base + '/index.html' });
     await waitUntil(() => evaluate(`document.documentElement?.dataset.gameReady==='error'`), 'Faltou diagnóstico de script ausente');
     assert(await evaluate(`$('startupStatus').textContent.includes('card-game.js')&&document.querySelector('#start [data-act="new"]').disabled`));
-    blockedPath = '/assets/images/room.png';
+    blockedPath = '/assets/images/room2.png';
     await send('Page.navigate', { url: base + '/index.html' });
     await waitUntil(() => evaluate(`document.documentElement?.dataset.gameReady==='error'`), 'Faltou diagnóstico de imagem ausente');
-    assert(await evaluate(`$('startupStatus').textContent.includes('room.png')`));
+    assert(await evaluate(`$('startupStatus').textContent.includes('room2.png')`));
     console.log('PASS arquivos ausentes mostram diagnóstico em vez de botões sem ação');
   } finally {
     if (send) { try { await Promise.race([send('Browser.close'),delay(2000)]); } catch (_) {} }

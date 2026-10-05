@@ -1,0 +1,143 @@
+// Nível da bodega, metas e conquistas, despesas diárias, validade do estoque,
+// calendário gaúcho e ciclo de dia e noite.
+'use strict';
+
+// ---------- Avisos em destaque ----------
+let bannerQueue=[],bannerTimer=null;
+function showBanner(title,subtitle='',kind='info'){
+ bannerQueue.push({title,subtitle,kind});if(!bannerTimer)nextBanner();
+}
+function nextBanner(){
+ const host=$('banner'),b=bannerQueue.shift();
+ if(!host||!b){bannerTimer=null;host?.classList.add('hidden');return;}
+ host.className='banner banner-'+b.kind;host.innerHTML=`<b>${escapeHTML(b.title)}</b>${b.subtitle?'<small>'+escapeHTML(b.subtitle)+'</small>':''}`;
+ bannerTimer=setTimeout(()=>{host.classList.add('hidden');bannerTimer=setTimeout(nextBanner,350);},3600);
+}
+
+// ---------- Nível da bodega ----------
+const LEVELS=[
+ {xp:0,name:'Bodega de esquina'},{xp:300,name:'Bodega do bairro'},{xp:800,name:'Venda da colônia'},
+ {xp:1600,name:'Armazém de respeito'},{xp:2800,name:'Bodega afamada'},{xp:4500,name:'Referência no interior'},{xp:7000,name:'Bodega lendária'}
+];
+function bodegaLevel(xp=G.xp){let n=1;LEVELS.forEach((l,i)=>{if(xp>=l.xp)n=i+1;});return n;}
+function levelInfo(level=bodegaLevel()){return LEVELS[level-1];}
+function levelProgress(){const l=bodegaLevel();if(l>=LEVELS.length)return 1;return clamp((G.xp-LEVELS[l-1].xp)/(LEVELS[l].xp-LEVELS[l-1].xp),0,1);}
+function gainXP(n){G.xp=Math.max(0,(G.xp||0)+n);}
+// O aluguel cresce com a bodega; o caderno de fiado também comporta mais.
+function rentForLevel(level=bodegaLevel()){return 15+8*(level-1);}
+function creditLimit(level=bodegaLevel()){return 40+20*level;}
+
+// ---------- Metas e conquistas ----------
+const ACHIEVEMENTS=[
+ {id:'portas',name:'Portas abertas',desc:'Concluir o primeiro dia.',xp:50,test:()=>G.day>1||G.phase==='closed'&&G.day===1&&!tutorialActive()},
+ {id:'freguesia',name:'Freguesia fiel',desc:'Fazer 100 atendimentos.',xp:120,test:()=>G.totalServed>=100},
+ {id:'casacheia',name:'Casa cheia',desc:'Fazer 500 atendimentos.',xp:300,test:()=>G.totalServed>=500},
+ {id:'caixa',name:'Caixa forrado',desc:'Juntar R$ 1.000 no caixa.',xp:150,test:()=>!G.testMode&&G.cash>=1000},
+ {id:'diadeouro',name:'Dia de ouro',desc:'Lucro operacional de R$ 150 em um dia.',xp:150,test:()=>(G.report?.profit||0)>=150},
+ {id:'completa',name:'Bodega completa',desc:'Comprar todas as melhorias.',xp:400,test:()=>UPGRADES.every(u=>G.up[u.id])},
+ {id:'enfeitada',name:'Galpão enfeitado',desc:'Ter 10 peças de decoração.',xp:120,test:()=>decorCount()>=10},
+ {id:'museu',name:'Museu gaúcho',desc:'Ter todas as peças de decoração.',xp:300,test:()=>decorCount()===DECOR.length},
+ {id:'agenda',name:'Agenda cheia',desc:'Ganhar o contato de todos os personagens especiais.',xp:250,test:()=>specialPeople().every(hasContact)},
+ {id:'amigo',name:'Amigo do peito',desc:'Chegar à amizade máxima com alguém.',xp:200,test:()=>specialPeople().some(i=>G.friends[i]>=100)},
+ {id:'truco',name:'Rei do truco',desc:'Ganhar um campeonato de truco.',xp:200,test:()=>sportState().truco.titles>0},
+ {id:'bocha',name:'Mão boa na bocha',desc:'Ganhar um campeonato de bocha.',xp:200,test:()=>sportState().bocha.titles>0},
+ {id:'fiado',name:'Palavra de bodegueiro',desc:'Receber 10 contas do fiado.',xp:150,test:()=>(G.fiadoPaid||0)>=10},
+ {id:'farroupilha',name:'Pilchado',desc:'Fechar um dia da Semana Farroupilha.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='farroupilha'},
+ {id:'junina',name:'Arraiá do pinhão',desc:'Fechar uma festa junina.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='junina'},
+ {id:'rodeio',name:'Laçador',desc:'Fechar um dia de rodeio de CTG.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='rodeio'},
+ {id:'grenal',name:'Clássico na bodega',desc:'Fechar um dia de Gre-Nal.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='grenal'},
+ {id:'lendaria',name:'Bodega lendária',desc:'Chegar ao nível máximo da bodega.',xp:0,test:()=>bodegaLevel()>=LEVELS.length}
+];
+function checkAchievements(){
+ G.achievements??={};
+ for(const a of ACHIEVEMENTS){
+  if(G.achievements[a.id]||!a.test())continue;
+  G.achievements[a.id]=G.day;gainXP(a.xp);
+  showBanner('Conquista: '+a.name,a.desc+(a.xp?' · +'+a.xp+' XP':''),'achievement');AudioEngine.heart();
+ }
+}
+let progressClock=0;
+function progressCheck(){
+ if(!started||!G)return;
+ checkAchievements();
+ const level=bodegaLevel();G.levelSeen??=level;
+ if(level>G.levelSeen){G.levelSeen=level;showBanner('Nível '+level+' · '+levelInfo(level).name,'Novas melhorias liberadas. Aluguel agora: '+money(rentForLevel(level))+' por dia.','level');AudioEngine.ready();}
+ socialCheck();
+}
+function progressTick(dt){progressClock+=dt;if(progressClock<.5)return;progressClock=0;progressCheck();}
+function achievementsHTML(){
+ const l=bodegaLevel(),next=LEVELS[l];
+ return `<section class="goals"><h3>Nível ${l} · ${levelInfo(l).name}</h3><div class="xp-track"><div style="width:${Math.round(levelProgress()*100)}%"></div></div><p>${G.xp} XP${next?' · faltam '+(next.xp-G.xp)+' para '+next.name:' · nível máximo'}. Aluguel diário: ${money(rentForLevel(l))} · limite do fiado: ${money(creditLimit(l))}.</p>
+ <div class="level-steps">${LEVELS.map((v,i)=>`<span class="${i<l?'done':''}">${i+1} · ${v.name}</span>`).join('')}</div>
+ <h3>Conquistas · ${Object.keys(G.achievements||{}).length}/${ACHIEVEMENTS.length}</h3><div class="achievements">${ACHIEVEMENTS.map(a=>{const got=G.achievements?.[a.id];return `<div class="achievement ${got?'got':''}"><b>${got?'★':'☆'} ${a.name}</b><small>${a.desc}${a.xp?' · '+a.xp+' XP':''}${got?' · dia '+got:''}</small></div>`;}).join('')}</div></section>`;
+}
+
+// ---------- Validade do estoque e despesas ----------
+// Fração perdida em cada virada de noite. O freezer corta a perda pela metade.
+const PERISH={salada:.5,pao_xis:.25,burger:.2,bacon:.2,coracao:.25,ovo:.1,queijo:.1,cerveja:.1,cafe:.3,bergamota:.15};
+function spoilOvernight(){
+ const factor=G.up.freezer?.5:1,lost=[];let value=0;
+ for(const[k,rate]of Object.entries(PERISH)){
+  if(!unlocked(k)||!G.stock[k])continue;
+  const n=bulk(k)?Math.round(G.stock[k]*rate*factor/50)*50:Math.floor(G.stock[k]*rate*factor);
+  if(n<=0)continue;G.stock[k]-=n;value+=n*(G.avg[k]||0);lost.push(nameOf(k)+' '+stockText(k,n));
+ }
+ G.stats.spoiled=round(value);G.stats.waste+=round(value);G.stats.spoiledItems=lost;
+}
+function litLamps(){return DECOR.filter(d=>d.light&&decorVisible(d)).length;}
+function dailyCosts(){
+ const share=Math.min(G.elapsed/DAY,1),power=round(6+6*share+litLamps()),rent=G.day===1?0:rentForLevel();
+ return {power,rent};
+}
+
+// ---------- Calendário gaúcho ----------
+// Cada dia de jogo é um dia da semana; cada semana corresponde a um mês, começando em março.
+const WEEKDAYS=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+const MONTHS=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+function calendar(day=G.day){const i=Math.max(0,day-1),weekday=i%7,week=Math.floor(i/7),month=(2+week)%12;return {weekday,week,month,name:WEEKDAYS[weekday],monthName:MONTHS[month],label:WEEKDAYS[weekday]+' · '+(month===8?(14+weekday)+' de setembro':'semana de '+MONTHS[month])};}
+const RODEIO_MONTHS=[0,1,9,10],WINTER=[5,6,7];
+function fixedEventFor(day){
+ if(day===1)return 'normal';
+ const{weekday,week,month}=calendar(day);
+ if(weekday===6)return ['grenal','gremio','inter'][week%3];
+ if(month===8)return 'farroupilha';
+ if(month===5&&weekday>=4)return 'junina';
+ if(weekday===5)return RODEIO_MONTHS.includes(month)?'rodeio':week%2?'campeonato':'baile';
+ if(weekday===4)return 'truco';
+ return null;
+}
+function randomEventPool(day){const pool=['normal','chuva','radio','motos','feira'];if(WINTER.includes(calendar(day).month))pool.push('geada','chuva');return pool;}
+function weekPreview(day=G.day){
+ const first=day-calendar(day).weekday;
+ return `<div class="week-strip">${WEEKDAYS.map((w,i)=>{const d=first+i,fixed=d>=1?fixedEventFor(d):null,e=fixed?EVENTS[fixed]:null,today=d===day;return `<div class="${today?'today':''}${d<day?' past':''}"><b>${w.slice(0,3)}</b><span>${e?e.icon:'?'}</span><small>${e?e.name:'sorteio'}</small></div>`;}).join('')}</div>`;
+}
+
+// ---------- Dia e noite ----------
+// O expediente vai das 14h às 23h; a preparação é à tarde.
+function gameMinutes(){if(G.phase==='prep')return 13*60;if(G.phase==='closed')return 23*60+30;return 14*60+Math.min(G.elapsed/DAY,1)*540;}
+function gameTimeText(){const m=Math.floor(gameMinutes());return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function nightLevel(){return clamp((gameMinutes()-18*60)/120,0,1);}
+let nightCanvas=null;
+function drawNight(){
+ const n=nightLevel();if(n<=0)return;
+ nightCanvas??=document.createElement('canvas');const scale=.5;
+ if(nightCanvas.width!==W*scale){nightCanvas.width=W*scale;nightCanvas.height=H*scale;}
+ const c=nightCanvas.getContext('2d');c.setTransform(scale,0,0,scale,0,0);c.globalCompositeOperation='source-over';c.clearRect(0,0,W,H);
+ const lamps=DECOR.filter(d=>d.light&&decorVisible(d));
+ c.fillStyle=`rgba(10,14,36,${n*Math.max(.24,.5-lamps.length*.06)})`;c.fillRect(0,0,W,H);
+ c.globalCompositeOperation='destination-out';
+ const hole=(x,y,r,a)=>{const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);};
+ for(const d of lamps)hole(roomX(d.light[0]),roomY(d.light[1]),340,.95);
+ if(decorState().fogao_lenha===true)hole(roomX(FIRE_LIGHT[0]),roomY(FIRE_LIGHT[1]),240,.8);
+ if(G.tv&&isFootball())hole(1228,147,200,.6);
+ hole(1524,300,150,.45);
+ hole(G.player.x,G.player.y-60,120,.35);
+ ctx.drawImage(nightCanvas,0,0,W,H);
+}
+function drawNightWindow(){
+ const n=nightLevel();if(n<=0)return;
+ const[x0,y0,x1,y1]=RAIN_WINDOW.view,left=roomX(x0),top=roomY(y0),width=roomX(x1)-left,height=roomY(y1)-top;
+ rect(left,top,width,height,`rgba(8,14,40,${.72*n})`);
+ if(!isRainDay())for(let i=0;i<14;i++){ctx.globalAlpha=n*(.5+.5*Math.sin(frameClock*2+i));rect(left+(i*53.7)%width,top+(i*17.3)%(height*.45),1.6,1.6,'#f4f0d2');}
+ ctx.globalAlpha=1;
+}

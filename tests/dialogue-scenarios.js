@@ -10,7 +10,7 @@
   }
   const special=G.dialogue;
   deliveryConversation(0,{});
-  check(G.dialogue===special&&G.friends[0]===3,'entrega comum silenciosa preserva fala atual e afeto');
+  check(G.dialogue===special&&G.friends[0]===0,'entrega comum silenciosa preserva fala atual; fregueses comuns não somam afeto');
   Math.random=()=>.1;deliveryConversation(0,{});
   check(G.dialogue!==special&&G.dialogue.name===PEOPLE[0].name&&!G.dialogueQueue.length,'sorteio permite fala comum e substitui a atual');
   progressionTick(14);

@@ -41,6 +41,9 @@ function pickVisitor(extra=[]) {
  if(G.event.id==='grenal'&&['gremio','inter'].includes(G.event.result))team=G.event.result;
  let pool=visitorPool(team).filter(i=>visitorAvailable(i,extra));
  if(!team){const fans=Math.random()<.18;const subset=pool.filter(i=>fans?!!PEOPLE[i].team:!PEOPLE[i].team);if(subset.length)pool=subset;}
+ // Personagens especiais são raros: aparecem em cerca de 12% das chegadas.
+ const specials=pool.filter(isSpecial),commons=pool.filter(i=>!isSpecial(i));
+ if(specials.length&&(!commons.length||Math.random()<SPECIAL_CHANCE))pool=specials;else if(commons.length)pool=commons;
  return pool.length?pick(pool):null;
 }
 

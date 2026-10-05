@@ -1,6 +1,6 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
- const reset=()=>{G=fresh();G.day=3;G.tutorial.complete=true;G.up.trago=true;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));G.day=3;G.tutorial.complete=true;G.up.trago=true;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
  const advance=n=>{for(let t=0;t<n;t+=.05){for(const table of G.tables)if(table.fight)resolveFight(table,true);simulate(.05);if(modal==='celebration')closeDialog(true);}};
  reset();G.phase='open';const first=spawnGroup({size:2,targetTable:0,members:[0,1]});const second=spawnGroup({size:1,members:[PEOPLE.findIndex(p=>p.id==='badin')],fixedOrders:['xis_salada','refri']});
  check(first.table===0&&second.table===1&&second.state==='walkTable','fila ocupa a mesa de truco livre inclusive com xis e refrigerante');

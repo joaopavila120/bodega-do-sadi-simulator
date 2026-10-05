@@ -1,7 +1,7 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
  const step=(seconds)=>{for(let t=0;t<seconds;t+=1/60)bocceTick(1/60);};
- const reset=()=>{G=fresh();started=true;paused=false;modal=null;phoneOpen=false;keys.clear();AudioEngine.on=false;G.cash=500;['start','overlay'].forEach(id=>$(id).classList.add('hidden'));};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));started=true;paused=false;modal=null;phoneOpen=false;keys.clear();AudioEngine.on=false;G.cash=500;['start','overlay'].forEach(id=>$(id).classList.add('hidden'));};
  const begin=(wager=25,level='normal')=>{G.phase='closed';G.report={...G.stats,end:G.cash,profit:0};bocceMenu();$('bocceWager').value=String(wager);$('bocceLevel').value=level;startBocceGame();};
  reset();bocceMenu();check(!G.bocce&&modal==='bocceSetup','bocha disponível antes de abrir a bodega');closeDialog(true);
  begin();check(G.bocce.wager===25&&G.cash===475&&G.stats.bocceStakes===25,'aposta da bocha sai do caixa uma única vez');

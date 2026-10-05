@@ -1,14 +1,13 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
- const reset=()=>{G=fresh();started=true;paused=false;modal=null;phoneOpen=false;keys.clear();AudioEngine.on=false;G.tutorial.guided=false;['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));started=true;paused=false;modal=null;phoneOpen=false;keys.clear();AudioEngine.on=false;G.tutorial.guided=false;['start','overlay','phone'].forEach(id=>$(id).classList.add('hidden'));};
  const approach=id=>{const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);
   for(let x=f.x-50;x<f.x+f.w+50;x+=8)for(let y=f.y-50;y<f.y+f.h+50;y+=8){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);
  };
  reset();check($('openButton').closest('#gameSidebar')&&!document.querySelector('.hud #openButton'),'abrir bodega fica no menu lateral');
  check(!$('orderRail')&&$('toasts').closest('#gameSidebar')&&getComputedStyle($('toasts')).position!=='fixed','nenhuma faixa de pedidos ou avisos ocupa o topo');
  $('start').classList.remove('hidden');const logo=$('startLogo');logo.scrollIntoView({block:'center'});const r=logo.getBoundingClientRect();check(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2).closest('#start'),'tela inicial cobre totalmente a interface de gameplay');$('start').classList.add('hidden');
- const selectable=[...$('startingCharacter').options].map(o=>o.value);
- check(selectable.length===9&&!selectable.some(id=>id.startsWith('gremio')||id.startsWith('inter')||originalIds.includes(id)),'fregueses comuns e torcedores não aparecem na seleção');
+ check(!$('startingCharacter')&&$('avatarPreview'),'tela inicial mostra só o Sadi, sem seleção de personagem');
  for(const day of [2,3,5]){
   const sizes=new Set();for(let i=0;i<90;i++){reset();G.day=day;G.phase='open';G.elapsed=30;const g=spawnGroup({targetTable:1});if(!g||g.size<1||g.size>difficulty().maxGroup)throw Error('Truco fora dos limites');sizes.add(g.size);}
   check(sizes.has(difficulty().maxGroup),'turmas de truco seguem a progressão do dia '+day);
@@ -30,7 +29,7 @@
  reset();takeFromBin('burger');useGrill(0);kitchenTick(COOK.burger+.1);useGrill(0);const cooked=held();approach('bin:burger');interact();save();G=readSave();approach('bin:burger');interact();check(held()?.ready&&held().heat===cooked.heat&&held().cost===cooked.cost,'ingrediente cozido devolvido preserva estado e custo ao salvar e retirar');
  held().burned=true;const count=G.stock.burger;interact();check(held().burned&&G.stock.burger===count,'produto queimado não contamina o estoque');takeHeld();
  G.up.tray=true;G.slot=1;approach('shop:cigarro');interact();G.hands[0]={kind:'ingredient',key:'pao_xis',cost:1.5};interact();check(!G.hands[1]&&G.hands[0]?.key==='pao_xis','devolução usa apenas o espaço selecionado da bandeja');G.hands=[null,null];G.slot=0;
- G.player={x:1220,y:735,dx:1,dy:0};refreshHUD();check(!$('enterCanchaButton').classList.contains('hidden')&&$('enterCanchaButton').classList.contains('context-button'),'cancha oferece botão contextual com o estilo dos outros controles');action('cancha');check(G.atCancha,'botão da cancha abre a porta');leaveCancha();
+ G.player={x:1525,y:432,dx:1,dy:0};refreshHUD();check(!$('enterCanchaButton').classList.contains('hidden')&&$('enterCanchaButton').classList.contains('context-button'),'cancha oferece botão contextual com o estilo dos outros controles');action('cancha');check(G.atCancha,'botão da cancha abre a porta');leaveCancha();
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);
  const bubbles=customerOrderBubbles(),overlap=(a,b)=>a.left<b.left+b.width&&a.left+a.width>b.left&&a.top<b.top+b.height&&a.top+a.height>b.top;

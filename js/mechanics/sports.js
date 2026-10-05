@@ -15,7 +15,7 @@ function sportTalk(match,type,action){
  if(!match)return;
  if(!specialOpponent(match.opponent))match.opponent=pick(sportPeople());
  const spectator=match.spectator??(match.spectator=pick(sportPeople().filter(i=>i!==match.opponent)));
- match.talk=[match.opponent,spectator].map(person=>{const line=sportLine(person,type,action);return {person,player:line.player,reply:line.reply};});
+ match.talk=(type==='bocha'?[match.opponent]:[match.opponent,spectator]).map(person=>{const line=sportLine(person,type,action);return {person,player:line.player,reply:line.reply};});
  match.talkLife=15;match.talkSequence=(match.talkSequence||0)+1;
 }
 function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<p><b>'+escapeHTML(sportName(line.person))+'</b><small>Você: '+escapeHTML(line.player)+'</small>'+escapeHTML(line.reply)+'</p>').join('')+'</div>':'';}
@@ -35,15 +35,15 @@ function updateBocceSocial(){
 function settleSport(type,match,won){
  if(match.sportSettled)return;match.sportSettled=true;
  const s=sportState()[type];s.matches++;if(won)s.wins++;s.reputation=clamp(s.reputation+(won?10:-3),0,100);
- if(specialOpponent(match.opponent))G.friends[match.opponent]=clamp((G.friends[match.opponent]||0)+2,0,100);
+ addFriendship(match.opponent,won?5:3);gainXP(won?20:6);
  sportTalk(match,type,won?'vitoria':'derrota');
- if(match.tutorial)sportState().tutorialDone=true;
+ if(match.tutorial){sportState().tutorialDone=true;finishBocceTutorial();}
  if(match.bracket)recordSportMatch(won);
 }
 function prepareAfterHours(){
  const s=sportState();if(s.challengeDay===G.day)return;s.challengeDay=G.day;
  if(G.day===1&&G.tutorial.complete&&!s.tutorialDone&&!s.tutorialOffered){s.tutorialOffered=true;s.challenge={person:PEOPLE.findIndex(p=>p.id==='manolima'),wager:0,tutorial:true};}
- else if(G.day>1&&Math.random()<.25)s.challenge={person:pick(sportPeople()),wager:pick([5,10,25]),tutorial:false};
+ else if(G.day>1&&contactPeople().length&&Math.random()<.25)s.challenge={person:pick(contactPeople()),wager:pick([5,10,25]),tutorial:false};
 }
 function showSportChallenge(){
  const challenge=sportState().challenge;if(!challenge)return false;
@@ -53,11 +53,15 @@ function answerSportChallenge(accept){
  const s=sportState(),c=s.challenge;if(!c)return;
  if(accept&&!hasCash(c.wager))return;
  s.challenge=null;
- if(!accept){if(!c.tutorial)G.friends[c.person]=Math.max(0,(G.friends[c.person]||0)-3);save();closeDialog(true);showReport();return;}
+ if(!accept){if(!c.tutorial)addFriendship(c.person,-3);save();closeDialog(true);showReport();return;}
  closeDialog(true);G.atCancha=true;
  launchSport('bocha',c.person,{wager:c.wager,tutorial:c.tutorial});
 }
-function launchSport(type,opponent,options={}){
+// Partidas do sistema (tutorial, desafio e campeonato) aceitam adversário fora da agenda.
+let sportLaunch=null;
+function invitablePeople(){return [...new Set([sportLaunch,sportState().challenge?.person,...contactPeople()].filter(i=>Number.isInteger(i)&&i>=0))];}
+function launchSport(type,opponent,options={}){sportLaunch=opponent;try{return launchSportNow(type,opponent,options);}finally{sportLaunch=null;}}
+function launchSportNow(type,opponent,options={}){
  if(G.bocce||G.game||G.task)return false;
  if(type==='bocha'){
   bocceMenu();if(modal!=='bocceSetup')return false;

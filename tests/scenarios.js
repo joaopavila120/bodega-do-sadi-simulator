@@ -15,7 +15,7 @@
     }
     throw new Error('Estação inacessível: ' + id);
   };
-  G = fresh(); G.tutorial.guided=false; started = true; paused = false; modal = null; phoneOpen = false;
+  G = fresh(); G.tutorial.guided=false; G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1])); started = true; paused = false; modal = null; phoneOpen = false;
   G.spawnShop = G.spawnGroup = 999; AudioEngine.on = false;
   for (const id of ['start', 'overlay', 'phone']) $(id).classList.add('hidden');
   check(unlocked('pao_xis') && unlocked('cigarro') && !unlocked('cafe'), 'produtos básicos disponíveis e melhorias bloqueadas');
@@ -34,9 +34,9 @@
   spawnShop({pid:'cigarro'}); advance(12, customersTick); readyProduct('cigarro'); approach('service');
   const retailBalance = G.cash; interact();
   check(!held() && G.cash > retailBalance, 'balcão comercial acessível e venda de cigarro funcional');
-  G.phase = 'prep'; G.rep = 100; G.cash = 10000;
+  G.phase = 'prep'; G.rep = 100; G.cash = 10000; G.xp = 99999; G.levelSeen = 7;
   for (const upgrade of UPGRADES) buyUpgrade(upgrade.id);
-  check(G.stock.cafe === 12 && G.up.coffee && G.gear === 'bootsBagual' && !G.up.horse, 'compras e cafeteira disponíveis; montaria permanece indisponível');
+  check(G.stock.cafe === 12 && G.up.coffee && G.gear === 'bootsBagual' && !G.up.horse, 'compras e cafeteira disponíveis; cavalo removido');
   for (const f of furniture()) approach(f.id);
   check(true, 'todas as estações e mesas compradas podem ser alcançadas');
   approach('coffee'); keys.add('e'); interact(); advance(1.45, holdTick); keys.clear();

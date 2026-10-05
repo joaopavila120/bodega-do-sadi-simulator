@@ -3,23 +3,31 @@
   const results=[];
   const check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
   const tick=(seconds,fn)=>{for(let t=0;t<seconds;t+=.05)fn(.05);};
-  const reset=()=>{G=fresh();G.tutorial.guided=false;started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;for(const id of ['start','overlay','phone'])$(id).classList.add('hidden');};
+  const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));G.tutorial.guided=false;started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;for(const id of ['start','overlay','phone'])$(id).classList.add('hidden');};
   const approach=id=>{const f=furniture().find(f=>f.id===id);for(let x=f.x-50;x<=f.x+f.w+50;x+=8)for(let y=f.y-50;y<=f.y+f.h+50;y+=8)if(canWalk(x,y)){G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Não alcançou '+id);};
   reset();
-  check(roomUnlocked(1)&&roomUnlocked(2)&&!roomUnlocked(3),'dois cenários iniciais e terceiro bloqueado');
+  check(typeof ROOMS==='undefined'&&roomArt.src.endsWith('assets/images/room2.png')&&roomArt.naturalWidth===1672,'cenário único e vazio carregado');
+  check(DECOR.length>=20&&DECOR.every(d=>DECOR_ART[d.id].naturalWidth>0)&&rainWindowArt.naturalWidth>0,'sprites de decoração e janela de chuva carregam');
+  check(decorCount()===0&&!DECOR.some(decorVisible),'bodega nova começa sem decoração');
   G.rep=100;G.cash=10000;
-  for(const id of ['coffee','bootsGaucho','mateCuiudo'])buyUpgrade(id);
-  check(!roomUnlocked(3),'três melhorias não liberam cenário antes da hora');
-  buyUpgrade('tray');buyUpgrade('tray');
-  check(improvementCount()===4&&roomUnlocked(3)&&!roomUnlocked(4),'quatro compras únicas desbloqueiam Room 3');
-  for(const id of ['pepino','bergamota','amendoim','salame'])buyUpgrade(id);
-  check(roomUnlocked(4)&&!roomUnlocked(5),'oito melhorias desbloqueiam Room 4');
-  for(const id of ['pinhao','bitter','capacity','bacon'])buyUpgrade(id);
-  chooseRoom(5);closeDialog(true);save();
-  check(roomUnlocked(5)&&readSave().room===5,'doze melhorias desbloqueiam Room 5 e salvam a escolha');
-  G.phase='open';chooseRoom(2);check(G.room===5,'cenário só pode ser trocado fora do expediente');
-  for(const room of ROOMS){G.room=room.id;draw();}
-  check(roomImages.every(im=>im.naturalWidth>0),'cinco cenários carregam e renderizam');
+  for(const id of ['coffee','bootsGaucho','mateCuiudo','tray'])buyUpgrade(id);
+  check(improvementCount()===4&&decorCount()===0,'melhorias não contam como decoração');
+  togglePhone(true);phoneTab='decor';renderPhone();
+  check(document.querySelector('[data-act="tab"][data-id="decor"]').classList.contains('active')&&$('phoneContent').querySelectorAll('[data-act="decorBuy"]').length===DECOR.length,'aba Estética lista todas as peças');
+  const cash=G.cash;buyDecor('kit_chimarrao');check(!decorOwned('kit_chimarrao')&&G.cash===cash,'kit do chimarrão exige a cômoda');
+  buyDecor('comoda');buyDecor('kit_chimarrao');buyDecor('bandeira');
+  check(decorCount()===3&&G.cash===cash-90-40-60&&decorVisible(DECOR.find(d=>d.id==='kit_chimarrao')),'compra desconta o caixa e expõe a peça');
+  toggleDecor('comoda');check(decorState().comoda===false&&decorState().kit_chimarrao===false,'guardar a base guarda o que está em cima');
+  toggleDecor('kit_chimarrao');check(decorState().comoda===true&&decorState().kit_chimarrao===true,'expor a peça devolve a base à parede');
+  buyDecor('bandeira');check(decorCount()===3,'peça comprada não é cobrada de novo');
+  save();check(readSave().decor.bandeira===true&&readSave().decor.comoda===true,'decoração sobrevive ao salvamento');
+  togglePhone(false);
+  for(const id of ['normal','chuva','gremio']){G.event={id,seen:true,fired:{}};draw();}
+  {const originalWood=wood;let tvDrawn=false;wood=(x,...rest)=>{if(x===943)tvDrawn=true;return originalWood(x,...rest);};
+   try{G.tv=true;G.event={id:'normal',seen:true,fired:{}};drawTelevision();check(!tvDrawn,'TV fica guardada em dia sem futebol');
+    for(const id of ['gremio','inter','grenal']){tvDrawn=false;G.event={id,seen:true,fired:{}};drawTelevision();check(tvDrawn,'TV aparece no jogo: '+id);}}
+   finally{wood=originalWood;}}
+  const oldSave=fresh();delete oldSave.decor;oldSave.room=4;check(normalizeSave(oldSave).room===1&&Object.keys(normalizeSave(oldSave).decor).length===0,'salvamentos antigos migram para o cenário único');
 
   reset();takeFromBin('pao_xis');useBench(0);takeFromBin('queijo');useBench(0);
   check(benchParts(G.kitchen.bench[0]).includes('queijo')&&!held(),'queijo entra diretamente no pão');

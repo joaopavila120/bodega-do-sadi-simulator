@@ -1,6 +1,6 @@
 (() => {
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
- const reset=()=>{G=fresh();started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;AudioEngine.on=false;['start','overlay','phone','bocceScreen'].forEach(id=>$(id).classList.add('hidden'));document.body.classList.remove('playing-bocce');};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));started=true;paused=false;modal=null;phoneOpen=false;keys.clear();G.spawnShop=G.spawnGroup=999;AudioEngine.on=false;['start','overlay','phone','bocceScreen'].forEach(id=>$(id).classList.add('hidden'));document.body.classList.remove('playing-bocce');};
  const advance=seconds=>{for(let n=0;n<seconds;n+=.05)customersTick(.05);};
  reset();check(G.event.id==='normal'&&!fightsAllowed(),'primeiro dia sempre tranquilo e sem brigas');
  for(const day of [1,2,3,4,5,7]){
@@ -13,8 +13,12 @@
  G.day=2;G.event.id='campeonato';check(triggerFight(G.tables[1]),'campeonato permite brigas antes do nível avançado');G.tables[1].fight=null;
  G.event.id='normal';G.day=5;check(triggerFight(G.tables[1]),'dia 5 libera brigas no truco comum');G.tables[1].fight=null;
  const modes=G.tables.map(t=>t.mode).join();toggleTable(1);check(G.tables.map(t=>t.mode).join()===modes,'troca manual de mesas permanece desativada');
- reset();let previous=G.event.id;const draws=[];for(let day=2;day<80;day++){const e=eventForDay(day,G);if(e.id===previous)throw Error('Evento repetido em dias seguidos');draws.push(e.id);G.event=e;previous=e.id;}
- check(new Set(draws.slice(0,Object.keys(EVENTS).length)).size===Object.keys(EVENTS).length,'sorteio percorre os eventos sem sequência fixa nem repetição consecutiva');
+ reset();let previous=G.event.id;const draws=[];for(let day=2;day<=170;day++){const e=eventForDay(day,G),c=calendar(day),fixed=fixedEventFor(day);if(!fixed&&e.id===previous)throw Error('Evento sorteado repetido em dias seguidos');
+  if(c.weekday===6&&!['gremio','inter','grenal'].includes(e.id))throw Error('Domingo sem futebol');if(c.month===8&&c.weekday<6&&e.id!=='farroupilha')throw Error('Setembro sem Semana Farroupilha');
+  if(c.month===5&&c.weekday>=4&&c.weekday<6&&e.id!=='junina')throw Error('Junho sem festa junina');if(c.weekday===4&&![5,8].includes(c.month)&&e.id!=='truco')throw Error('Sexta sem noite do truco');
+  if(e.id==='geada'&&![5,6,7].includes(c.month))throw Error('Geada fora do inverno');draws.push(e.id);G.event=e;previous=e.id;}
+ check(Object.keys(EVENTS).every(id=>draws.includes(id)),'calendário gaúcho: domingo de futebol, sexta de truco, junina, Farroupilha, rodeio e sorteio sem repetição');
+ check(eventForDay(7).id==='grenal'&&calendar(1).name==='Segunda'&&calendar(7).name==='Domingo'&&calendar(8).monthName==='abril','o primeiro domingo tem Gre-Nal e cada semana é um mês');
  G.phase='closed';const next=plannedEvent();planDay();closeDialog(true);check(plannedEvent().id===next.id&&readSave().nextEvent.id===next.id,'consultar ou recarregar a previsão não sorteia outro evento');
  reset();finishDay();check(G.tv&&G.tvAwardPending&&modal==='tvAward'&&$('dialogContent').textContent.includes('sorteio do comércio local'),'TV anunciada ao concluir o primeiro dia');
  save();check(readSave().tvAwardPending,'anúncio pendente da TV sobrevive ao salvamento');action('tvAwardClose');check(modal==='report'&&!G.tvAwardPending,'anúncio da TV conduz ao relatório sem prêmio duplicado');nextDay('automatic');closeDialog(true);check(G.day===2&&G.tv,'segundo dia mantém a TV e começa a nova progressão');
@@ -22,17 +26,17 @@
  G.day=2;G.player={x:510,y:585,dx:1,dy:0};refreshHUD();check($('tutorialHint').classList.contains('hidden')&&!$('hint').textContent.includes('WASD'),'dicas gerais e tutorial desaparecem depois do primeiro dia');
  G.mateHerb=0;G.mateEmptyNotified=false;notifyEmptyMate();check($('toasts').textContent.includes('Acabou seu mate, traga mais erva para sua cuia.'),'aviso de cuia vazia usa a orientação solicitada');
  refreshHUD();check($('refillMateContext').classList.contains('hidden')&&!$('mateStock'),'refil não ocupa a interface longe da erva');
- G.player={x:919,y:303,dx:0,dy:-1};refreshHUD();check(!$('refillMateContext').classList.contains('hidden')&&$('hint').textContent.includes('Encher sua cuia de erva'),'F aparece somente ao chegar perto da erva');const stock=G.stock.erva;refillMate();check(G.mateHerb===500&&G.stock.erva===stock-500&&!G.mateEmptyNotified,'refil contextual consome estoque e rearma aviso');
+ G.player={x:1110,y:440,dx:0,dy:-1};refreshHUD();check(!$('refillMateContext').classList.contains('hidden')&&$('hint').textContent.includes('Encher sua cuia de erva'),'F aparece somente ao chegar perto da erva');const stock=G.stock.erva;refillMate();check(G.mateHerb===500&&G.stock.erva===stock-500&&!G.mateEmptyNotified,'refil contextual consome estoque e rearma aviso');
  check(!document.querySelector('[data-act="map"]')&&!document.querySelector('[data-act="tableMode"]')&&!$('combo')&&!$('tableOrders'),'mapa, troca de mesa, combo e lista lateral foram removidos');
- check(!$('gameSidebar').querySelector('[data-act="rooms"]')&&$('phone').querySelector('[data-act="rooms"]'),'trocar cenário fica exclusivamente no celular');
+ check(!document.querySelector('[data-act="rooms"]')&&$('phone').querySelector('[data-act="tab"][data-id="decor"]'),'troca de cenário removida e Estética no celular');
  check(getComputedStyle($('gameSidebar')).overflowY==='hidden'&&$('dayNotice').textContent.split('\n').length===2,'faixa lateral fixa e cabeçalho do dia em duas linhas');
  check(itemArtKey('xis_salada',{kind:'assembled'})==='xis_montado'&&itemArtKey('xis_salada',{ready:true})==='xis_prensado'&&ITEM_ART.xis_montado.src!==ITEM_ART.xis_prensado.src,'xis muda de desenho entre montagem e prensa');
  const originalBar=bar;try{
   for(const type of ['mate','clean']){let bars=0;bar=(...args)=>{bars++;originalBar(...args);};G.task={type,target:type==='mate'?'mate':'table:1',time:.5};G.boost=5;if(type==='clean')G.tables[1].dirty=true;draw();check(bars===1,'somente uma barra de ação durante '+type);}
  }finally{bar=originalBar;G.task=null;G.boost=0;G.tables[1].dirty=false;}
- G.player={x:510,y:585,dx:1,dy:0};joinSeatedTruco();check(!modal,'truco não inicia longe da mesa');G.player={x:1145,y:445,dx:0,dy:-1};refreshHUD();check(!$('playTrucoButton').classList.contains('hidden'),'jogar truco aparece perto da mesa fixa');joinSeatedTruco();check(modal==='cards','mesa vazia também oferece partida contextual');closeDialog(true);
+ G.player={x:510,y:585,dx:1,dy:0};joinSeatedTruco();check(!modal,'truco não inicia longe da mesa');G.player={x:1334,y:590,dx:0,dy:-1};refreshHUD();check(!$('playTrucoButton').classList.contains('hidden'),'jogar truco aparece perto da mesa fixa');joinSeatedTruco();check(modal==='cards','mesa vazia também oferece partida contextual');closeDialog(true);
  G.player={x:510,y:585,dx:1,dy:0};enterCancha();check(!G.atCancha,'entrada na cancha exige proximidade da porta');
- G.player={x:1220,y:735,dx:1,dy:0};check(canWalk(G.player.x,G.player.y),'porta da cancha é alcançável');interact();
+ G.player={x:1525,y:432,dx:1,dy:0};check(canWalk(G.player.x,G.player.y),'porta da cancha é alcançável');interact();
  check(G.atCancha&&!G.bocce&&!$('canchaLobby').classList.contains('hidden')&&$('bocceButton').getBoundingClientRect().width>0,'porta abre a cancha antes de oferecer jogar bocha');
  const before=G.elapsed;G.phase='open';simulate(2);check(G.elapsed===before,'visita à cancha também pausa o atendimento');
  bocceMenu();$('bocceWager').value='0';startBocceGame();check(!!G.bocce&&$('canchaLobby').classList.contains('hidden'),'partida inicia a partir da cancha');
