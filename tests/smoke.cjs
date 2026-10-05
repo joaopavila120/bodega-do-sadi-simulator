@@ -132,6 +132,8 @@ async function main() {
     await load(base+'/index.html');assert(await evaluate(`nextProse(6).reply==='Fala nova editada no TXT'`));
     dialogueOverride=null;
     await load(base+'/index.html');assert(await evaluate(`nextProse(6).reply!=='Fala nova editada no TXT'`));
+    assert(await evaluate(`(()=>{const acts=Object.entries(SPORT_ACTIONS).flatMap(([t,l])=>l.map(a=>t+'.'+a));return [...ALWAYS_TALK].every(id=>acts.every(a=>(customDialogues[id+'.'+a]||[]).length>=10));})()`),'Cada especial deve ter 10 falas por ação de bocha e truco');
+    console.log('PASS cada especial tem pelo menos 10 falas em cada ação de bocha e truco');
     console.log('PASS TXT automático por file:// e HTTP, sem botão e sem cache de falas antigas');
 
     const sports = await evaluate(fs.readFileSync(path.join(__dirname, 'sports-scenarios.js'), 'utf8'));

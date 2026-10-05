@@ -3,7 +3,7 @@
 
 const $ = id => document.getElementById(id);
 const canvas = $('scene');
-const ctx = canvas ? canvas.getContext('2d') : null;
+let ctx = canvas ? canvas.getContext('2d') : null;
 
 const money = n => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -53,9 +53,12 @@ function drinksForGroup(g){return G.event.id==='campeonato'?alcoholPool():drinkP
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-function deck(spanish=false,copies=1){const a=[];for(let d=0;d<copies;d++)for(let s=0;s<4;s++)for(const r of spanish?[1,2,3,4,5,6,7,10,11,12]:[1,2,3,4,5,6,7,8,9,10,11,12,13])a.push({r,s,uid:`${d}-${s}-${r}`});return shuffle(a);}
+// Baralho espanhol de 40 cartas, usado no truco.
+function deck(){const a=[];for(let s=0;s<4;s++)for(const r of [1,2,3,4,5,6,7,10,11,12])a.push({r,s,uid:`${s}-${r}`});return shuffle(a);}
 
-function cardName(c,spanish=false){return `${spanish?c.r:({1:'A',11:'J',12:'Q',13:'K'}[c.r]||c.r)} de ${spanish?['espadas','bastos','ouros','copas'][c.s]:['espadas','paus','ouros','copas'][c.s]}`;}
+// Só troca o HTML quando ele muda: evita recriar imagens e refazer o layout a cada atualização.
+function setHTML(element,html){if(element._html===html)return false;element.innerHTML=html;element._html=html;return true;}
+function cardName(c){return `${c.r} de ${['espadas','bastos','ouros','copas'][c.s]}`;}
 
 function distRect(p,r){return Math.hypot(p.x-clamp(p.x,r.x,r.x+r.w),p.y-clamp(p.y,r.y,r.y+r.h));}
 

@@ -8,7 +8,7 @@ const ITEM_ART = Object.fromEntries(ITEM_SPRITE_KEYS.map(key => {
 }));
 
 // Redução progressiva: preserva as cores e o contorno sem descartar pixels
-// aleatoriamente ao reduzir os originais de 1254 px para ícones pequenos.
+// ao reduzir os originais de 320 px para ícones pequenos.
 const ITEM_LEVELS = new Map();
 function itemImageForSize(key, pixels) {
   const original = ITEM_ART[key];
@@ -16,7 +16,8 @@ function itemImageForSize(key, pixels) {
   if (!ITEM_LEVELS.has(key)) {
     const levels = [original];
     let source = original;
-    for (let side=512;side>=32;side/=2) {
+    for (let side=256;side>=32;side/=2) {
+      if (side>=Math.max(source.width,source.height)) continue;
       const level=document.createElement('canvas');
       const ratio=side/Math.max(source.width,source.height);
       level.width=Math.max(1,Math.round(source.width*ratio));
@@ -29,7 +30,8 @@ function itemImageForSize(key, pixels) {
     ITEM_LEVELS.set(key,levels);
   }
   const levels=ITEM_LEVELS.get(key);
-  return [...levels].reverse().find(level=>Math.max(level.width,level.height)>=pixels)||original;
+  for (let i=levels.length-1;i>=0;i--) if (Math.max(levels[i].width,levels[i].height)>=pixels) return levels[i];
+  return original;
 }
 
 // xis bacon, xis coração e torrada de salame levam o ingrediente ao lado do lanche.
@@ -60,16 +62,16 @@ function itemIconHTML(key, item=null) {
 function food(key,x,y,size=40,item=null) {
   const transform=ctx.getTransform();
   const image = itemImageForSize(itemArtKey(key,item),size*Math.hypot(transform.a,transform.b));
-  ctx.save();
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
-  ctx.filter = itemFilter(item);
   if (image) {
-    const scale = size / Math.max(image.width,image.height);
+    const filter = itemFilter(item), scale = size / Math.max(image.width,image.height);
     const w=image.width*scale,h=image.height*scale;
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    if (filter !== 'none') ctx.filter = filter;
     ctx.drawImage(image,Math.round(x-w/2),Math.round(y-h/2),w,h);
+    ctx.restore();
   }
-  ctx.restore();
   // Selo do ingrediente que diferencia o lanche, grande e com sombra para destacar.
   const badge = itemBadge(key);
   if (badge) { ctx.save(); ctx.shadowColor='#1e120acc'; ctx.shadowBlur=Math.max(2,size*.08); ctx.shadowOffsetY=size*.03; food(badge,x+size*.3,y+size*.2,size*.68); ctx.restore(); }
