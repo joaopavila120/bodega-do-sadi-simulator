@@ -15,7 +15,7 @@
   G.up.cigarro_py=true;
   check(itemIconHTML('cigarro').includes('cigarro_py.png'),'melhoria troca o maço imediatamente');
   check(itemFilter({burned:true})==='brightness(.32)'&&itemFilter({spoiled:true}).includes('grayscale'),'queimados e estragados mantêm sinal visual');
-  check(itemIconHTML('xis_bacon').includes('bacon.png')&&itemIconHTML('xis_coracao').includes('coracao.png'),'receitas especiais mantêm ingrediente visível');
+  check(itemIconHTML('xis_bacon').includes('bacon.png')&&itemIconHTML('xis_coracao').includes('coracao.png')&&itemIconHTML('torrada').includes('salame.png'),'xis bacon, xis coração e torrada mostram o ingrediente ao lado');
   check(itemIconHTML('burger',{ready:true,cheese:true}).includes('queijo.png'),'queijo sobre carne mantém indicação na mão');
  } finally {G=old;draw();}
  return results;

@@ -115,7 +115,7 @@
 @media(max-width:750px){.bocce-screen{grid-template-columns:1fr;grid-template-rows:min(48dvh,360px) auto;overflow:auto}.bocce-sidebar{border-left:0;border-top:2px solid #976c39;overflow:visible;padding:14px}.bocce-sidebar h1{font-size:23px;margin:0 0 9px}.bocce-score{font-size:32px;padding:3px}.bocce-sidebar h2{margin-top:14px}.bocce-move{margin:8px 0}.bocce-sidebar p{margin:8px 0}.bocce-remaining{min-height:0}.bocce-court{position:sticky;top:0;background:#20180f;z-index:1}}
 :root .pixel-item{position:relative;display:inline-block;width:100%;height:100%;vertical-align:middle}
 .pixel-item img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:auto}
-.pixel-item img.pixel-item-extra{position:absolute;right:-3%;bottom:-3%;width:46%;height:46%}
+.pixel-item img.pixel-item-extra{position:absolute;right:-12%;bottom:-10%;width:68%;height:68%;filter:drop-shadow(0 1px 1px #1e120acc)}
 
 /* Mais área para a bodega e controles de leitura fora do cenário. */
 .view-controls{display:flex;align-items:center;gap:3px}

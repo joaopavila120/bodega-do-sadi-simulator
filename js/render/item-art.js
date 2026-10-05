@@ -32,6 +32,9 @@ function itemImageForSize(key, pixels) {
   return [...levels].reverse().find(level=>Math.max(level.width,level.height)>=pixels)||original;
 }
 
+// xis bacon, xis coração e torrada de salame levam o ingrediente ao lado do lanche.
+function itemBadge(key) { return {xis_bacon:'bacon',xis_coracao:'coracao',torrada:'salame'}[key] || null; }
+
 function itemArtKey(key, item) {
   if (key?.startsWith('xis_') && !['xis_montado','xis_prensado'].includes(key)) return item && !item.ready ? 'xis_montado' : 'xis_prensado';
   if (key === 'cigarro' && G?.up.cigarro_py) return 'cigarro_py';
@@ -50,7 +53,7 @@ function itemFilter(item) {
 function itemIconHTML(key, item=null) {
   const artKey = itemArtKey(key,item);
   if (!ITEM_ART[artKey]) return '';
-  const badge = key === 'xis_bacon' ? 'bacon' : key === 'xis_coracao' ? 'coracao' : item?.cheese ? 'queijo' : null;
+  const badge = itemBadge(key) || (item?.cheese ? 'queijo' : null);
   return `<span class="pixel-item" aria-hidden="true"><img src="assets/images/items/${artKey}.png" alt="" draggable="false" style="filter:${itemFilter(item)}">${badge?`<img class="pixel-item-extra" src="assets/images/items/${badge}.png" alt="" draggable="false">`:''}</span>`;
 }
 
@@ -67,7 +70,9 @@ function food(key,x,y,size=40,item=null) {
     ctx.drawImage(image,Math.round(x-w/2),Math.round(y-h/2),w,h);
   }
   ctx.restore();
-  if (key==='xis_bacon'||key==='xis_coracao') food(key==='xis_bacon'?'bacon':'coracao',x+size*.31,y+size*.25,size*.48);
+  // Selo do ingrediente que diferencia o lanche, grande e com sombra para destacar.
+  const badge = itemBadge(key);
+  if (badge) { ctx.save(); ctx.shadowColor='#1e120acc'; ctx.shadowBlur=Math.max(2,size*.08); ctx.shadowOffsetY=size*.03; food(badge,x+size*.3,y+size*.2,size*.68); ctx.restore(); }
   if (item?.cheese) food('queijo',x,y-4,size*.62);
   if (item?.spoiled) {
     ctx.save();ctx.strokeStyle='#d4ce72';ctx.lineWidth=2;
