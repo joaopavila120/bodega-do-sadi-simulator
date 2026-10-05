@@ -25,6 +25,7 @@ const DECOR=[
  {id:'lampiao_centro',cat:'Luz e plantas',name:'Lampião do meio',cost:35,rep:0,at:[575,44],light:[595,124,90],desc:'Lampião de parede: à noite clareia o meio do salão.'},
  {id:'lampiao_dir',cat:'Luz e plantas',name:'Lampião do salão',cost:35,rep:0,at:[1589,0],light:[1613,121,100],desc:'Lampião que, à noite, ilumina o canto do salão.'},
  {id:'planta_esq',cat:'Luz e plantas',name:'Samambaia pendurada',cost:25,rep:0,at:[49,36],desc:'Samambaia caindo do vaso no canto da cozinha.'},
+ {id:'lampada_coracao',cat:'Luz e plantas',name:'Lâmpada de coração',cost:0,rep:0,gift:'Lauro Boleador',at:[1335,0],light:[1358,92,85],lightColor:'255,96,110',desc:'Presente do Lauro Boleador depois da primeira bocha. À noite, deixa o salão vermelhinho.'},
  {id:'planta_dir',cat:'Luz e plantas',name:'Folhagem no vaso de barro',cost:30,rep:0,at:[1467,0],desc:'Vaso pendurado ao lado da janela, com folhas até o chão.'}
 ];
 const DECOR_ART=Object.fromEntries(DECOR.map(d=>{const image=new Image();image.src='assets/images/decor/'+d.id+'.png';return[d.id,image];}));
@@ -70,7 +71,7 @@ function sanitizeDecor(state){const decor=decorState(state);for(const id of Obje
 function decorPanel(){
  return `<div class="phone-intro"><h3>Deixe a bodega com a sua cara</h3><p>${decorCount()} de ${DECOR.length} peças compradas. Itens de estética não mudam o atendimento: compre, exponha ou guarde quando quiser.</p></div>`+DECOR_CATS.map(cat=>`<details class="upgrade-category" open><summary>${cat}</summary>${DECOR.filter(d=>d.cat===cat).map(d=>{
   const owned=decorOwned(d.id),shown=decorState()[d.id]===true,missing=owned?[]:decorMissing(d),base=d.requires&&DECOR.find(x=>x.id===d.requires);
-  return `<div class="decor-card${shown?' shown':''}"><span class="decor-thumb"><img src="assets/images/decor/${d.id}.png" alt="" draggable="false"></span><div><h3>${d.name}</h3><p>${d.desc}</p><small>${money(d.cost)}${d.rep?' · reputação '+d.rep:''}${base?' · vai junto com '+base.name:''}</small>${owned?`<button data-act="decorToggle" data-id="${d.id}" aria-pressed="${shown}">${shown?'Exposto ✓ · guardar':'Guardado · expor'}</button>`:`<button class="primary" data-act="decorBuy" data-id="${d.id}" ${missing.length?'disabled':''}>${missing.length?'Falta: '+missing.join(' + '):'Comprar · '+money(d.cost)}</button>`}</div></div>`;
+  return `<div class="decor-card${shown?' shown':''}"><span class="decor-thumb"><img src="assets/images/decor/${d.id}.png" alt="" draggable="false"></span><div><h3>${d.name}</h3><p>${d.desc}</p><small>${d.gift?'Presente · não se compra':money(d.cost)}${d.rep?' · reputação '+d.rep:''}${base?' · vai junto com '+base.name:''}</small>${!owned&&d.gift?`<button disabled>Presente de ${d.gift}</button>`:owned?`<button data-act="decorToggle" data-id="${d.id}" aria-pressed="${shown}">${shown?'Exposto ✓ · guardar':'Guardado · expor'}</button>`:`<button class="primary" data-act="decorBuy" data-id="${d.id}" ${missing.length?'disabled':''}>${missing.length?'Falta: '+missing.join(' + '):'Comprar · '+money(d.cost)}</button>`}</div></div>`;
  }).join('')}</details>`).join('');
 }
 
@@ -89,7 +90,7 @@ function drawDecorLights(){
  for(const d of DECOR){
   // Lampiões só acendem de verdade à noite.
   if(!d.light||!decorVisible(d)||night<=0)continue;const[lx,ly,r]=d.light,flicker=1+Math.sin(frameClock*6.3+lx)*.05+Math.sin(frameClock*14.1+ly)*.03;
-  glow(roomX(lx),roomY(ly),roomX(r)*(1+night*.8)*flicker,(.12+.2*night)*flicker,'255,176,82');
+  glow(roomX(lx),roomY(ly),roomX(r)*(1+night*.8)*flicker,(.12+.2*night)*flicker,d.lightColor||'255,176,82');
  }
  if(decorState().fogao_lenha===true){const[fx,fy,r]=FIRE_LIGHT,flicker=1+Math.sin(frameClock*8.7)*.08+Math.sin(frameClock*19.3)*.05;glow(roomX(fx),roomY(fy),roomX(r)*flicker,.16*flicker,'255,128,48');}
  ctx.restore();

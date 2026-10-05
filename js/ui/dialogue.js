@@ -23,20 +23,22 @@ function portraitHTML(person,size=96){
  const sp=p.sprite,art=typeof sp==='object'?CHARACTER_ART[sp.file]:peopleArt,s=characterCrop(sp),W=art?.naturalWidth,H=art?.naturalHeight;if(!W)return '';
  return `<span class="portrait" style="${style};background-image:url('${art.src}');background-size:${W/s.w*100}% auto;background-position:${s.x/(W-s.w)*100}% ${s.y/(H-s.w)*100}%"></span>`;
 }
-let dialogueKey='',dialogueTimer=null;
-function updateDialogue(){
- const d=G.dialogue,box=$('dialogueUI');box.classList.toggle('hidden',!d);
- if(!d){dialogueKey='';stopDialogueTyping();return;}
- const key=d.name+'|'+d.reply;if(key===dialogueKey)return;dialogueKey=key;
- const person=Number.isInteger(d.person)?d.person:PEOPLE.findIndex(p=>p.name===d.name);
- $('dialoguePortrait').innerHTML=portraitHTML(person,104);$('dialogueName').textContent=d.name;$('dialoguePlayer').textContent=d.player?'Você: '+d.player:'';
+// Cada caixa (bodega: 'dialogue', cancha: 'bocceTalk') tem retrato, nome, pergunta e resposta.
+const rpgBoxes={};
+function showRpgBox(prefix,line){
+ const box=$(prefix+'UI'),state=rpgBoxes[prefix]??={key:'',timer:null,text:''};box.classList.toggle('hidden',!line);
+ if(!line){state.key='';stopRpgTyping(prefix);return;}
+ const key=line.name+'|'+line.reply;if(key===state.key)return;state.key=key;state.text=line.reply||'';
+ $(prefix+'Portrait').innerHTML=portraitHTML(line.person,104);$(prefix+'Name').textContent=line.name;$(prefix+'Player').textContent=line.player?'Você: '+line.player:'';
  // A fala aparece letra por letra, com um bipe baixinho.
- const text=d.reply||'',el=$('dialogueReply');let i=0;stopDialogueTyping();el.textContent='';box.classList.remove('done');
- dialogueTimer=setInterval(()=>{i=Math.min(text.length,i+2);el.textContent=text.slice(0,i);if(i%8===0)AudioEngine.blip();if(i>=text.length)finishDialogueTyping();},28);
+ const el=$(prefix+'Reply');let i=0;stopRpgTyping(prefix);el.textContent='';box.classList.remove('done');
+ state.timer=setInterval(()=>{i=Math.min(state.text.length,i+2);el.textContent=state.text.slice(0,i);if(i%8===0)AudioEngine.blip();if(i>=state.text.length)finishRpgTyping(prefix);},28);
 }
-function stopDialogueTyping(){if(dialogueTimer)clearInterval(dialogueTimer);dialogueTimer=null;}
-function finishDialogueTyping(){stopDialogueTyping();if(G.dialogue)$('dialogueReply').textContent=G.dialogue.reply||'';$('dialogueUI').classList.add('done');}
+function stopRpgTyping(prefix){const s=rpgBoxes[prefix];if(s?.timer)clearInterval(s.timer);if(s)s.timer=null;}
+function finishRpgTyping(prefix){stopRpgTyping(prefix);$(prefix+'Reply').textContent=rpgBoxes[prefix]?.text||'';$(prefix+'UI').classList.add('done');}
+function rpgTyping(prefix){return !!rpgBoxes[prefix]?.timer;}
+function updateDialogue(){const d=G.dialogue;showRpgBox('dialogue',d&&{person:Number.isInteger(d.person)?d.person:PEOPLE.findIndex(p=>p.name===d.name),name:d.name,player:d.player,reply:d.reply});}
 // Clique na caixa: completa a fala; com a fala inteira, fecha.
-function dialogueClick(){if(dialogueTimer){finishDialogueTyping();return;}advanceDialogue();}
+function dialogueClick(){if(rpgTyping('dialogue')){finishRpgTyping('dialogue');return;}advanceDialogue();}
 
 function nextProse(person){const personal=personalizedProse(person);if(personal&&(PEOPLE[person].exclusiveVoice||G.friends[person]<12||G.conversations[person]%4!==0))return personal;const seen=new Set(G.dialogueSeen||[]),stories=STORIES.map((s,i)=>({id:'story:'+i,player:'E aquele causo que tu ficou de me contar?',reply:s.text,title:s.title,source:s.source,affinity:s.affinity})).filter(s=>G.friends[person]>=s.affinity);let ordinary=PROSE.filter(s=>!seen.has(s.id)),lore=stories.filter(s=>!seen.has(s.id));if(!ordinary.length&&!lore.length){G.dialogueSeen=[];ordinary=[...PROSE];lore=stories;}const pool=lore.length&&(!ordinary.length||G.conversations[person]%4===0)?lore:ordinary;const line=pick(pool);G.dialogueSeen.push(line.id);return line;}

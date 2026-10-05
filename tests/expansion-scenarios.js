@@ -13,7 +13,7 @@
   for(const id of ['coffee','bootsGaucho','mateCuiudo','tray'])buyUpgrade(id);
   check(improvementCount()===4&&decorCount()===0,'melhorias não contam como decoração');
   togglePhone(true);phoneTab='decor';renderPhone();
-  check(document.querySelector('[data-act="tab"][data-id="decor"]').classList.contains('active')&&$('phoneContent').querySelectorAll('[data-act="decorBuy"]').length===DECOR.length,'aba Estética lista todas as peças');
+  check(document.querySelector('[data-act="tab"][data-id="decor"]').classList.contains('active')&&$('phoneContent').querySelectorAll('[data-act="decorBuy"]').length===DECOR.filter(d=>!d.gift).length&&$('phoneContent').textContent.includes('Presente de Lauro Boleador'),'aba Estética lista todas as peças, e as de presente sem compra');
   const cash=G.cash;buyDecor('kit_chimarrao');check(!decorOwned('kit_chimarrao')&&G.cash===cash,'kit do chimarrão exige a cômoda');
   buyDecor('comoda');buyDecor('kit_chimarrao');buyDecor('bandeira');
   check(decorCount()===3&&G.cash===cash-90-40-60&&decorVisible(DECOR.find(d=>d.id==='kit_chimarrao')),'compra desconta o caixa e expõe a peça');

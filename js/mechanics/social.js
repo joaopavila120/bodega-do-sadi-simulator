@@ -13,7 +13,7 @@ const GIFTS={
  marcio:[{at:GIFT_AT,decor:['poncho'],text:'“Pro inverno da bodega.”'}],
  marcelo:[{at:GIFT_AT,decor:['cabaca'],text:'“Porongo da roça lá de casa.”'}],
  indavirus:[{at:GIFT_AT,decor:['alho'],text:'“Réstia da colônia. Espanta até mau-olhado.”'}],
- lauro:[{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
+ lauro:[{at:'tutorial',decor:['lampada_coracao'],text:'“Pra tua bodega ficar com a luz do coração. E treina, que a revanche vem!”'},{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
  peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]
 };
 
@@ -64,8 +64,6 @@ function deliverGift(item){
 function giveGift(person,gift){const key=giftKey(person,gift.at);G.giftQueue=(G.giftQueue||[]).filter(g=>g.key!==key);deliverGift({person,key,decor:gift.decor,text:gift.text});}
 // Depois do expediente: presentes de visita e a bandeira do Mano Lima no fim do segundo dia.
 function queueAfterHoursGifts(){
- const mano=PEOPLE.findIndex(p=>p.id==='manolima');
- if(G.day>=2&&mano>=0&&mano!==PEOPLE.findIndex(p=>p.id===G.avatarId))queueGift(mano,GIFTS.manolima[0]);
  const today=G.visitedToday?.day===G.day?G.visitedToday.ids:[];
  for(const id of today){const i=PEOPLE.findIndex(p=>p.id===id);if(i>=0&&(G.friends[i]||0)>=25&&Math.random()<VISIT_GIFT_CHANCE)queueGift(i,{at:'dia'+G.day});}
 }
@@ -84,8 +82,12 @@ function socialCheck(){
   if(f>=MAX_FRIENDSHIP&&!G.playable[id]){G.playable[id]=G.day;showBanner(PEOPLE[i].name+' é teu parceiro de verdade','Agora dá para jogar com '+PEOPLE[i].name+': Celular → Contatos.','friend');}
  }
 }
-// Depois da bocha do tutorial, o Mano Lima volta para a bodega com você e entrega a bandeira em pessoa.
-function finishBocceTutorial(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');unlockContact(mano);queueGift(mano,GIFTS.manolima[0]);G.giftQueue.sort((a,b)=>(b.key==='manolima:tutorial')-(a.key==='manolima:tutorial'));}
+// Lições depois do expediente: quem ensina vira contato e volta com um presente em mãos.
+function lessonGift(id){const i=PEOPLE.findIndex(p=>p.id===id);unlockContact(i);queueGift(i,GIFTS[id][0]);const key=id+':tutorial';G.giftQueue.sort((a,b)=>(b.key===key)-(a.key===key));}
+// Bocha com o Lauro Boleador (fim do primeiro dia): lâmpada de coração.
+function finishBocceTutorial(){lessonGift('lauro');}
+// Truco com o Mano Lima (primeira segunda): bandeira do Rio Grande, mesmo se o jogador desistir.
+function finishTrucoTutorial(){sportState().trucoTutorialDone=true;lessonGift('manolima');}
 
 // Primeira visita de um especial: aviso grande. Depois, só uma notinha.
 function announceArrivals(people){

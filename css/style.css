@@ -248,12 +248,16 @@
 .rpg-portrait{border:3px solid #f1ead2;outline:2px solid #0a0e26;background:#0f1638;line-height:0}
 .portrait{display:block;object-fit:cover;background-repeat:no-repeat;image-rendering:auto;flex:none}
 .rpg-text b{display:inline-block;color:#ffd96a;font-size:17px;letter-spacing:.5px;text-shadow:2px 2px 0 #0a0e26;padding-right:30px}
-.rpg-text #dialoguePlayer{margin:4px 0 6px;font-size:13px;font-style:italic;color:#b9c4ee}
-.rpg-text #dialogueReply{margin:0;font-size:16px;line-height:1.5;text-shadow:1px 1px 0 #0a0e26;min-height:3em}
+.rpg-text .rpg-player{margin:4px 0 6px;font-size:13px;font-style:italic;color:#b9c4ee}
+.rpg-text .rpg-reply{margin:0;font-size:16px;line-height:1.5;text-shadow:1px 1px 0 #0a0e26;min-height:3em}
 .rpg-next{position:absolute;right:14px;bottom:8px;color:#ffd96a;font-size:13px;opacity:0}
 .rpg-box.done .rpg-next{opacity:1;animation:rpgBlink 1s steps(2) infinite}
 @keyframes rpgBlink{50%{opacity:0}}
 .rpg-box .bubble-close{position:absolute;top:6px;right:8px;background:none;border:0;color:#f1ead2;font-size:20px;cursor:pointer;padding:2px 6px;min-height:0}
-@media(max-width:750px){.rpg-box{gap:10px;padding:10px 12px 10px 10px;bottom:8px}.rpg-portrait .portrait{width:64px!important;height:64px!important}.rpg-text #dialogueReply{font-size:14px}}
+@media(max-width:750px){.rpg-box{gap:10px;padding:10px 12px 10px 10px;bottom:8px}.rpg-portrait .portrait{width:64px!important;height:64px!important}.rpg-text .rpg-reply{font-size:14px}}
 .talk-line{display:flex;gap:10px;align-items:flex-start;margin:6px 0}.talk-line p{margin:0}.talk-line .portrait{border:2px solid #f1ead2;outline:2px solid #0a0e26}
 .rpg-speaker{display:flex;gap:14px;align-items:flex-start}.rpg-speaker .portrait{border:3px solid #f1ead2;outline:2px solid #0a0e26;border-radius:2px}.rpg-speaker>div{flex:1}.rpg-speaker p:first-child{margin-top:0}
+
+.bocce-court{position:relative}
+#bocceTalkUI{left:auto;right:16px;bottom:16px;transform:none;width:min(560px,52%)}
+@media(max-width:750px){#bocceTalkUI{width:calc(100% - 20px);right:10px}}

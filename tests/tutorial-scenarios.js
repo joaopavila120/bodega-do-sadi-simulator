@@ -35,7 +35,7 @@
  check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===6&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
  check(G.tv&&G.up.trago&&!G.tables[0].dirty,'TV, melhoria e limpeza permanecem após tutorial');
  action('tvAwardClose');check(modal==='report'&&sportState().challenge.tutorial,'relatório aparece antes do convite');closeDialog();
- check(!modal&&PEOPLE[G.challengeVisit?.person]?.id==='manolima','Mano Lima entra pela porta da bodega antes de convidar');for(let n=0;n<400&&modal!=='sportChallenge';n++)simulate(.05);
+ check(!modal&&PEOPLE[G.challengeVisit?.person]?.id==='lauro','o Lauro Boleador entra pela porta da bodega antes de convidar');for(let n=0;n<400&&modal!=='sportChallenge';n++)simulate(.05);
  check(modal==='sportChallenge'&&G.challengeVisit.arrived,'o convite para a bocha aparece quando ele chega até você');answerSportChallenge(false);check(G.challengeVisit?.leaving,'recusar faz o visitante ir embora');nextDay('normal');closeDialog(true);G.event.seen=true;openDay();advance(25);
  check(G.day===2&&G.elapsed>0&&G.groups.length>0&&G.shop.length>0,'dia 2 retoma tempo e chegadas normais ao salão e balcão');
  const legacy=fresh();legacy.version=11;legacy.day=3;legacy.stock.cachaca=7;const migrated=normalizeSave(legacy);
