@@ -267,7 +267,7 @@ function costelaoWelcome(){
 function lassoNeeded(){return G.phase==='closed'&&calendar().weekday===5&&G.lassoDay!==G.day&&!tutorialActive();}
 function lassoIntro(){
  const herd=G.herd||0,need=Math.min(MIN_LASSO,herd);
- openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão: lace <b>pelo menos um boi</b>. Cada laço certeiro enche a barra; com <b>${LASSO_HITS} laços</b> o boi está laçado e rende ${MANTAS_PER_BOI} mantas.</p><div class="callout"><b>Segure E</b> para girar o laço e <b>solte</b> com o círculo sobre o boi. Quando aparecer um <b>alvo vermelho</b> no chão, é rasante de quero-quero: saia dele ou aperte <b>Q</b>.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
+ openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão: lace <b>pelo menos um boi</b>. Cada laço certeiro enche a barra; com <b>${LASSO_HITS} laços</b> o boi está laçado e rende ${MANTAS_PER_BOI} mantas.</p><div class="callout"><b>Segure Q</b> para girar o laço e <b>solte</b> com o círculo sobre o boi. Quando aparecer um <b>alvo vermelho</b> no chão, é rasante de quero-quero: saia dele ou aperte <b>Espaço</b>.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
 }
 function buyBoi(){if(!hasCash(BOI_COST)){say('Um boi custa '+money(BOI_COST)+'.');AudioEngine.bad();return;}spendCash(BOI_COST);G.stats.purchases+=BOI_COST;G.herd=(G.herd||0)+1;AudioEngine.heart();say('Boi comprado! Rebanho: '+G.herd+'.');save();if(phoneOpen)renderPhone();else if(modal==='lassoIntro')lassoIntro();}
 function startLasso(){
@@ -314,13 +314,14 @@ function lassoCharge(){const L=G.lasso;if(!L||L.throw||L.charging||L.stun>0||L.k
 function lassoAim(){const L=G.lasso,p=.5-.5*Math.cos(L.charge*Math.PI*1.4),dist=110+p*380;return {x:clamp(G.player.x+L.fx*dist,40,W-40),y:clamp(G.player.y-40+L.fy*dist,430,880),p};}
 function lassoRelease(){const L=G.lasso;if(!L?.charging)return;L.charging=false;const a=lassoAim();L.throw={sx:G.player.x,sy:G.player.y-110,tx:a.x,ty:a.y,time:0,total:.32+a.p*.25};AudioEngine.lassoThrow();}
 function lassoKeyDown(e){
- const key=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','e'].includes(key))e.preventDefault();
+ const key=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','e','q'].includes(key))e.preventDefault();
  if(key==='Escape'){pauseGame('Laçada pausada.');return;}
- if((key==='e'||key===' ')&&!e.repeat){lassoCharge();return;}
- if(key==='q'||key==='Shift'){if(!e.repeat)lassoDash();return;}
+ // Q (ou E) gira e solta o laço; Espaço (ou Shift) esquiva do quero-quero.
+ if((key==='q'||key==='e')&&!e.repeat){lassoCharge();return;}
+ if(key===' '||key==='Shift'){if(!e.repeat)lassoDash();return;}
  keys.add(key);
 }
-function lassoKeyUp(e){const key=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(key);if(key==='e'||key===' ')lassoRelease();}
+function lassoKeyUp(e){const key=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(key);if(key==='q'||key==='e')lassoRelease();}
 function updateLassoUI(){const L=G.lasso;if(!L)return;const best=Math.max(0,...L.bois.filter(b=>b.state==='free').map(b=>b.rope||0));$('lassoCount').textContent=(L.caught?L.caught+(L.caught>1?' bois laçados':' boi laçado'):'Nenhum boi laçado')+(best?' · laço '+best+'/'+LASSO_HITS:'');$('lassoHerd').textContent='Rebanho no campo: '+L.bois.filter(b=>b.state==='free').length;$('lassoFinish').disabled=L.caught<L.need;$('lassoFinish').textContent=L.caught<L.need?'Lace pelo menos um boi':'Levar '+L.caught+(L.caught>1?' bois':' boi')+' para o costelão';}
 function finishLasso(){
  const L=G.lasso;if(!L||L.caught<L.need)return;
