@@ -47,19 +47,38 @@ function prepareAfterHours(){
 }
 function showSportChallenge(){
  const challenge=sportState().challenge;if(!challenge)return false;
- openDialog(challenge.tutorial?'Mano Lima te ensina a jogar bocha':'Desafio depois do expediente',`<p><b>${sportName(challenge.person)}</b> apareceu na bodega!</p><p>${challenge.tutorial?'“Bora pra cancha! O lobisome do Arvoredo te ensina a mirar, escolher a força e contar os pontos.” O treino é gratuito e guiado, uma etapa por vez.':'“Vamos tirar uma bocha valendo '+money(challenge.wager)+' por lado?” Vitória devolve o dobro; derrota perde a entrada. Recusar custa 3 pontos de amizade.'}</p><div class="actions"><button class="primary" data-act="sportAccept" ${hasCash(challenge.wager)?'':'disabled'}>${challenge.tutorial?'Aprender com Mano Lima':'Aceitar · '+money(challenge.wager)}</button><button data-act="sportDecline">${challenge.tutorial?'Aprender depois':'Recusar · −3 amizade'}</button></div>`,'sportChallenge');return true;
+ openDialog(challenge.tutorial?'Mano Lima te ensina a jogar bocha':'Desafio depois do expediente',`<p><b>${sportName(challenge.person)}</b> apareceu na bodega!</p><p>${challenge.tutorial?'“Bora pra cancha, vivente! Índio véio te ensina a mirar, escolher a força e contar os pontos.” O treino é gratuito e guiado, uma etapa por vez.':'“Vamos tirar uma bocha valendo '+money(challenge.wager)+' por lado?” Vitória devolve o dobro; derrota perde a entrada. Recusar custa 3 pontos de amizade.'}</p><div class="actions"><button class="primary" data-act="sportAccept" ${hasCash(challenge.wager)?'':'disabled'}>${challenge.tutorial?'Aprender com Mano Lima':'Aceitar · '+money(challenge.wager)}</button><button data-act="sportDecline">${challenge.tutorial?'Aprender depois':'Recusar · −3 amizade'}</button></div>`,'sportChallenge');return true;
 }
 function answerSportChallenge(accept){
  const s=sportState(),c=s.challenge;if(!c)return;
  if(accept&&!hasCash(c.wager))return;
  s.challenge=null;
- if(!accept){if(!c.tutorial)addFriendship(c.person,-3);save();closeDialog(true);showReport();return;}
- closeDialog(true);G.atCancha=true;
+ if(!accept){if(!c.tutorial)addFriendship(c.person,-3);closeDialog(true);challengeVisitLeave();save();return;}
+ G.challengeVisit=null;closeDialog(true);G.atCancha=true;
  launchSport('bocha',c.person,{wager:c.wager,tutorial:c.tutorial});
 }
 // Partidas do sistema (tutorial, desafio e campeonato) aceitam adversário fora da agenda.
 let sportLaunch=null;
 function invitablePeople(){return [...new Set([sportLaunch,sportState().challenge?.person,...contactPeople()].filter(i=>Number.isInteger(i)&&i>=0))];}
+// O Mano Lima está sempre disponível para uma bocha.
+function boccePeople(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');return [...new Set([...invitablePeople(),...(PEOPLE[mano]?.id!==G.avatarId?[mano]:[])])];}
+
+// ---------- Desafiante entrando na bodega ----------
+// Depois do expediente, quem propõe a bocha entra pela porta e caminha até você; só então aparece o convite.
+function startChallengeVisit(){
+ const c=sportState().challenge;if(!c||G.challengeVisit)return false;
+ const near={x:clamp(G.player.x+90,80,W-80),y:clamp(G.player.y+10,450,860)};
+ const actor={id:G.next++,person:c.person,x:ENTRY.x,y:ENTRY.y,path:[],dest:null,dx:0,dy:-1,arrived:false,leaving:false};
+ setDestination(actor,near);G.challengeVisit=actor;if(modal)closeDialog(true);announceArrivals([c.person]);save();return true;
+}
+function challengeVisitTick(dt){
+ const v=G.challengeVisit;if(!v)return;
+ const done=moveActor(v,dt,130);
+ if(v.leaving){if(done)G.challengeVisit=null;return;}
+ if(done&&!v.arrived){v.arrived=true;v.dx=G.player.x<v.x?-1:1;save();showSportChallenge();}
+}
+function challengeVisitLeave(){const v=G.challengeVisit;if(!v)return;v.leaving=true;v.dest=null;setDestination(v,EXIT);}
+function drawChallengeVisit(layers){const v=G.challengeVisit;if(v)layers.push({y:v.y,draw:()=>{if(isSpecial(v.person))specialRing(v.x,v.y);personDraw(PEOPLE[v.person].sprite,v.x,v.y,!!v.path?.length,false,v.dx);}});}
 function launchSport(type,opponent,options={}){sportLaunch=opponent;try{return launchSportNow(type,opponent,options);}finally{sportLaunch=null;}}
 function launchSportNow(type,opponent,options={}){
  if(G.bocce||G.game||G.task)return false;

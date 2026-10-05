@@ -20,18 +20,18 @@ Como tá o tempo lá fora? | CUDIO! Saí de casa com sol, peguei chuva e cheguei
 Vai levar erva? | Me pesa bem certinho. O nono desconfia até da balança da farmácia.
 
 [guri]
-E aí, guri? | Chê, vim só dar uma olhada e o cheiro da chapa já fez meu pedido.
-Como foi a lida? | Chê, trabalhei tanto que até minha sombra pediu folga.
-Vai jogar truco? | Se tiver parceiro, chê! Meu problema é que a cara entrega antes da carta.
-Mais um mate? | Chê, aceito. Mate e prosa boa nunca precisam de convite duas vezes.
-Tá com fome? | Mais que cusco olhando churrasco, chê. Capricha nesse xis!
-Como tá o cavalo? | Chê, viu eu pegar a sela e foi pastar do outro lado do campo. Inteligente o vivente.
-Gostou da bodega? | Chê, aqui até a espera vem acompanhada de causo.
-Qual é a previsão? | O céu tá indeciso, chê. Eu já decidi: fico perto da comida.
-Vai uma torrada? | Show, chê! Mas se o salame aparecer só na lembrança, eu reclamo.
-E esse frio? | Chê, hoje o minuano veio buscar troco que eu nem devia.
-De onde tu vem? | Lá de onde o GPS diz boa sorte, chê.
-Já vai embora? | Depois da saideira de prosa, chê. Essa demora um pouco.
+E aí, Guri? | Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam.
+Como tá a fronteira? | Tranquila! Atravessei a ponte pra Paso de los Libres, comprei uma erva e voltei. Só se fala de outra coisa!
+Cadê o Licurgo? | O Licurgo ficou em casa ouvindo música triste. É o único gaúcho emo do Rio Grande, tchê. Mas que falta de opção!
+E a Silvia Helena? | A patroa mandou eu voltar cedo. Eu disse que vinha só tomar um mate… ela já sabe que mate meu dura a tarde inteira.
+Vai um xis? | Capricha, que gaudério da fronteira não come pouco. Bota tudo que tiver, que se faltar eu reclamo cantando!
+Que música tu tá cantando? | Uma paródia nova, tchê! Pego o sucesso do momento e boto bombacha nele. Até o Canto Alegretense entra no meio.
+Como foi o show? | Theatro São Pedro lotado em Porto Alegre! Gaúcho rindo de gaúcho, que é o melhor tipo de riso que tem.
+Tu usa WhatsApp? | Uso, mas no meu ritmo. Mando áudio de sete minutos e começo com bom dia, que educação vem antes da tecnologia.
+Mais um mate? | Mas bah, sempre! Cuia bem cevada, água no ponto e conversa sem pressa. O resto é modernagem.
+Vai jogar truco? | Truco com gaudério da fronteira é perigoso, tchê. Eu já peço o truco olhando pro horizonte, que é pra não entregar a carta.
+Tá pilchado hoje? | Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece. Nem a Silvia Helena.
+Qual a novidade? | A novidade é que não tem novidade! Mas que falta de opção, tchê. Por isso vim pra bodega: aqui sempre tem causo.
 
 [marcio]
 E o pedido, Márcio? | É o quê? Show de bola! O pedido vai se umas par de raineken é oq? show de bola
@@ -99,60 +99,60 @@ Tudo tranquilo na mesa? | Tranquilo, chê. Posso discordar do gremista e dividir
 # Novos fregueses: edite as falas abaixo ou acrescente outras no mesmo formato.
 
 [indavirus]
-Veio de longe? | Ô, alemon! Saí de Santa Catarina com o Lauro. A viagem era curta, mas a prosa fez três desvios.
-Vai sentar com o Lauro? | Ja! Guarda duas cadeiras. Lá na nossa colônia catarinense, amizade boa já chega trazendo companhia.
-Como anda a família? | Tudo firme em Santa Catarina! A oma guarda receita da família como quem guarda documento da imigração: ninguém mexe sem pedir.
-Tem causo da colônia? | Opa! O vô contava que a família chegou sem conhecer as estradas. Hoje nóis tem mapa e continua se perdendo na prosa.
-Trouxe fome? | Trouxe, alemon! A vó lá em Santa Catarina pergunta se já comeu enquanto serve outro prato. É pergunta sem direito de resposta.
-Que música toca na festa? | Lá na festa da colônia tem banda, dança e tio marcando o compasso na mesa. Até o copo entra no ritmo, ja!
-Vai um café? | Café combina com lembrança da cozinha da oma. Ela dizia que a família veio da Alemanha, mas o cheiro do café já era de casa aqui em Santa Catarina.
-Como aprendeu tanta história? | Escutando os mais velhos, alemon. Quando o vô puxava o causo da imigração, até o Lauro esquecia de interromper.
-E esse teu sotaque? | É bagagem de família, ja! Veio passando de boca em boca. Em Santa Catarina nóis bota um temperinho nosso na conversa.
-Vai pra bocha? | Vou, alemon! Na nossa colônia a bocha anda devagar; quem corre é a desculpa depois de errar o bolim.
-O Lauro demora? | Ele disse já tô chegando. Em idioma de visita catarinense, isso pode significar que ainda tá tomando café.
-Qual é o segredo da prosa? | Mesa comprida, ouvido aberto e café passando. A história da nossa família imigrante ganha um capítulo em cada encontro.
+Quem tu é? | Gustavo Pórco, do Jornal Indavírus! Direto de Indaial, Vale do Itajaí, trazendo notícia, lenda e muita bobagem.
+De onde veio esse nome? | Indaial com coronavírus, ja! O canal nasceu na pandemia, quando a gente ficou sem serviço e resolveu fazer o povo rir.
+Cadê o Lauro? | Tá vindo! Eu pedi pra ele não quebrar nada no caminho. Não me quebra, Lauro, é o que eu mais falo na vida.
+Vai fazer pegadinha aqui? | Só se o freguês deixar! A melhor pegadinha é perguntar pro alemão quanto custa a cuca. Ele te conta a receita inteira e não diz o preço.
+Que história tu trouxe? | Uma lenda do Vale! Cada cidadezinha de Santa Catarina tem um causo que o vô jura que é verdade. Eu só filmo e confio.
+E aquela música de Urubici? | Ah, a paródia! Todo mundo desce pra BC no verão; nóis inventou de subir pra Urubici no frio. Foi sucesso por três dias!
+Tu fala como alemão? | O sotaque é de família, ja! Em Indaial a conversa tem um tempero próprio. Quem é de fora acha que é piada; quem é de lá acha normal.
+Vai um café? | Vai, com cuca! Café sem cuca em Santa Catarina é igual reportagem sem o Lauro: falta o melhor pedaço.
+Tá famoso agora? | Um pouquinho, ja! O canal de humor mais assistido do Sul. Mas em Indaial eu continuo sendo o guri que pede desconto no açougue.
+Vai jogar bocha? | Vou! E vou narrar cada jogada como se fosse final de campeonato. Prepara o microfone, que o Jornal Indavírus tá ao vivo.
+Já foi pro Rio Grande do Sul antes? | Agora vamos toda semana! Gaúcho e catarinense brigam pelo churrasco, mas concordam que o mate é sagrado.
+Qual a notícia do dia? | Urgente: o xis dessa bodega é bom demais. Fonte confiável, eu mesmo. Voltamos depois dos comerciais!
 
 [lauro]
-Quem veio contigo? | O Indavirus, alemon! Saímos de Santa Catarina juntos. Ele trouxe os causos e eu trouxe paciência pra escutar os mesmos de novo.
-Quer alguma coisa? | Um petisco e uma cadeira, ja! Lá na colônia catarinense, a conversa sempre começa com pode se servir.
-E a família alemã? | A oma ensinou: chegando visita, aumenta a mesa. Não aumenta a casa porque aí precisa de pedreiro, alemon!
-Lembra das histórias do vô? | Lembro dos relatos da vinda da família. Ele falava da saudade de lá e do trabalho pra fazer um lar em Santa Catarina.
-O que tem na festa da colônia? | Banda tocando, comida passando e gente dizendo só mais um pedacinho. Esse pedacinho dura a tarde toda, ja!
-Vai jogar truco? | Vou aprender contigo! Em casa o opa ensinou a contar as cartas. Só não ensinou a esconder minha cara de carta ruim.
-Trouxe receita de família? | Trouxe a ideia! A medida da oma era um tanto. Perguntei quanto era um tanto e ela disse tu vai vendo, alemon.
-Por que tu gosta de viajar? | Pra conhecer as mesas dos vizinhos! Nossa família cruzou um oceano; nóis cruza a divisa de Santa Catarina atrás de uma prosa boa.
-Como vai o Indavirus? | Vai contando história desde que saímos de Santa Catarina. Se a estrada fosse mais longa, ele começava a árvore genealógica de novo!
-Tem saudade de casa? | Do café da oma e da varanda depois da chuva. Nossa lembrança da imigração vive nessas coisas pequenas, ja.
-Já jogou bocha hoje? | Ainda não, alemon! Se minha bocha parar perto, é técnica da colônia. Se passar longe, foi o vento de Santa Catarina.
-Vai mais uma rodada? | Vai uma rodada de conversa primeiro. Conta tua história que nóis conta a da família, sem pressa de levantar da mesa.
+E aí, Lauro? | Opa! Lauro Antigo, de Indaial. O Gustavo fala, eu faço a cara de quem concorda. Assim funciona o Jornal Indavírus.
+O Gustavo vem junto? | Vem, mas fica gritando não me quebra, Lauro! Eu só encostei na mesa, rapaz. Tá firme ainda, ó.
+Como tão os porquinhos? | Tudo gordinho! Fiz até reportagem com eles. Teve mais visualização do que muita notícia séria, ja.
+Como começou o canal? | A pandemia tirou nosso serviço. A gente pegou o celular e foi fazer o povo rir em Indaial. Deu mais certo do que o serviço.
+Quer alguma coisa? | Um petisco e uma cadeira firme, por favor. Firme mesmo, que eu tenho fama de quebrar as coisas.
+Tu gosta de aparecer no vídeo? | Gosto, mas fico nervoso. Quando ligam a câmera eu esqueço até o nome da rua onde moro.
+Vai jogar truco? | Vou! Só que eu não sei fazer cara de paisagem. Se a carta é boa, eu rio. Se é ruim, eu rio também, pra disfarçar.
+E a roça? | A roça segue. A gente grava de manhã e cuida das coisas de tarde. Ou o contrário, depende de quem acordou primeiro.
+O que tem de bom em Indaial? | Gente boa, cuca, festa, futsal no verão e muito causo do Vale do Itajaí. E agora tem o Indavírus também, ja.
+Já jogou bocha hoje? | Ainda não! Se a bocha parar perto do bolim, é talento. Se for longe, foi o Gustavo que me desconcentrou.
+Tá cansado? | Um pouco. Viajar com o Gustavo cansa, ele grava até a placa da estrada. Mas é bom, a gente ri o caminho todo.
+Vai mais uma rodada? | Vai! Mas devagar, que eu já tenho cinquenta e poucos anos e o fígado também assiste os vídeos.
 
 [peixinhonabrasa]
-Chegou de onde? | De Santa Catarina, alemon! Vim trazer prosa da colônia e conferir se essa chapa trabalha tão bem quanto fala.
-O peixe fica no ponto? | Fica, ja! Quem tem pressa vira duas vezes; quem tem prosa esquece na brasa. Hoje eu vou só conversar contigo.
-Tem história de imigrante? | Na minha família se conta muito da chegada dos alemães. O que eu mais gosto é ouvir como fizeram amizade com os vizinhos daqui de Santa Catarina.
-E esse teu nome? | Peixinho na Brasa, alemon! Mas se o peixe acabar, eu aceito salame. O apelido não pode limitar o cardápio.
-Quem ensinou a cozinhar? | Foi olhando a família na colônia catarinense. O opa cuidava do fogo e a oma cuidava pra ele não contar causo até queimar tudo.
-Que festa tu prefere? | A que junta o povo da colônia, ja! Banda de um lado, comida do outro e nóis no meio sem saber pra onde ir primeiro.
-Vai um petisco? | Vai, alemon! Lá em Santa Catarina um petisco vira almoço quando a visita encontra assunto.
-Como é a prosa lá? | Mistura palavra antiga da família com jeito catarinense de falar. Meu alemon vem da mesa de casa, ja!
-Indavirus e Lauro vêm também? | Se os dois vierem, pode aumentar a mesa. Um começa a história da colônia, o outro corrige, e nóis passa a noite nisso.
-Vai arriscar uma bocha? | Claro! A tradição de família é dar opinião na jogada dos outros. Na minha eu peço silêncio, alemon!
-Qual lembrança tu leva daqui? | Uma mesa boa e conversa nova. A família guardou tanta memória da imigração que eu aprendi a guardar as de cada viagem também.
-Tá com pressa pra voltar? | Santa Catarina não sai do lugar, ja! Posso terminar esse petisco e esse causo antes de pegar a estrada.
+Chegou de onde? | De Vera Cruz, Rio Grande do Sul! Peixinho na brasa, Kaiser na mão, morra de inveja, vagabundo!
+O que é Peixinho na Brasa? | É estilo de vida, ja! Fogo bom, peixinho estalando, uma gelada na mão e a turma dos alemão em volta.
+Vai pedir o quê? | O que tiver de mais caprichado. Aqui é só pra quem pode, seus pela-saco! Mas paga direitinho, que alemão é honesto.
+Tem Kaiser aí? | Óia a Kaiser! Se não tiver, serve outra bem gelada que eu não faço desfeita. Mas a Kaiser é tradição da casa.
+Tá dançando por quê? | Tocou vaneira, o corpo vai sozinho! Em Vera Cruz a gente aprende a dançar antes de aprender a pescar.
+Qual o segredo do peixe? | Brasa forte, sal grosso e paciência. E ninguém mexendo no meu fogo, que eu fico brabo!
+Conhece o Indavírus? | Conheço! Os guri de Santa Catarina são bons de prosa, mas peixe na brasa é coisa nossa do Rio Grande.
+Ficou famoso? | Ficou! O vídeo correu o Brasil inteiro. Agora não posso acender uma brasa que alguém já grita: só pra quem pode!
+Vai um petisco? | Vai! Mas peixe eu trago o meu, que o meu é pescado e assado com respeito. O resto eu aceito da casa.
+Tem festa no fim de semana? | Sempre tem! Música de alemão alto, um churrasquinho e a turma toda falando ao mesmo tempo.
+Vai jogar bocha? | Vou, e se eu ganhar já sabe: Kaiser na mão e todo mundo morrendo de inveja.
+Já vai embora? | Daqui a pouco. Ainda tenho que acender o fogo lá em casa. Peixinho não se assa sozinho, vagabundo!
 
 [manolima]
-Como chegou por aqui? | Chegou o lobisome do Arvoredo! Deixei minha cadela baia descansando e vim buscar um mate e uma prosa.
-E a cadela baia? | A minha baia escuta mais que muita gente. O lobisome do Arvoredo conta um causo e ela já sabe se é hora de sair ou de dormir.
-Vai jogar bocha? | O lobisome do Arvoredo vai tentar! Se a cadela baia estivesse junto, ia querer buscar a bocha antes da medição.
-Puxa uma cadeira? | Puxo, sim. A cadela baia já tomou conta da minha lá em casa; o lobisome do Arvoredo teve que procurar outra querência.
-Como foi o passeio? | A baia escolheu o caminho. Eu sou o lobisome do Arvoredo, mas na hora de passear quem manda é aquela cadela.
-Vai um petisco? | Vai! A cadela baia me olha com uma cara quando tem salame... Até o lobisome do Arvoredo perde a pose e divide.
-Tá inspirado hoje? | O lobisome do Arvoredo acordou proseador. Falei tanto com a baia que ela foi deitar no outro lado do pátio.
-Uma partida de truco? | Aceito! A cadela baia conhece minha cara de blefe. Sorte do lobisome do Arvoredo que ela não sabe contar pros outros.
-Como vai a lida? | A baia fiscaliza tudo deitada na sombra. O lobisome do Arvoredo trabalha e ela aprova abanando o rabo.
-Vai mais um mate? | Manda o mate pro lobisome do Arvoredo. A cadela baia me espera, mas sabe que prosa boa não se termina no susto.
-Qual foi a novidade do dia? | A baia sumiu com meu chinelo de novo. O lobisome do Arvoredo botou as botas e veio reclamar aqui na bodega.
-Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo; depois a cadela baia recebe a versão completa lá em casa.
+Quem é o senhor? | Mano Lima, o filósofo dos pampas! Tropeiro velho do M'Bororé, gaiteiro de botão e contador de causo.
+De onde o senhor é? | Nasci pras bandas de Itaqui, me criei no M'Bororé e fiz querência em São Borja. Tudo na beira do Rio Uruguai.
+Fala da Cadela Baia! | Cadela Baia é música que o povo pede em todo baile. Fala de doma, de peão bueno e de bicho companheiro.
+E o Lobisomem do Arvoredo? | Ah, essa é das minhas! Causo de assombração que eu canto até criança dormir de luz acesa.
+Vai um trago? | Bebendo Canha e Tocando Gaita, como diz minha música. Mas só um, que índio véio tem que voltar a cavalo.
+O senhor sempre teve bigode? | Eu Já Nasci de Bigode, vivente! Fiz até música disso. Bigode de gaúcho não cresce, ele já vem de fábrica.
+Já foi na academia? | Fui uma vez e virou música: Mano na Academia. Levantei um peso e o peso me levantou junto.
+Toca uma? | Toca Outra Mano Lima, o povo grita! A gaita de botão não sai de perto. Se faltar gaita, eu toco no assobio.
+O senhor foi tropeiro mesmo? | Fui, e muito! Estouro de Tropa e Atrás da Tropa não são invenção. Poeira na cara e chuva nas costas, por anos.
+Maragato ou chimango? | Ih, tchê, isso é briga velha. Fiz Maragato e Chimango pra mostrar que no fim os dois tomam o mesmo mate.
+Vai bocha hoje? | Sempre! Na cancha eu sou paciente que nem tropeiro esperando o rio baixar. Mira firme e mão leve.
+Qual o conselho do dia? | Homem Valente e Cavalo Manso, vivente. Valentia é pra lida; paciência é pra vida. O resto a gaita explica.
 
 # FALAS POR AÇÃO — opcionais. Se vazio, usa o diálogo normal do personagem.
 # Formato: pergunta do jogador | resposta do personagem
@@ -208,6 +208,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [guri.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Bora uma bocha? | Mas bah, bora! Gaudério da fronteira não recusa desafio.
 
 [guri.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
@@ -217,6 +218,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [guri.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+Boa jogada? | Mas que jogada, tchê! Só se fala de outra coisa!
 
 [guri.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
@@ -226,18 +228,22 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [guri.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou do Guri de Uruguaiana? Vou contar pro Licurgo, ele vai chorar.
 
 [guri.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Mas que falta de opção! Treina mais que na próxima eu alivio… mentira, não alivio nada.
 
 [guri.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Truco? | Truco é comigo, tchê! Lá na fronteira eu aprendi com castelhano.
 
 [guri.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [guri.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Retruco! Quero ver se tu é taura mesmo!
 
 [guri.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -250,9 +256,11 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [guri.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Bah, tu é bom! A Silvia Helena não pode saber que eu perdi.
 
 [guri.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Mas que falta de opção! Paga um mate e fica tudo certo.
 
 [marcio.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
@@ -352,6 +360,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [indavirus.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Vamos jogar? | Atenção, Jornal Indavírus ao vivo da cancha! Começa a partida do século!
 
 [indavirus.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
@@ -361,6 +370,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [indavirus.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+E aí? | Que lançamento! O Lauro chorou aqui do lado, ja!
 
 [indavirus.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
@@ -370,18 +380,22 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [indavirus.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Urgente: perdi! Fonte confiável, eu mesmo. Parabéns!
 
 [indavirus.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | E o campeão é… o Gustavo Pórco! Voltamos depois dos comerciais.
 
 [indavirus.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Truco? | Vamos, mas vou narrar cada carta. Não me quebra o baralho!
 
 [indavirus.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [indavirus.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Notícia urgente: pediram truco! O povo de Indaial tá em choque!
 
 [indavirus.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -394,12 +408,15 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [indavirus.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Que partida! Isso vai virar vídeo, ja.
 
 [indavirus.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Não fica triste, o Lauro perde todo dia e continua sorrindo.
 
 [lauro.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Vamos jogar? | Vamos! Só não me deixa segurar a bocha muito tempo, que eu derrubo.
 
 [lauro.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
@@ -409,6 +426,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [lauro.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+Foi bem? | Foi bem! Melhor que eu, que quase acertei o Gustavo.
 
 [lauro.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
@@ -418,18 +436,22 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [lauro.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou honesto! Vou contar pros porquinhos.
 
 [lauro.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Perdeu pro Lauro Antigo! Isso nem o Gustavo vai acreditar, ja.
 
 [lauro.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Truco? | Vamos, mas eu rio com carta boa e com carta ruim. Boa sorte pra adivinhar.
 
 [lauro.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [lauro.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Ai, ai… aceito! Não me quebra, que eu tô fraco hoje.
 
 [lauro.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -442,12 +464,15 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [lauro.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Tu joga bem, rapaz. Eu só jogo feliz.
 
 [lauro.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Agora faço pose pra câmera que o Gustavo tá filmando.
 
 [peixinhonabrasa.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Bora jogar? | Bora! Kaiser na mão e bocha na outra, só pra quem pode!
 
 [peixinhonabrasa.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
@@ -457,6 +482,7 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [peixinhonabrasa.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+Que tal? | Óia! Essa foi no capricho, seus pela-saco!
 
 [peixinhonabrasa.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
@@ -466,18 +492,22 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [peixinhonabrasa.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou, vagabundo! Hoje tu pode pegar o peixinho mais gordo da brasa.
 
 [peixinhonabrasa.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Perdeu! Peixinho na brasa, Kaiser na mão, morra de inveja!
 
 [peixinhonabrasa.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Truco? | Truco é com alemão de Vera Cruz! Embaralha que eu vou buscar a gelada.
 
 [peixinhonabrasa.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [peixinhonabrasa.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Retruco! Aqui é só pra quem pode!
 
 [peixinhonabrasa.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -490,42 +520,54 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [peixinhonabrasa.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Bah, ganhou do Peixinho! Essa eu vou contar na próxima pescaria.
 
 [peixinhonabrasa.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Morra de inveja, vagabundo! Kaiser por conta do perdedor.
 
 [manolima.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bora, vivente! A bocha é que nem tropa: vai devagar, mas chega.
 
 [manolima.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira no bolim que nem tropeiro mira a porteira: sem pressa e sem desviar.
 
 [manolima.bocha.forca]
 # Escreva as falas abaixo, uma por linha.
+Quanta força? | Mão leve, tchê. Força demais espanta a bocha que nem estouro de tropa.
 
 [manolima.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+Foi bem? | Saiu bonita! Rolou que nem o Trem do Bororé.
 
 [manolima.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou no bolim! Mais perto que bigode de gaúcho.
 
 [manolima.bocha.rodada]
 # Escreva as falas abaixo, uma por linha.
+Fechou a rodada? | Fechou! Conta os ponto que eu vou cevando outro mate.
 
 [manolima.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei? | Ganhou, vivente! Te dou os parabéns e uma música de presente: Toca Outra Mano Lima!
 
 [manolima.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi, né? | Perdeu, mas perdeu bonito. Amanhã tem cancha de novo, e índio véio não foge de revanche.
 
 [manolima.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Vamos de truco? | Embaralha essas carta, vivente. Filósofo dos pampas também sabe blefar.
 
 [manolima.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [manolima.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Trucou o índio véio? Tá corajoso hoje, tchê!
 
 [manolima.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -538,8 +580,10 @@ Já vai embora? | Daqui a pouco. O lobisome do Arvoredo ainda termina esse causo
 
 [manolima.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou com mérito. Vou fazer uma música pra essa partida.
 
 [manolima.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Não esquenta, vivente. Carta é que nem tempo de campanha: uma hora vira.
 
 */ };

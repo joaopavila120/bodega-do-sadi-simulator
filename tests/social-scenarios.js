@@ -55,7 +55,9 @@
  phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Contatos da bodega')&&document.querySelectorAll('[data-contact]').length===ALWAYS_TALK.size,'aba Contatos lista só os especiais, com retratos e afeto; preferências');
  phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&$('phoneContent').querySelectorAll('.upgrade-category').length===4,'melhorias separadas em categorias sem relações');
  for(const id of ['indavirus','lauro','peixinhonabrasa']){const p=index(id);G.friends[p]=100;G.conversations[p]=4;check(!!personalizedProse(p)&&nextProse(p).id?.includes(id),'voz própria permanece com afinidade alta: '+id);}
- const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!/baia/i.test(line.reply)||!/lobisome do Arvoredo/i.test(line.reply))throw Error('Mano perdeu a voz própria');}check(true,'Mano mantém falas da baia e do lobisome sem cair nas genéricas');
+ const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!line.id?.includes('manolima'))throw Error('Mano perdeu a voz própria');}check(true,'Mano Lima mantém voz própria sem cair nas falas genéricas');
+ for(const id of ['guri','manolima','peixinhonabrasa','indavirus','lauro']){const lines=customDialogues[id]||DEFAULT_DIALOGUES[id];check(lines?.length>=12&&!lines.some(l=>/imigração|lobisome do Arvoredo te/.test(l.reply)),'falas novas de '+id);}
+ check(/Kaiser/.test(DEFAULT_DIALOGUES.peixinhonabrasa.map(l=>l.reply).join())&&/Indaial/.test(DEFAULT_DIALOGUES.indavirus.map(l=>l.reply).join())&&/Uruguaiana/.test(DEFAULT_DIALOGUES.guri.map(l=>l.reply).join())&&/M'Bororé/.test(DEFAULT_DIALOGUES.manolima.map(l=>l.reply).join()),'falas fazem referência a cada personagem real');
  for(const phase of ['prep','open','closing','closed']){
   reset();G.phase=phase;G.elapsed=30;G.report=phase==='closed'?{...G.stats,end:G.cash,profit:0}:null;
   cardsMenu();check(modal==='cards','truco disponível em '+phase);$('trucoWager').value='0';startTruco();

@@ -4,10 +4,10 @@
  const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.day=2;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=1000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();cardInvite=null;['start','overlay','phone','bocceScreen'].forEach(id=>$(id).classList.add('hidden'));document.body.classList.remove('playing-bocce');};
  try{
   reset();cardsMenu();check(!$('opponent')&&$('dialogContent').textContent.includes('agenda ainda está vazia'),'sem contatos não há convite para truco');closeDialog(true);
-  bocceMenu();check(!$('bocceOpponent'),'sem contatos não há convite para bocha');closeDialog(true);
+  bocceMenu();check([...$('bocceOpponent').options].map(o=>PEOPLE[Number(o.value)].id).join()==='manolima','sem contatos, o Mano Lima está sempre disponível para a bocha');closeDialog(true);
   const badin=PEOPLE.findIndex(p=>p.id==='badin'),mano=PEOPLE.findIndex(p=>p.id==='manolima');G.contacts={badin:2,manolima:2};
   cardsMenu();check([...$('opponent').options].map(o=>Number(o.value)).sort().join()===[badin,mano].sort().join(),'truco convida apenas contatos da agenda');closeDialog(true);
-  bocceMenu();check([...$('bocceOpponent').options].every(o=>hasContact(Number(o.value))),'bocha convida apenas contatos da agenda');startBocceGame();
+  bocceMenu();check([...$('bocceOpponent').options].every(o=>hasContact(Number(o.value))||PEOPLE[Number(o.value)].id==='manolima'),'bocha convida contatos da agenda e o Mano Lima');startBocceGame();
   check(specialOpponent(G.bocce.opponent)&&G.bocce.talk.length===1&&G.bocce.talk[0].person===G.bocce.opponent,'bocha só tem a fala do adversário, sem torcida');
   G.bocce.phase='direction';G.bocce.turn=0;confirmBocce();G.bocce.power=.7;const sequence=G.bocce.talkSequence;confirmBocce();
   check(G.bocce.used[0]===1&&G.bocce.talkSequence>sequence&&G.bocce.talk.length===1,'lançamento real gera nova fala do adversário');

@@ -8,7 +8,7 @@ function draw(){beginWorld();
  if(isCampo()){drawCampoBackground();drawWeather();}else{const currentRoom=roomArt;if(currentRoom.complete&&currentRoom.naturalWidth){ctx.imageSmoothingEnabled=false;ctx.drawImage(currentRoom,0,0,W,H);ctx.imageSmoothingEnabled=true;}else rect(0,0,W,H,'#7d7955');
  // Signs remain small and belong to the room; the nearby station gets the detailed instruction.
 
- drawDecor();drawRainWindow();drawNightWindow();drawDecorLights();drawTelevision();drawCanchaDoor();drawWeather();rect(ENTRY.x-70,H-25,139,23,'#624c2e',3,'#ae9253');txt('BEM-VINDO',ENTRY.x,H-14,11,'#d9bd7c');}const active=furniture(),near=started&&!modal&&!phoneOpen?nearest():null;
+ drawDecor();drawRainWindow();drawNightWindow();drawDecorLights();drawTelevision();drawCanchaDoor();drawWeather();rect(ENTRY.x-70,H-25,139,23,'#624c2e',3,'#ae9253');txt('BEM-VINDO',ENTRY.x,H-14,11,'#d9bd7c');if(G.up.placaFiado&&placaFiadoArt.complete&&placaFiadoArt.naturalWidth){ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(placaFiadoArt,1362,700,96,84);ctx.restore();}}const active=furniture(),near=started&&!modal&&!phoneOpen?nearest():null;
  if(near?.kind==='station'){const f=near.obj;rect(f.x-6,f.y-6,f.w+12,f.h+16,'#ffdb6825',7,'#fce497');}
  // Draw stools first, then furniture and standing people in depth order.
  for(const t of availableTables()){chair(t.x-27,t.y+t.h/2+57);chair(t.x+t.w+27,t.y+t.h/2+57);chair(t.x+32,t.y+t.h+27);chair(t.x+t.w-32,t.y+t.h+27);}
@@ -17,7 +17,7 @@ function draw(){beginWorld();
  for(const c of G.shop)layers.push({y:c.y,draw:()=>{if(isSpecial(c.person)&&c.state!=='leave')specialRing(c.x,c.y);personDraw(PEOPLE[c.person].sprite,c.x,c.y,!!c.path?.length,false,c.dx);}});
  for(const g of G.groups){const seated=['seated','chat'].includes(g.state),t=G.tables.find(t=>t.id===g.table);for(let j=0;j<g.size;j++){const {x,y}=groupSeatPosition(g,j);layers.push({y,draw:()=>{if(isSpecial(groupPerson(g,j))&&g.state!=='leave')specialRing(x,y);personDraw(PEOPLE[groupPerson(g,j)].sprite,x,y,!seated&&(g.state==='tournamentMove'||!!g.path?.length),false,g.dx,seated);}});}}
  if(deliveryVisitor>0)layers.push({y:ENTRY.y-20,draw:()=>{personDraw(5,ENTRY.x-10,ENTRY.y-20,true);food('erva',ENTRY.x-3,ENTRY.y-71,36);}});
- layers.push({y:G.player.y,draw:()=>personDraw(avatarSprite(),G.player.x,G.player.y,G.player.walk,true,G.player.dx)});layers.sort((a,b)=>a.y-b.y).forEach(l=>l.draw());
+ drawChallengeVisit(layers);layers.push({y:G.player.y,draw:()=>personDraw(avatarSprite(),G.player.x,G.player.y,G.player.walk,true,G.player.dx)});layers.sort((a,b)=>a.y-b.y).forEach(l=>l.draw());
 
  drawNight();
  drawCustomerOrders();

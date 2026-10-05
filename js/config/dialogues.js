@@ -52,55 +52,19 @@ const DEFAULT_DIALOGUES={
     }
   ],
   "guri": [
-    {
-      "player": "E aí, guri?",
-      "reply": "Chê, vim só dar uma olhada e o cheiro da chapa já fez meu pedido."
-    },
-    {
-      "player": "Como foi a lida?",
-      "reply": "Chê, trabalhei tanto que até minha sombra pediu folga."
-    },
-    {
-      "player": "Vai jogar truco?",
-      "reply": "Se tiver parceiro, chê! Meu problema é que a cara entrega antes da carta."
-    },
-    {
-      "player": "Mais um mate?",
-      "reply": "Chê, aceito. Mate e prosa boa nunca precisam de convite duas vezes."
-    },
-    {
-      "player": "Tá com fome?",
-      "reply": "Mais que cusco olhando churrasco, chê. Capricha nesse xis!"
-    },
-    {
-      "player": "Como tá o cavalo?",
-      "reply": "Chê, viu eu pegar a sela e foi pastar do outro lado do campo. Inteligente o vivente."
-    },
-    {
-      "player": "Gostou da bodega?",
-      "reply": "Chê, aqui até a espera vem acompanhada de causo."
-    },
-    {
-      "player": "Qual é a previsão?",
-      "reply": "O céu tá indeciso, chê. Eu já decidi: fico perto da comida."
-    },
-    {
-      "player": "Vai uma torrada?",
-      "reply": "Show, chê! Mas se o salame aparecer só na lembrança, eu reclamo."
-    },
-    {
-      "player": "E esse frio?",
-      "reply": "Chê, hoje o minuano veio buscar troco que eu nem devia."
-    },
-    {
-      "player": "De onde tu vem?",
-      "reply": "Lá de onde o GPS diz boa sorte, chê."
-    },
-    {
-      "player": "Já vai embora?",
-      "reply": "Depois da saideira de prosa, chê. Essa demora um pouco."
-    }
-  ],
+  {"player": "E aí, Guri?", "reply": "Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam."},
+  {"player": "Como tá a fronteira?", "reply": "Tranquila! Atravessei a ponte pra Paso de los Libres, comprei uma erva e voltei. Só se fala de outra coisa!"},
+  {"player": "Cadê o Licurgo?", "reply": "O Licurgo ficou em casa ouvindo música triste. É o único gaúcho emo do Rio Grande, tchê. Mas que falta de opção!"},
+  {"player": "E a Silvia Helena?", "reply": "A patroa mandou eu voltar cedo. Eu disse que vinha só tomar um mate… ela já sabe que mate meu dura a tarde inteira."},
+  {"player": "Vai um xis?", "reply": "Capricha, que gaudério da fronteira não come pouco. Bota tudo que tiver, que se faltar eu reclamo cantando!"},
+  {"player": "Que música tu tá cantando?", "reply": "Uma paródia nova, tchê! Pego o sucesso do momento e boto bombacha nele. Até o Canto Alegretense entra no meio."},
+  {"player": "Como foi o show?", "reply": "Theatro São Pedro lotado em Porto Alegre! Gaúcho rindo de gaúcho, que é o melhor tipo de riso que tem."},
+  {"player": "Tu usa WhatsApp?", "reply": "Uso, mas no meu ritmo. Mando áudio de sete minutos e começo com bom dia, que educação vem antes da tecnologia."},
+  {"player": "Mais um mate?", "reply": "Mas bah, sempre! Cuia bem cevada, água no ponto e conversa sem pressa. O resto é modernagem."},
+  {"player": "Vai jogar truco?", "reply": "Truco com gaudério da fronteira é perigoso, tchê. Eu já peço o truco olhando pro horizonte, que é pra não entregar a carta."},
+  {"player": "Tá pilchado hoje?", "reply": "Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece. Nem a Silvia Helena."},
+  {"player": "Qual a novidade?", "reply": "A novidade é que não tem novidade! Mas que falta de opção, tchê. Por isso vim pra bodega: aqui sempre tem causo."}
+ ],
   "marcio": [
     {
       "player": "E o pedido, Márcio?",

@@ -85,7 +85,9 @@ function fiadoOpen(){return fiadoState().filter(e=>e.status==='open');}
 function fiadoTotal(){return round(fiadoOpen().reduce((n,e)=>n+e.amount,0));}
 // Cada freguês tem um jeito de pagar: uns são pontuais, outros somem.
 function reliability(person){return .5+((person*37+11)%45)/100;}
-function wantsFiado(person){return G.day>=2&&!tutorialActive()&&!isSpecial(person)&&!PEOPLE[person].team&&Math.random()<.18;}
+const placaFiadoArt=new Image();placaFiadoArt.src='assets/images/icons/placa_fiado.png';
+function fiadoChance(){return G.up.placaFiado?.04:.18;}
+function wantsFiado(person){return G.day>=2&&!tutorialActive()&&!isSpecial(person)&&!PEOPLE[person].team&&Math.random()<fiadoChance();}
 function fiadoFirst(){const c=G.shop.find(c=>c.state==='queue');return c?.fiado?c:null;}
 function recordFiado(person,amount){
  const e={id:G.next++,person,amount:round(amount),day:G.day,due:G.day+2+Math.floor(Math.random()*3),status:'open',charged:0};

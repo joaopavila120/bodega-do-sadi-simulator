@@ -11,10 +11,18 @@ function initializeCharacterChoice(){
  const c=$('avatarPreview');if(c)drawCharacterPortrait(c.getContext('2d'),0,c.width/2,c.height-6,166);
 }
 function upgradeCategory(u){if(u.goods||u.id==='cigarro_py')return 'Cardápio e mercadorias';if(u.id.startsWith('table'))return 'Salão';if(GEAR[u.id]||u.id.toLowerCase().includes('mate'))return 'Botas e chimarrão';return 'Cozinha e atendimento';}
+// Ícone de cada melhoria: sprite do produto que ela libera ou um ícone próprio.
+const UPGRADE_ICONS={trago:'item:cachaca',coffee:'item:cafe',bootsGaucho:'bota_gaucho',bootsBagual:'bota_bagual',mateCuiudo:'mate:1',mateTopetudo:'mate:2',mateLendario:'mate:3',cigarro_py:'item:cigarro_py',table3:'mesa',table4:'mesa',tray:'bandeja',pepino:'item:pepino',bergamota:'item:bergamota',amendoim:'item:amendoim',salame:'item:salame',pinhao:'item:pinhao',bitter:'item:bitter',capacity:'estoque',bacon:'item:bacon',grill3:'chapa',coracao:'item:coracao',placaFiado:'placa_fiado'};
+function upgradeIconHTML(id){
+ const icon=UPGRADE_ICONS[id];if(!icon)return '';const[kind,arg]=icon.split(':');
+ if(kind==='item')return `<span class="upgrade-icon">${itemIconHTML(arg)}</span>`;
+ if(kind==='mate')return `<span class="upgrade-icon">${itemIconHTML('mate')}<b class="upgrade-stars">${'★'.repeat(Number(arg))}</b></span>`;
+ return `<span class="upgrade-icon"><img src="assets/images/icons/${icon}.png" alt="" draggable="false"></span>`;
+}
 function upgradeCatalog(){
  return ['Cardápio e mercadorias','Cozinha e atendimento','Salão','Botas e chimarrão'].map(category=>`<details class="upgrade-category" open><summary>${category}</summary>${UPGRADES.filter(u=>upgradeCategory(u)===category).map(u=>{
   const missing=[];if(!tutorialUpgradeAllowed(u.id))missing.push('concluir a etapa do tutorial');if(bodegaLevel()<(u.level||1))missing.push('nível '+u.level);if(G.rep<u.rep)missing.push('reputação '+u.rep);if(!hasCash(u.cost))missing.push(money(u.cost));if(u.requires&&!G.up[u.requires])missing.push(UPGRADES.find(v=>v.id===u.requires).name);
-  return `<div class="upgrade"><h3>${u.name}</h3><p>${u.desc}</p><p>${u.level>1?'Nível '+u.level+' · ':''}Reputação ${u.rep} · ${money(u.cost)}${u.requires?' · requer '+UPGRADES.find(v=>v.id===u.requires).name:''}</p><button class="primary" data-act="upgrade" data-id="${u.id}" ${G.up[u.id]||missing.length?'disabled':''}>${G.up[u.id]?'Já é da casa':missing.length?'Falta: '+missing.join(' + '):u.cost===0?'Instalar grátis':'Comprar melhoria'}</button></div>`;
+  return `<div class="upgrade"><h3>${upgradeIconHTML(u.id)}${u.name}</h3><p>${u.desc}</p><p>${u.level>1?'Nível '+u.level+' · ':''}Reputação ${u.rep} · ${money(u.cost)}${u.requires?' · requer '+UPGRADES.find(v=>v.id===u.requires).name:''}</p><button class="primary" data-act="upgrade" data-id="${u.id}" ${G.up[u.id]||missing.length?'disabled':''}>${G.up[u.id]?'Já é da casa':missing.length?'Falta: '+missing.join(' + '):u.cost===0?'Instalar grátis':'Comprar melhoria'}</button></div>`;
  }).join('')}</details>`).join('');
 }
 function guideContent(){

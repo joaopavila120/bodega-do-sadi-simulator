@@ -56,6 +56,10 @@
   check(first.status==='thinking'&&!first.orders.length,'o próximo item só sai depois da entrega anterior');
   for(let n=0;n<340;n++)customersTick(.05);check(first.status==='waiting'&&first.orders.join()==='refri','depois de um tempo a pessoa pede o próximo item');
   G.phase='closing';first.status='thinking';first.later=['cerveja'];customersTick(.05);check(first.status==='served'&&!first.later.length,'com as portas fechadas ninguém faz pedido novo');
+  // Ícones das melhorias e placa do fiado
+  check(UPGRADES.every(u=>upgradeIconHTML(u.id).includes('upgrade-icon')),'toda melhoria tem ícone');
+  reset();check(fiadoChance()===.18,'sem placa, 18% pedem fiado');G.xp=99999;G.levelSeen=7;G.cash=500;buyUpgrade('placaFiado');check(G.up.placaFiado&&fiadoChance()===.04,'placa Fiado só amanhã derruba os pedidos de fiado');
+  phoneOpen=true;phoneTab='upgrades';renderPhone();check(document.querySelectorAll('#phoneContent .upgrade-icon').length>=UPGRADES.length&&$('phoneContent').textContent.includes('Fiado só amanhã'),'aba Melhorias mostra ícones e a placa');phoneOpen=false;
   // Calendário e eventos
   check(calendar(1).name==='Sexta'&&fixedEventFor(2)==='normal'&&fixedEventFor(3)==='costelao'&&fixedEventFor(6)==='grenal'&&!EVENTS.truco&&!EVENTS.motos&&!EVENTS.rodeio&&fixedEventFor(10)==='costelao'&&!EVENTS.farroupilha&&!EVENTS.junina&&nameOf('cachaca')==='Dose de cachaça','calendário tem Gre-Nal, truco e rodeio; sem Farroupilha, junina ou quentão');
   // Modo de testes escolhe o evento

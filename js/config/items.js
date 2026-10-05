@@ -24,6 +24,7 @@ const UPGRADES=[
  {id:'mateLendario',level:5,name:'Mate Lendário',cost:440,rep:80,requires:'mateTopetudo',desc:'Impulso de +85% durante 35 segundos.'},
  {id:'cigarro_py',level:3,name:'Cigarro do Paraguai',cost:140,rep:67,desc:'Melhora os maços da prateleira: cada venda passa de R$ 12 para R$ 18.'},
  {id:'table4',level:4,name:'Quarta mesa',cost:240,rep:74,desc:'Mais quatro lugares para o restaurante. Participa do carteado durante campeonatos.'},
+ {id:'placaFiado',name:'Placa “Fiado só amanhã”',cost:70,rep:0,desc:'Pendurada ao lado do balcão: bem menos fregueses pedem fiado (de 18% para 4%). Quem já tem conta continua pagando normalmente.'},
  {id:'tray',name:'Bandeja de dois lugares',cost:80,rep:60,desc:'Carregue dois itens. Selecione o espaço com 1 e 2.'},
  {id:'pepino',goods:'pepino',name:'Conserva de pepino',cost:45,rep:62,desc:'Libera a venda e inclui 4 potes para começar.'},
  {id:'bergamota',goods:'bergamota',name:'Bergamota do pomar',cost:45,rep:63,desc:'Libera venda por peso e inclui 12 kg de bergamota.'},
