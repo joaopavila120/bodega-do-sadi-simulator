@@ -83,6 +83,8 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
  doorChime(){[[2637,0],[3520,.09]].forEach(([f,t])=>{this.note(f,.55,'sine',.022,t);this.note(f*2.76,.25,'sine',.006,t);});},
  // Caixa registradora: gaveta abrindo, "tlim" e moedas.
  register(){this.pop(900,.1,.03);this.noise(.08,.08,600);this.note(2794,.45,'sine',.05,.06);this.note(4186,.3,'sine',.02,.08);[1568,2093,2637].forEach((f,i)=>this.note(f,.12,'sine',.03,.2+i*.05));},
+ // Bipe das letras aparecendo na caixa de diálogo.
+ blip(){this.note(1100+Math.random()*180,.03,'square',.01);},
  brawl(){[0,.09,.2,.3].forEach((t,i)=>{this.note(95+i*14,.07,'triangle',.09,t);this.noise(.08,.14,900+i*300);});},
  crash(){this.noise(.4,.3,3200);[2350,3100,2650,3900,2900].forEach((f,i)=>this.note(f,.18,'sine',.05,.02+i*.045));this.note(70,.25,'triangle',.12);},
  near(x,y,range=800){return clamp(1.15-Math.hypot(G.player.x-x,G.player.y-y)/range,.3,1);},

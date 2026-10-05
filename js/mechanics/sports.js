@@ -16,9 +16,11 @@ function sportTalk(match,type,action){
  if(!specialOpponent(match.opponent))match.opponent=pick(sportPeople());
  const spectator=match.spectator??(match.spectator=pick(sportPeople().filter(i=>i!==match.opponent)));
  match.talk=(type==='bocha'?[match.opponent]:[match.opponent,spectator]).map(person=>{const line=sportLine(person,type,action);return {person,player:line.player,reply:line.reply};});
+ // No fim da lição, o Mano Lima apresenta o melhor da região.
+ if(match.tutorial&&type==='bocha'&&['vitoria','derrota'].includes(action)&&PEOPLE[match.opponent]?.id==='manolima')match.talk=[{person:match.opponent,player:'Tu joga bem demais, Mano!',reply:'Se tu acha eu bom, tem que ver o famoso Lauro Boleador!'}];
  match.talkLife=15;match.talkSequence=(match.talkSequence||0)+1;
 }
-function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<p><b>'+escapeHTML(sportName(line.person))+'</b><small>Você: '+escapeHTML(line.player)+'</small>'+escapeHTML(line.reply)+'</p>').join('')+'</div>':'';}
+function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<div class="talk-line">'+portraitHTML(line.person,52)+'<p><b>'+escapeHTML(sportName(line.person))+'</b><small>Você: '+escapeHTML(line.player)+'</small>'+escapeHTML(line.reply)+'</p></div>').join('')+'</div>':'';}
 function sportTalkTick(dt){
  const match=G.bocce||G.game;if(!match||document.hidden||match.paused||!match.talkLife)return;
  match.talkLife=Math.max(0,match.talkLife-dt);
@@ -30,7 +32,7 @@ function updateBocceSocial(){
  const token=(b.talkLife>0?b.talkSequence:0)+':'+b.phase+':'+b.paused+':'+b.tutorial;
  if(host.dataset.token===token)return;host.dataset.token=token;
  const tips={jack:'1 · A bolinha pequena é o bolim. Ganha quem deixar suas bochas mais perto dele.',direction:'2 · Mova com A/D. Quando a mira apontar para o bolim, aperte Espaço para travar a direção.',power:'3 · A força está subindo. Aperte Espaço para lançar. Aproximadamente 70% alcança o fundo da cancha.',rolling:'4 · Observe onde sua bocha para. Na próxima, ajuste a direção e a força.',ai:'Agora observe o lançamento do Mano Lima. Cada lado tem quatro bochas.',between:'5 · Quem deixou a bocha mais perto do bolim vence a rodada. Aperte Próxima rodada. A partida é melhor de 3: vence quem ganhar 2 rodadas.',over:'Tutorial concluído! Você pode apostar e organizar campeonatos na cancha.'};
- host.innerHTML='<p><b>Contra '+escapeHTML(sportName(b.opponent))+'</b></p>'+(b.tutorial?'<div class="callout">'+tips[b.phase]+'</div>':'')+sportTalkHTML(b);
+ host.innerHTML='<p><b>Contra '+escapeHTML(sportName(b.opponent))+(PEOPLE[b.opponent]?.id==='lauro'?' Boleador':'')+'</b></p>'+(b.tutorial?'<div class="callout">'+tips[b.phase]+'</div>':'')+sportTalkHTML(b);
 }
 function settleSport(type,match,won){
  if(match.sportSettled)return;match.sportSettled=true;
@@ -47,7 +49,7 @@ function prepareAfterHours(){
 }
 function showSportChallenge(){
  const challenge=sportState().challenge;if(!challenge)return false;
- openDialog(challenge.tutorial?'Mano Lima te ensina a jogar bocha':'Desafio depois do expediente',`<p><b>${sportName(challenge.person)}</b> apareceu na bodega!</p><p>${challenge.tutorial?'“Bora pra cancha, vivente! Índio véio te ensina a mirar, escolher a força e contar os pontos.” O treino é gratuito e guiado, uma etapa por vez.':'“Vamos tirar uma bocha valendo '+money(challenge.wager)+' por lado?” Vitória devolve o dobro; derrota perde a entrada. Recusar custa 3 pontos de amizade.'}</p><div class="actions"><button class="primary" data-act="sportAccept" ${hasCash(challenge.wager)?'':'disabled'}>${challenge.tutorial?'Aprender com Mano Lima':'Aceitar · '+money(challenge.wager)}</button><button data-act="sportDecline">${challenge.tutorial?'Aprender depois':'Recusar · −3 amizade'}</button></div>`,'sportChallenge');return true;
+ openDialog(challenge.tutorial?'Mano Lima te ensina a jogar bocha':'Desafio depois do expediente',`<div class="rpg-speaker">${portraitHTML(challenge.person,88)}<div><p><b>${sportName(challenge.person)}</b> apareceu na bodega!</p><p>${challenge.tutorial?'“Bora pra cancha, vivente! Índio véio te ensina a mirar, escolher a força e contar os pontos.” O treino é gratuito e guiado, uma etapa por vez.':'“Vamos tirar uma bocha valendo '+money(challenge.wager)+' por lado?” Vitória devolve o dobro; derrota perde a entrada. Recusar custa 3 pontos de amizade.'}</p></div></div><div class="actions"><button class="primary" data-act="sportAccept" ${hasCash(challenge.wager)?'':'disabled'}>${challenge.tutorial?'Aprender com Mano Lima':'Aceitar · '+money(challenge.wager)}</button><button data-act="sportDecline">${challenge.tutorial?'Aprender depois':'Recusar · −3 amizade'}</button></div>`,'sportChallenge');return true;
 }
 function answerSportChallenge(accept){
  const s=sportState(),c=s.challenge;if(!c)return;

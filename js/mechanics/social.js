@@ -7,7 +7,7 @@ const CONTACT_AT=15;          // afeto para ganhar o contato
 const GIFT_AT=50;             // afeto para ganhar o presente
 const MAX_FRIENDSHIP=100;     // afeto para poder jogar com o personagem
 const GIFTS={
- manolima:[{at:'tutorial',decor:['bandeira'],text:'“Pra tua bodega ter cara de galpão de verdade.”'},{at:GIFT_AT,decor:['prateleira','gaita'],text:'“Essa gaita já tocou muito baile no Arvoredo.”'}],
+ manolima:[{at:'tutorial',decor:['bandeira'],text:'“Pra tua bodega ter cara de galpão de verdade. E treina, que um dia tu enfrenta o Lauro Boleador!”'},{at:GIFT_AT,decor:['prateleira','gaita'],text:'“Essa gaita já tocou muito baile no Arvoredo.”'}],
  badin:[{at:GIFT_AT,decor:['chapeu'],text:'“Um chapéu campeiro pra receber a freguesia.”'}],
  guri:[{at:GIFT_AT,decor:['laco'],text:'“Laço trançado pelo meu avô. Cuida bem.”'}],
  marcio:[{at:GIFT_AT,decor:['poncho'],text:'“Pro inverno da bodega.”'}],
@@ -71,7 +71,7 @@ function queueAfterHoursGifts(){
 }
 function showGiftVisit(){
  const item=G.giftQueue?.[0];if(!item)return false;const p=PEOPLE[item.person];
- openDialog('Presente de '+p.name,`<p><b>${p.name}</b> passou na bodega depois do expediente e trouxe um presente.</p><div class="callout"><b>🎁 ${giftLabel(item)}</b><p>${item.text}</p></div><div class="actions"><button class="primary" data-act="giftAccept">Receber o presente</button></div>`,'giftVisit');return true;
+ openDialog('Presente de '+p.name,`<div class="rpg-speaker">${portraitHTML(item.person,88)}<div><p><b>${p.name}</b> trouxe um presente.</p><div class="callout"><b>🎁 ${giftLabel(item)}</b><p>${item.text}</p></div></div></div><div class="actions"><button class="primary" data-act="giftAccept">Receber o presente</button></div>`,'giftVisit');return true;
 }
 function acceptGiftVisit(){const item=G.giftQueue?.shift();deliverGift(item);closeDialog(true);challengeVisitLeave();save();}
 function socialCheck(){
