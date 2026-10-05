@@ -94,6 +94,7 @@ function recordFiado(person,amount){
 }
 function refuseFiado(){
  const c=fiadoFirst();if(!c)return;
+ if(tutorialActive()){say('Hoje é dia de aprender: anote este no caderninho entregando com E.');return;}
  if(Math.random()<.6){c.fiado=false;say(PEOPLE[c.person].name+': “Tá, tá… pago à vista então.”');}
  else{c.state='leave';c.dest=null;setDestination(c,EXIT);G.rep=clamp(G.rep-1,0,100);G.stats.lost++;resetQueuePaths();say(PEOPLE[c.person].name+' foi embora sem levar nada.');}
  save();refreshHUD();

@@ -35,14 +35,8 @@
   useGrill(0);useBench(0);useGrill(1);useBench(0);useBench(0);useBench(0);usePress();tick(6.1,kitchenTick);usePress();
   check(held()?.pid==='xis_salada'&&held().ready,'xis completo usando queijo fora da chapa');
   reset();approach('mate');
-  for(let i=0;i<5;i++){keys.add('e');interact();tick(1.15,holdTick);keys.clear();}
-  check(G.mateHerb===0&&G.boost===10,'cinco mates esgotam os 500 g');
-  interact();check(!G.task,'cuia vazia bloqueia consumo');
-  const stock=G.stock.erva;refillMate();check(G.stock.erva===stock,'reabastecer exige proximidade do balcão');
-  approach('bag');refillMate();check(G.mateHerb===500&&G.stock.erva===stock-500,'reabastecimento consome 500 g do estoque real');
-  G.mateHerb=0;G.stock.erva=70;refillMate();check(G.mateHerb===70&&G.stock.erva===0,'estoque parcial não cria erva');
-  approach('mate');interact();check(!G.task,'carga menor que 100 g não dá impulso');
-  G.mateHerb=230;save();check(readSave().mateHerb===230,'erva da cuia persiste no salvamento');
+  const herb=G.stock.erva;for(let i=0;i<8;i++){keys.add('e');interact();tick(1.15,holdTick);keys.clear();}
+  check(G.boost===10&&G.stock.erva===herb&&!('mateHerb' in G),'mate pode ser tomado à vontade, sem abastecer a cuia');
 
   reset();G.phase='open';G.event={id:'chuva',seen:true,fired:{}};
   const rainy=spawnGroup({size:1});tick(12,customersTick);
@@ -78,7 +72,7 @@
   let rejected=false;try{parseDialogueText('[inexistente]\nOi | Tchau');}catch(_){rejected=true;}check(rejected,'texto inválido informa erro sem substituir falas');
   customDialogues=imported;check(nextProse(6).reply==='Resposta nova','fala importada é usada na conversa');customDialogues={};
   const old=fresh();old.version=7;old.day=3;delete old.room;delete old.mateHerb;delete old.tv;old.friends=[4,2,0,0,0,0];old.regulars=[1,2,0,0,0,0];old.groups=[{person:1,size:2,patience:72.5,maxPatience:145}];const migrated=normalizeSave(old);
-  check(migrated.friends.length===PEOPLE.length&&migrated.friends[0]===4&&migrated.tv&&migrated.mateHerb===500&&migrated.groups[0].patience===55,'partida antiga preserva afeto e migra tempos, TV e cuia');
+  check(migrated.friends.length===PEOPLE.length&&migrated.friends[0]===4&&migrated.tv&&migrated.groups[0].patience===55,'partida antiga preserva afeto e migra tempos e TV');
   check(ORDER_WAIT===110&&COUNTER_WAIT===95,'pedidos com tempo reduzido');
   reset();return results;
 })()

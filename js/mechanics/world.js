@@ -2,7 +2,6 @@
 
 function improvementCount(g=G){return UPGRADES.filter(u=>g.up[u.id]).length;}
 
-function refillMate(){if(!started||paused||modal||phoneOpen||G.task)return;const bag=FIXED.find(f=>f.id==='bag');if(distRect(G.player,bag)>65){say('Vá ao balcão de erva-mate e aperte F para abastecer a cuia.');return;}if(G.hands.some(Boolean)){say('Apoie os pedidos para abastecer a cuia.');return;}const qty=Math.min(500-G.mateHerb,G.stock.erva);if(qty<=0){say(G.mateHerb>=500?'A cuia já está cheia: 500 g.':'Faltou erva-mate. Peça ao fornecedor.');return;}G.stock.erva-=qty;G.mateHerb+=qty;G.mateEmptyNotified=false;G.stats.cogs+=qty*G.avg.erva;AudioEngine.grain();effect('Cuia: '+G.mateHerb+' / 500 g',G.player.x,G.player.y-95,'#d5ed95');save();refreshHUD();}
 
 function wetFootsteps(actor,distance){if(G.event.id!=='chuva'||actor.state==='leave'||!['open','closing'].includes(G.phase))return;actor.wetDistance=(actor.wetDistance||0)+distance;actor.dripDistance=(actor.dripDistance||0)+distance;if(actor.wetDistance>750||actor.dripDistance<62)return;actor.dripDistance=0;const x=actor.x,y=actor.y;if(G.puddles.length>=24||G.puddles.some(p=>Math.hypot(p.x-x,p.y-y)<30)||!canWalk(x,y))return;G.puddles.push({id:G.next++,x,y,r:18+Math.random()*6});}
 

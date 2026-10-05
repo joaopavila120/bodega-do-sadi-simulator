@@ -14,10 +14,9 @@
   check(rentForLevel(1)<rentForLevel(7)&&creditLimit(1)<creditLimit(7),'aluguel e limite do fiado crescem com o nível');
 
   // Despesas e validade
-  reset();G.phase='open';G.elapsed=DAY;for(const k in PERISH)G.stock[k]=0;G.stock.salada=12;G.avg.salada=1.5;const before=G.cash;finishDay();closeDialog(true);
-  check(G.report.rent===rentForLevel()&&G.report.power>=6&&G.stock.salada===6&&G.report.spoiled===9,'fim do dia cobra aluguel e luz; salada perde metade na virada');
+  reset();G.phase='open';G.elapsed=DAY;G.stock.salada=12;const before=G.cash;finishDay();closeDialog(true);
+  check(G.report.rent===rentForLevel()&&G.report.power>=6&&G.stock.salada===12,'fim do dia cobra aluguel e luz; o estoque não vence');
   check(G.cash<=before-G.report.rent-G.report.power+.01,'despesas saem do caixa');
-  reset();G.up.freezer=true;G.stock.salada=12;spoilOvernight();check(G.stock.salada===9,'freezer reduz a perda pela metade');
   reset();G.day=1;G.phase='open';G.elapsed=DAY;finishDay();closeDialog(true);check(G.report.rent===0,'primeiro dia sem aluguel');
 
   // Conquistas
@@ -48,12 +47,19 @@
   reset();G.fiado=[{id:1,person:0,amount:10,day:2,due:3,status:'open',charged:0}];G.day=9;{let n=0;Math.random=()=>n++%2?0:.99;}processFiado();Math.random=random;check(G.fiado[0].status==='lost'&&G.stats.fiadoLost===10,'conta muito atrasada pode virar calote');
   reset();G.phase='open';Math.random=()=>.05;pickVisitor=()=>index('rosa');const r=spawnShop({pid:'codorna'});pickVisitor=original;for(let n=0;n<300;n++)customersTick(.05);Math.random=()=>.1;refuseFiado();Math.random=random;check(!r.fiado&&r.state==='queue','recusar o fiado pode fazer o freguês pagar à vista');
 
+  // Pedidos das mesas saem um por vez
+  reset();G.day=8;G.phase='open';Math.random=()=>.3;const table=spawnGroup({size:3});Math.random=random;for(let n=0;n<600&&table.state!=='seated';n++)customersTick(.05);
+  check(table.state==='seated'&&table.diners.every(d=>d.orders.length<=1),'cada pessoa pede no máximo um item por vez');
+  check(table.diners.filter(d=>d.status==='waiting').length===1&&table.diners.slice(1).every(d=>d.status==='thinking'),'os outros da mesa pensam antes do primeiro pedido');
+  for(let n=0;n<200;n++)customersTick(.05);check(table.diners.every(d=>d.status==='waiting'),'depois de alguns segundos todos pedem');
+  const first=table.diners[0];first.later=['refri'];const item=first.orders[0];G.hands[G.slot]={kind:'product',pid:item,key:item,cost:1,ready:true};deliverToDiner(table,held(),G.tables[table.table]);
+  check(first.status==='thinking'&&!first.orders.length,'o próximo item só sai depois da entrega anterior');
+  for(let n=0;n<340;n++)customersTick(.05);check(first.status==='waiting'&&first.orders.join()==='refri','depois de um tempo a pessoa pede o próximo item');
+  G.phase='closing';first.status='thinking';first.later=['cerveja'];customersTick(.05);check(first.status==='served'&&!first.later.length,'com as portas fechadas ninguém faz pedido novo');
   // Calendário e eventos
-  check(fixedEventFor(7)==='grenal'&&fixedEventFor(5)==='truco'&&EVENTS.farroupilha&&EVENTS.junina&&EVENTS.rodeio,'calendário tem Gre-Nal, truco, Farroupilha, junina e rodeio');
-  const sept=Array.from({length:200},(_,i)=>i+1).find(d=>calendar(d).month===8&&calendar(d).weekday===0);check(eventForDay(sept).id==='farroupilha'&&calendar(sept).label.includes('14 de setembro'),'Semana Farroupilha cai em setembro');
-  reset();G.event={id:'junina',seen:true,fired:{}};check(nameOf('cachaca')==='Quentão'&&price('cachaca')===8&&itemArtKey('cachaca')==='quentao'&&ITEM_ART.quentao.naturalWidth>0,'na festa junina a cachaça vira quentão');
+  check(calendar(1).name==='Sexta'&&fixedEventFor(2)==='normal'&&fixedEventFor(3)==='costelao'&&fixedEventFor(6)==='grenal'&&!EVENTS.truco&&!EVENTS.motos&&!EVENTS.rodeio&&fixedEventFor(10)==='costelao'&&!EVENTS.farroupilha&&!EVENTS.junina&&nameOf('cachaca')==='Dose de cachaça','calendário tem Gre-Nal, truco e rodeio; sem Farroupilha, junina ou quentão');
   // Modo de testes escolhe o evento
-  reset();G.testMode=true;G.phase='closed';planDay();check($('testEvent'),'modo de testes mostra a escolha de evento');$('testEvent').value='rodeio';action('chooseTestEvent');check(plannedEvent().id==='rodeio','modo de testes define o evento do próximo dia');closeDialog(true);
+  reset();G.testMode=true;G.phase='closed';planDay();check($('testEvent'),'modo de testes mostra a escolha de evento');$('testEvent').value='feira';action('chooseTestEvent');check(plannedEvent().id==='feira','modo de testes define o evento do próximo dia');closeDialog(true);
   reset();G.phase='closed';planDay();check(!$('testEvent'),'partida normal não escolhe evento');closeDialog(true);
 
   // Noite

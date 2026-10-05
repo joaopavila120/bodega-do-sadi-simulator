@@ -34,6 +34,7 @@ async function initializeGame() {
       waitForImage($('startLogo'), 'assets/images/logo.png'),
       ...DECOR.map(d=>waitForImage(DECOR_ART[d.id],'assets/images/decor/'+d.id+'.png')),
       waitForImage(rainWindowArt, RAIN_WINDOW_DATA),
+      ...CAMPO_ART.map(([image,file])=>waitForImage(image,CAMPO_IMG+file)),
       ...Object.entries(CHARACTER_ART).map(([name,im])=>waitForImage(im,name+'.png'))
     ]);
 

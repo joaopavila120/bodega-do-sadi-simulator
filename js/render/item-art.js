@@ -1,6 +1,6 @@
 // PNGs compartilhados pelo cenário, pedidos, bandeja e catálogo do celular.
 'use strict';
-const ITEM_SPRITE_KEYS = ['erva','pao_xis','burger','burger_pronto','ovo','ovo_pronto','queijo','salada','bacon','coracao','refri','cerveja','cachaca','cigarro','cigarro_py','codorna','pepino','salame','amendoim','pinhao','bergamota','cafe','bitter','torrada','xis_montado','xis_prensado','mate','wait','quentao'];
+const ITEM_SPRITE_KEYS = ['erva','pao_xis','burger','burger_pronto','ovo','ovo_pronto','queijo','salada','bacon','coracao','refri','cerveja','cachaca','cigarro','cigarro_py','codorna','pepino','salame','amendoim','pinhao','bergamota','cafe','bitter','torrada','xis_montado','xis_prensado','mate','wait','costela_crua','costela_assada','costela_queimada','costela','maionese','azeite','lenha'];
 const ITEM_ART = Object.fromEntries(ITEM_SPRITE_KEYS.map(key => {
   const image = new Image();
   image.src = 'assets/images/items/' + key + '.png';
@@ -35,14 +35,14 @@ function itemImageForSize(key, pixels) {
 function itemArtKey(key, item) {
   if (key?.startsWith('xis_') && !['xis_montado','xis_prensado'].includes(key)) return item && !item.ready ? 'xis_montado' : 'xis_prensado';
   if (key === 'cigarro' && G?.up.cigarro_py) return 'cigarro_py';
-  if (isQuentao(key)) return 'quentao';
+  if (key === 'costela_assada' && item?.burned) return 'costela_queimada';
   if (item?.ready && ['burger','ovo'].includes(key)) return key + '_pronto';
   return key;
 }
 
 function itemFilter(item) {
   if (item?.spoiled) return 'grayscale(.8) brightness(.65)';
-  if (item?.burned) return 'brightness(.32)';
+  if (item?.burned) return item.key === 'costela_assada' ? 'none' : 'brightness(.32)';
   if (item?.ready && ['bacon','coracao'].includes(item.key)) return 'saturate(.8) brightness(.72)';
   return 'none';
 }

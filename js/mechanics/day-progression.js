@@ -11,12 +11,10 @@ function fixedTableModes(state=G){for(const t of state.tables){t.mode=t.id===1||
 
 
 function plannedEvent(){if(!G.nextEvent){G.nextEvent=eventForDay(G.day+1,G);save();}return G.nextEvent;}
-function notifyEmptyMate(){if(G.mateHerb<100&&!G.mateEmptyNotified){G.mateEmptyNotified=true;say('Acabou seu mate, traga mais erva para sua cuia.');}}
-function nearMateHerb(){return G.mateHerb<500&&distRect(G.player,FIXED.find(f=>f.id==='bag'))<=65;}
 
-// A porta da cancha está pintada no cenário, na parede direita (room2.png).
+// A porta da cancha (fechada, com placa) está pintada no cenário, na parede direita (room2.png).
 const CANCHA_DOOR={id:'cancha',x:1485,y:300,w:80,h:80,label:'Porta da cancha de bocha'};
-const CANCHA_DOOR_SHAPE=[[1485,161],[1563,185],[1563,372],[1485,324]];
+const CANCHA_DOOR_SHAPE=[[1485,181],[1564,207],[1564,372],[1485,324]];
 function nearCanchaDoor(){return distRect(G.player,CANCHA_DOOR)<62;}
 function nearTrucoTable(){return availableTables().filter(isTableTruco).find(t=>distRect(G.player,t)<65);}
 function enterCancha(){
@@ -40,21 +38,21 @@ function drawCanchaDoor(){
  if(!started||!nearCanchaDoor())return;
  ctx.save();ctx.beginPath();CANCHA_DOOR_SHAPE.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
  ctx.fillStyle='#ffdb6830';ctx.fill();ctx.strokeStyle='#fce497';ctx.lineWidth=3;ctx.stroke();ctx.restore();
- txt('E · entrar na cancha',1524,402,13,'#fff4c4');
+ rect(1440,140,170,30,'#2b1c10e6',7,'#fce497');txt('Aperte E para entrar',1525,155,14,'#fff4c4');
 }
 
 function updateContextActions(){
- const n=nearest(),table=nearTrucoTable(),refill=nearMateHerb();
+ const n=nearest(),table=nearTrucoTable();
  $('enterCanchaButton').classList.toggle('hidden',!nearCanchaDoor()||!!G.task);
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
- $('refillMateContext').classList.toggle('hidden',!refill||!!G.task);
  $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);
- $('hint').classList.toggle('hidden',!G.task&&!n&&!refill&&!nearCanchaDoor()&&G.day>1);
- if(refill&&!G.task)$('hint').innerHTML='<strong>F</strong> Encher sua cuia de erva';
+ $('hint').classList.toggle('hidden',!G.task&&!n&&!nearCanchaDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||phoneOpen||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';
  if(G.day===1)$('tutorialHint').innerHTML=tutorialHint();
+ if(costelaoTutorialActive()){$('tutorialHint').classList.remove('hidden');$('tutorialHint').innerHTML=costelaoTutorialHint();}
+ $('gameSidebar').classList.toggle('lasso-mode',!!G.lasso);
  $('gameSidebar').classList.toggle('focused-task',['weigh','pour'].includes(G.task?.type)||G.fightTarget!==null);
 }
 

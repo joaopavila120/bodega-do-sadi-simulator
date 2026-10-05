@@ -14,19 +14,17 @@
  G.event.id='normal';G.day=5;check(triggerFight(G.tables[1]),'dia 5 libera brigas no truco comum');G.tables[1].fight=null;
  const modes=G.tables.map(t=>t.mode).join();toggleTable(1);check(G.tables.map(t=>t.mode).join()===modes,'troca manual de mesas permanece desativada');
  reset();let previous=G.event.id;const draws=[];for(let day=2;day<=170;day++){const e=eventForDay(day,G),c=calendar(day),fixed=fixedEventFor(day);if(!fixed&&e.id===previous)throw Error('Evento sorteado repetido em dias seguidos');
-  if(c.weekday===6&&!['gremio','inter','grenal'].includes(e.id))throw Error('Domingo sem futebol');if(c.month===8&&c.weekday<6&&e.id!=='farroupilha')throw Error('Setembro sem Semana Farroupilha');
-  if(c.month===5&&c.weekday>=4&&c.weekday<6&&e.id!=='junina')throw Error('Junho sem festa junina');if(c.weekday===4&&![5,8].includes(c.month)&&e.id!=='truco')throw Error('Sexta sem noite do truco');
+  if(c.weekday===6&&e.id!=='costelao')throw Error('Domingo sem costelão');if(c.weekday===2&&!['gremio','inter','grenal'].includes(e.id))throw Error('Quarta sem futebol');
+  if(['truco','rodeio','motos'].includes(e.id))throw Error('Evento removido voltou: '+e.id);
   if(e.id==='geada'&&![5,6,7].includes(c.month))throw Error('Geada fora do inverno');draws.push(e.id);G.event=e;previous=e.id;}
- check(Object.keys(EVENTS).every(id=>draws.includes(id)),'calendário gaúcho: domingo de futebol, sexta de truco, junina, Farroupilha, rodeio e sorteio sem repetição');
- check(eventForDay(7).id==='grenal'&&calendar(1).name==='Segunda'&&calendar(7).name==='Domingo'&&calendar(8).monthName==='abril','o primeiro domingo tem Gre-Nal e cada semana é um mês');
+ check(Object.keys(EVENTS).every(id=>draws.includes(id)),'calendário gaúcho: domingo de costelão, quarta de futebol, sábado de baile ou campeonato e sorteio sem repetição');
+ check(eventForDay(3).id==='costelao'&&eventForDay(6).id==='grenal'&&calendar(1).name==='Sexta'&&calendar(3).name==='Domingo','o jogo começa na sexta e o primeiro domingo é de costelão');
  G.phase='closed';const next=plannedEvent();planDay();closeDialog(true);check(plannedEvent().id===next.id&&readSave().nextEvent.id===next.id,'consultar ou recarregar a previsão não sorteia outro evento');
  reset();finishDay();check(G.tv&&G.tvAwardPending&&modal==='tvAward'&&$('dialogContent').textContent.includes('sorteio do comércio local'),'TV anunciada ao concluir o primeiro dia');
  save();check(readSave().tvAwardPending,'anúncio pendente da TV sobrevive ao salvamento');action('tvAwardClose');check(modal==='report'&&!G.tvAwardPending,'anúncio da TV conduz ao relatório sem prêmio duplicado');nextDay('automatic');closeDialog(true);check(G.day===2&&G.tv,'segundo dia mantém a TV e começa a nova progressão');
 
  G.day=2;G.player={x:510,y:585,dx:1,dy:0};refreshHUD();check($('tutorialHint').classList.contains('hidden')&&!$('hint').textContent.includes('WASD'),'dicas gerais e tutorial desaparecem depois do primeiro dia');
- G.mateHerb=0;G.mateEmptyNotified=false;notifyEmptyMate();check($('toasts').textContent.includes('Acabou seu mate, traga mais erva para sua cuia.'),'aviso de cuia vazia usa a orientação solicitada');
- refreshHUD();check($('refillMateContext').classList.contains('hidden')&&!$('mateStock'),'refil não ocupa a interface longe da erva');
- G.player={x:1110,y:440,dx:0,dy:-1};refreshHUD();check(!$('refillMateContext').classList.contains('hidden')&&$('hint').textContent.includes('Encher sua cuia de erva'),'F aparece somente ao chegar perto da erva');const stock=G.stock.erva;refillMate();check(G.mateHerb===500&&G.stock.erva===stock-500&&!G.mateEmptyNotified,'refil contextual consome estoque e rearma aviso');
+ check(!$('refillMateContext')&&!$('mateStock'),'cuia não precisa ser abastecida: sem botão de reposição');
  check(!document.querySelector('[data-act="map"]')&&!document.querySelector('[data-act="tableMode"]')&&!$('combo')&&!$('tableOrders'),'mapa, troca de mesa, combo e lista lateral foram removidos');
  check(!document.querySelector('[data-act="rooms"]')&&$('phone').querySelector('[data-act="tab"][data-id="decor"]'),'troca de cenário removida e Estética no celular');
  check(getComputedStyle($('gameSidebar')).overflowY==='hidden'&&$('dayNotice').textContent.split('\n').length===2,'faixa lateral fixa e cabeçalho do dia em duas linhas');

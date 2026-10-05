@@ -1,4 +1,4 @@
-// Nível da bodega, metas e conquistas, despesas diárias, validade do estoque,
+// Nível da bodega, metas e conquistas, despesas diárias,
 // calendário gaúcho e ciclo de dia e noite.
 'use strict';
 
@@ -42,10 +42,9 @@ const ACHIEVEMENTS=[
  {id:'truco',name:'Rei do truco',desc:'Ganhar um campeonato de truco.',xp:200,test:()=>sportState().truco.titles>0},
  {id:'bocha',name:'Mão boa na bocha',desc:'Ganhar um campeonato de bocha.',xp:200,test:()=>sportState().bocha.titles>0},
  {id:'fiado',name:'Palavra de bodegueiro',desc:'Receber 10 contas do fiado.',xp:150,test:()=>(G.fiadoPaid||0)>=10},
- {id:'farroupilha',name:'Pilchado',desc:'Fechar um dia da Semana Farroupilha.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='farroupilha'},
- {id:'junina',name:'Arraiá do pinhão',desc:'Fechar uma festa junina.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='junina'},
- {id:'rodeio',name:'Laçador',desc:'Fechar um dia de rodeio de CTG.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='rodeio'},
  {id:'grenal',name:'Clássico na bodega',desc:'Fechar um dia de Gre-Nal.',xp:120,test:()=>G.phase==='closed'&&G.event.id==='grenal'},
+ {id:'costelao',name:'Costelão de respeito',desc:'Vender 10 kg de costela.',xp:200,test:()=>(G.costelaSold||0)>=10000},
+ {id:'lacador2',name:'Laçador de mão cheia',desc:'Laçar 15 bois.',xp:200,test:()=>(G.bullsLassoed||0)>=15},
  {id:'lendaria',name:'Bodega lendária',desc:'Chegar ao nível máximo da bodega.',xp:0,test:()=>bodegaLevel()>=LEVELS.length}
 ];
 function checkAchievements(){
@@ -72,18 +71,7 @@ function achievementsHTML(){
  <h3>Conquistas · ${Object.keys(G.achievements||{}).length}/${ACHIEVEMENTS.length}</h3><div class="achievements">${ACHIEVEMENTS.map(a=>{const got=G.achievements?.[a.id];return `<div class="achievement ${got?'got':''}"><b>${got?'★':'☆'} ${a.name}</b><small>${a.desc}${a.xp?' · '+a.xp+' XP':''}${got?' · dia '+got:''}</small></div>`;}).join('')}</div></section>`;
 }
 
-// ---------- Validade do estoque e despesas ----------
-// Fração perdida em cada virada de noite. O freezer corta a perda pela metade.
-const PERISH={salada:.5,pao_xis:.25,burger:.2,bacon:.2,coracao:.25,ovo:.1,queijo:.1,cerveja:.1,cafe:.3,bergamota:.15};
-function spoilOvernight(){
- const factor=G.up.freezer?.5:1,lost=[];let value=0;
- for(const[k,rate]of Object.entries(PERISH)){
-  if(!unlocked(k)||!G.stock[k])continue;
-  const n=bulk(k)?Math.round(G.stock[k]*rate*factor/50)*50:Math.floor(G.stock[k]*rate*factor);
-  if(n<=0)continue;G.stock[k]-=n;value+=n*(G.avg[k]||0);lost.push(nameOf(k)+' '+stockText(k,n));
- }
- G.stats.spoiled=round(value);G.stats.waste+=round(value);G.stats.spoiledItems=lost;
-}
+// ---------- Despesas ----------
 function litLamps(){return DECOR.filter(d=>d.light&&decorVisible(d)).length;}
 function dailyCosts(){
  const share=Math.min(G.elapsed/DAY,1),power=round(6+6*share+litLamps()),rent=G.day===1?0:rentForLevel();
@@ -94,19 +82,18 @@ function dailyCosts(){
 // Cada dia de jogo é um dia da semana; cada semana corresponde a um mês, começando em março.
 const WEEKDAYS=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
 const MONTHS=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-function calendar(day=G.day){const i=Math.max(0,day-1),weekday=i%7,week=Math.floor(i/7),month=(2+week)%12;return {weekday,week,month,name:WEEKDAYS[weekday],monthName:MONTHS[month],label:WEEKDAYS[weekday]+' · '+(month===8?(14+weekday)+' de setembro':'semana de '+MONTHS[month])};}
-const RODEIO_MONTHS=[0,1,9,10],WINTER=[5,6,7];
+// O jogo começa numa sexta-feira: dois dias depois vem o primeiro costelão.
+function calendar(day=G.day){const i=Math.max(0,day-1)+4,weekday=i%7,week=Math.floor(i/7),month=(2+week)%12;return {weekday,week,month,name:WEEKDAYS[weekday],monthName:MONTHS[month],label:WEEKDAYS[weekday]+' · semana de '+MONTHS[month]};}
+const WINTER=[5,6,7];
 function fixedEventFor(day){
  if(day===1)return 'normal';
  const{weekday,week,month}=calendar(day);
- if(weekday===6)return ['grenal','gremio','inter'][week%3];
- if(month===8)return 'farroupilha';
- if(month===5&&weekday>=4)return 'junina';
- if(weekday===5)return RODEIO_MONTHS.includes(month)?'rodeio':week%2?'campeonato':'baile';
- if(weekday===4)return 'truco';
+ if(weekday===6)return 'costelao';                       // domingo: costelão no campo
+ if(weekday===2)return ['grenal','gremio','inter'][(week+2)%3]; // quarta: futebol na TV
+ if(weekday===5)return day===2?'normal':week%2?'campeonato':'baile';
  return null;
 }
-function randomEventPool(day){const pool=['normal','chuva','radio','motos','feira'];if(WINTER.includes(calendar(day).month))pool.push('geada','chuva');return pool;}
+function randomEventPool(day){const pool=['normal','chuva','radio','feira'];if(WINTER.includes(calendar(day).month))pool.push('geada','chuva');return pool;}
 function weekPreview(day=G.day){
  const first=day-calendar(day).weekday;
  return `<div class="week-strip">${WEEKDAYS.map((w,i)=>{const d=first+i,fixed=d>=1?fixedEventFor(d):null,e=fixed?EVENTS[fixed]:null,today=d===day;return `<div class="${today?'today':''}${d<day?' past':''}"><b>${w.slice(0,3)}</b><span>${e?e.icon:'?'}</span><small>${e?e.name:'sorteio'}</small></div>`;}).join('')}</div>`;
@@ -123,19 +110,19 @@ function drawNight(){
  nightCanvas??=document.createElement('canvas');const scale=.5;
  if(nightCanvas.width!==W*scale){nightCanvas.width=W*scale;nightCanvas.height=H*scale;}
  const c=nightCanvas.getContext('2d');c.setTransform(scale,0,0,scale,0,0);c.globalCompositeOperation='source-over';c.clearRect(0,0,W,H);
- const lamps=DECOR.filter(d=>d.light&&decorVisible(d));
+ const lamps=isCampo()?[]:DECOR.filter(d=>d.light&&decorVisible(d));
  c.fillStyle=`rgba(10,14,36,${n*Math.max(.24,.5-lamps.length*.06)})`;c.fillRect(0,0,W,H);
  c.globalCompositeOperation='destination-out';
  const hole=(x,y,r,a)=>{const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(0,0,0,${a})`);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);};
  for(const d of lamps)hole(roomX(d.light[0]),roomY(d.light[1]),340,.95);
- if(decorState().fogao_lenha===true)hole(roomX(FIRE_LIGHT[0]),roomY(FIRE_LIGHT[1]),240,.8);
- if(G.tv&&isFootball())hole(1228,147,200,.6);
- hole(1524,300,150,.45);
+ if(isCampo()){hole(525,520,420,.9);}
+ else if(decorState().fogao_lenha===true)hole(roomX(FIRE_LIGHT[0]),roomY(FIRE_LIGHT[1]),240,.8);
+ if(!isCampo()){if(G.tv&&isFootball())hole(1228,147,200,.6);hole(1524,300,150,.45);}
  hole(G.player.x,G.player.y-60,120,.35);
  ctx.drawImage(nightCanvas,0,0,W,H);
 }
 function drawNightWindow(){
- const n=nightLevel();if(n<=0)return;
+ const n=nightLevel();if(n<=0||isCampo())return;
  const[x0,y0,x1,y1]=RAIN_WINDOW.view,left=roomX(x0),top=roomY(y0),width=roomX(x1)-left,height=roomY(y1)-top;
  rect(left,top,width,height,`rgba(8,14,40,${.72*n})`);
  if(!isRainDay())for(let i=0;i<14;i++){ctx.globalAlpha=n*(.5+.5*Math.sin(frameClock*2+i));rect(left+(i*53.7)%width,top+(i*17.3)%(height*.45),1.6,1.6,'#f4f0d2');}

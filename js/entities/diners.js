@@ -15,32 +15,47 @@ function ensureDiners(g){
  if(g.delivered?.length)g.diners[0].delivered=[...g.delivered];
  syncGroupOrders(g);
 }
+// Cada pessoa pede um item por vez: os outros da mesa pensam alguns segundos
+// antes do primeiro pedido, e o próximo item só sai depois da entrega anterior.
+const THINK_FIRST=[2,7],THINK_NEXT=[7,16];
+function thinkTime([a,b]){return a+Math.random()*(b-a);}
+function orderNext(d){d.orders=[d.later.shift()];d.status='waiting';d.patience=d.maxPatience=ORDER_WAIT;}
 function seatDiners(g){
  const fixed=g.fixedOrders;delete g.fixedOrders;
- g.diners=Array.from({length:g.size},(_,i)=>({person:groupPerson(g,i),orders:fixed?fixed.filter((_,j)=>j%g.size===i):tableOrders({...g,person:groupPerson(g,i),size:1}),delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:'waiting'}));
- g.diners.forEach(d=>{if(!d.orders.length)d.status='served';});syncGroupOrders(g);if(g.celebrationTeam){const team=g.celebrationTeam;delete g.celebrationTeam;alcoholRound(g,team);}
+ g.diners=Array.from({length:g.size},(_,i)=>{
+  const all=fixed?fixed.filter((_,j)=>j%g.size===i):tableOrders({...g,person:groupPerson(g,i),size:1});
+  // Encomendas fixas e lições chegam completas; a freguesia comum pede aos poucos.
+  if(fixed||g.training)return {person:groupPerson(g,i),orders:all,later:[],delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:all.length?'waiting':'served'};
+  const d={person:groupPerson(g,i),orders:[],later:all,delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:'thinking',think:i===0?0:thinkTime(THINK_FIRST)};
+  if(!all.length)d.status='served';else if(i===0)orderNext(d);return d;
+ });syncGroupOrders(g);if(g.celebrationTeam){const team=g.celebrationTeam;delete g.celebrationTeam;alcoholRound(g,team);}
 }
 function addDinerRound(g){
  ensureDiners(g);
  for(const d of g.diners){
   if(d.status==='lost')continue;
-  if(d.status==='waiting'&&d.orders.length>=difficulty().maxItems)continue;
-  // Uma rodada nova nunca renova o prazo de um pedido que ainda está pendente.
-  if(d.status!=='waiting'){d.status='waiting';d.patience=d.maxPatience=ORDER_WAIT;}
-  d.orders.push(pick(drinksForGroup(g)));
+  // Quem ainda tem pedido em aberto deixa a rodada para depois.
+  if(['waiting','thinking'].includes(d.status)){d.later??=[];if(d.later.length<difficulty().maxItems)d.later.push(pick(drinksForGroup(g)));continue;}
+  d.status='waiting';d.patience=d.maxPatience=ORDER_WAIT;d.orders=[pick(drinksForGroup(g))];
  }
  g.state='seated';g.round=1;syncGroupOrders(g);
 }
 function completeDinerRound(g){
- syncGroupOrders(g);if(g.diners.some(d=>d.status==='waiting'))return;
+ syncGroupOrders(g);if(g.diners.some(d=>['waiting','thinking'].includes(d.status)))return;
  if(g.tournament&&championshipActive()){tournamentRest(g);return;}
  if(g.diners.every(d=>d.status==='lost')){departGroup(g);return;}
  const t=G.tables.find(t=>t.id===g.table);g.state='chat';g.chat=g.training?1:9+Math.random()*5;g.paid=true;
 }
 function tickDiners(g,dt){
  ensureDiners(g);
- for(const d of g.diners){if(d.status!=='waiting')continue;d.patience=Math.max(0,d.patience-(g.training?0:dt));if(d.patience>0)continue;
-  d.status='lost';d.orders=[];G.stats.lost++;G.rep=clamp(G.rep-1.5,0,100);
+ for(const d of g.diners){
+  if(d.status==='thinking'){
+   // Depois que as portas fecham, ninguém pede mais nada.
+   if(G.phase!=='open'||!d.later?.length){d.later=[];d.status='served';continue;}
+   d.think-=dt;if(d.think<=0){orderNext(d);syncGroupOrders(g);}continue;
+  }
+  if(d.status!=='waiting')continue;d.patience=Math.max(0,d.patience-(g.training?0:dt));if(d.patience>0)continue;
+  d.status='lost';d.orders=[];d.later=[];G.stats.lost++;G.rep=clamp(G.rep-1.5,0,100);
   G.stats.waste+=d.delivered.reduce((sum,item)=>sum+(item.cost||0),0);d.delivered=[];
   effect(PEOPLE[d.person].name+': desisti do pedido',g.x,g.y-80,'#e7b097');
  }
@@ -52,7 +67,7 @@ function deliverToDiner(g,item,table){
  if(!d){say('A mesa espera '+g.orders.map(nameOf).join(' e ')+'.');return;}
  takeHeld();d.orders.splice(d.orders.indexOf(item.pid),1);d.delivered.push(item);table.plates++;G.tutorial.table=true;
  if(RECIPES[item.pid])G.tutorial.xis=true;AudioEngine.tick();
- if(!d.orders.length){pay(d.delivered,d.person,d.patience/d.maxPatience,true,g.x,g.y);d.delivered=[];d.status='served';}
+ if(!d.orders.length){pay(d.delivered,d.person,d.patience/d.maxPatience,true,g.x,g.y);d.delivered=[];d.status=d.later?.length&&G.phase==='open'&&!g.training?'thinking':'served';d.think=thinkTime(THINK_NEXT);}
  finishToastLesson(g,item);deliveryConversation(d.person,g,d);tutorialDelivered(g,item.pid);completeDinerRound(g);save();
 }
 function renderTableOrders(){

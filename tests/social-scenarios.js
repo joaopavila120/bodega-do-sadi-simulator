@@ -46,7 +46,7 @@
  check(group.diners[2].patience===remaining&&group.diners[0].patience===ORDER_WAIT&&group.diners[1].status==='lost','rodada extra conserva prazos pendentes e não reativa desistência');
  refreshHUD();draw();check(!$('tableOrders')&&group.diners.length===4,'pedidos individuais ficam no cenário, sem lista lateral');
  save();const saved=readSave();check(saved.groups[0].diners[2].patience===remaining&&saved.groups[0].diners[1].status==='lost','salvamento mantém pedidos e cronômetros individuais');
- reset();G.phase='open';const truco=spawnGroup({size:4,targetTable:1});for(let t=0;t<12;t+=.05)customersTick(.05);
+ reset();G.phase='open';const truco=spawnGroup({size:4,targetTable:1});for(let t=0;t<24;t+=.05)customersTick(.05);
  check(truco.orders.length===4&&truco.orders.every(k=>GOODS[k]||RECIPES[k]),'mesa de truco usa pedidos individuais do cardápio comum');
  reset();G.up.horse=true;G.up.bootsBagual=true;G.gear='horse';const migrated=normalizeSave(JSON.parse(JSON.stringify(G)));
  check(migrated.gear==='bootsBagual'&&!migrated.up.horse&&!GEAR.horse&&!UPGRADES.some(u=>u.id==='horse'),'cavalo removido: saves antigos equipam as melhores botas');

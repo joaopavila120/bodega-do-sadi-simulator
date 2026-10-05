@@ -27,11 +27,12 @@
  buyUpgrade('trago');check(G.up.trago&&G.stock.cachaca===10&&G.cash===cash&&G.stats.investments===0&&furniture().some(f=>f.id==='pour'),'melhoria instala mesa e dez doses sem gastar dinheiro');
  advance(20);check(!G.shop.length,'novo cliente aguarda fechar o celular');togglePhone(false);lesson('trago');
  use('pour');keys.add('e');advance(1.25);keys.delete('e');cancelHold();counter();lesson('erva');
- use('bag');keys.add('e');holdTick(G.task.requested/G.task.maxWeight*2.5);keys.delete('e');finishWeigh();check(held()?.weight===500,'tutorial pesa os 500 g reais solicitados');counter();lesson('mate');
- use('mate');keys.add('e');advance(1.2);keys.delete('e');lesson('refill');check(G.mateHerb===400,'mate da lição consome 100 g');
- approach('bag');const stock=G.stock.erva;refillMate();lesson('clean');check(G.stock.erva===stock-100&&G.mateHerb===500,'reposição usa exatamente a erva faltante');
+ use('bag');keys.add('e');holdTick(G.task.requested/G.task.maxWeight*2.5);keys.delete('e');finishWeigh();check(held()?.weight===500,'tutorial pesa os 500 g reais solicitados');counter();lesson('fiado');
+ check(G.shop[0]?.fiado&&G.shop[0].pid==='codorna','tutorial traz um freguês pedindo fiado');refuseFiado();check(G.shop[0]?.fiado&&G.shop[0].state==='queue','no tutorial o fiado não pode ser recusado');
+ const fiadoCash=G.cash;use('shop:codorna');counter();check(G.cash===fiadoCash&&fiadoOpen().length===1&&fiadoOpen()[0].amount===price('codorna'),'entrega fiado vai para o caderninho, sem entrar no caixa');lesson('mate');
+ const stock=G.stock.erva;use('mate');keys.add('e');advance(1.2);keys.delete('e');const boosted=G.boost>0;lesson('clean');check(boosted&&G.stock.erva===stock,'mate da lição dá impulso sem gastar erva nem pedir reposição');
  use('table:0');keys.add('e');advance(1.1);keys.delete('e');advance(2);
- check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===5&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
+ check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===6&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
  check(G.tv&&G.up.trago&&!G.tables[0].dirty,'TV, melhoria e limpeza permanecem após tutorial');
  action('tvAwardClose');check(modal==='sportChallenge'&&sportState().challenge.tutorial,'Mano Lima convida para tutorial de bocha depois da TV');answerSportChallenge(false);nextDay('normal');closeDialog(true);G.event.seen=true;openDay();advance(25);
  check(G.day===2&&G.elapsed>0&&G.groups.length>0&&G.shop.length>0,'dia 2 retoma tempo e chegadas normais ao salão e balcão');

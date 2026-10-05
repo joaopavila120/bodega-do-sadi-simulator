@@ -150,6 +150,8 @@ async function main() {
     for (const result of social) console.log('PASS ' + result);
     const progression = await evaluate(fs.readFileSync(path.join(__dirname, 'progression-scenarios.js'), 'utf8'));
     for (const result of progression) console.log('PASS ' + result);
+    const campo = await evaluate(fs.readFileSync(path.join(__dirname, 'campo-scenarios.js'), 'utf8'));
+    for (const result of campo) console.log('PASS ' + result);
     const difficulty = await evaluate(fs.readFileSync(path.join(__dirname, 'difficulty-scenarios.js'), 'utf8'));
     for (const result of difficulty) console.log('PASS ' + result);
     await load(base + '/index.html');

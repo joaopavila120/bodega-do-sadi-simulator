@@ -8,8 +8,8 @@ const TUTORIAL_STEPS=[
  {id:'upgrade',title:'Sua primeira melhoria é grátis',text:'Vamos fazer uma pausa nas chegadas. Aperte C, abra Melhorias e instale a Mesa de tragos por R$ 0. Ela inclui dez doses. Depois feche o celular com C.'},
  {id:'trago',title:'Inaugure a mesa de tragos',pid:'cachaca',text:'A mesa nova fica abaixo da torneira de cerveja. Segure E para servir a cachaça, solte na faixa verde e entregue ao freguês no balcão.'},
  {id:'erva',title:'Erva no peso certo',pid:'erva',grams:500,text:'O freguês quer 500 g de erva-mate. Vá ao saco de erva nas mercadorias, segure E e solte na faixa verde. Se errar, use Recomeçar. Entregue o pacote no balcão.'},
- {id:'mate',title:'Uma pausa para o chimarrão',text:'Agora, com as mãos livres, vá à cuia no centro e segure E para tomar mate. Ele dá velocidade e gasta 100 g. Depois ensinaremos a repor a erva.'},
- {id:'refill',title:'Reponha a erva da sua cuia',text:'Vá ao saco de erva nas mercadorias. Ao chegar perto, aparece F · Encher sua cuia de erva. Aperte F: a cuia comporta 500 g e usa o estoque da bodega.'},
+ {id:'fiado',title:'Pendura no caderninho',pid:'codorna',fiado:true,text:'Este freguês pediu ovos de codorna <b>fiado</b> (📒 no balão). Pegue os ovos na prateleira e entregue no balcão com E: o valor vai para o caderninho, sem entrar no caixa agora. Quem paga em dia traz 10% de juros de amizade; alguns demoram e outros somem. No Celular → Fiado você acompanha, cobra ou perdoa as contas. Para recusar um fiado, aperte X no balcão.'},
+ {id:'mate',title:'Uma pausa para o chimarrão',text:'Agora, com as mãos livres, vá à cuia e segure E para tomar mate. Ele dá velocidade por alguns segundos e pode ser tomado sempre que quiser.'},
  {id:'clean',title:'Casa pronta para amanhã',text:'Com as mãos livres, aproxime-se da mesa 1 e segure E para limpar. Depois o primeiro dia termina. Amanhã o movimento e a dificuldade começam a crescer.'}
 ];
 function tutorialActive(){return G.day===1&&G.tutorial.guided&&!G.tutorial.complete;}
@@ -31,13 +31,13 @@ function tutorialTick(){
   if(s.pid){
    let actor;
    if(s.id==='xis')actor=spawnGroup({size:1,targetTable:0,fixedOrders:[s.pid],training:true});
-   else actor=spawnShop({pid:s.pid,grams:s.grams,training:true});
+   else actor=spawnShop({pid:s.pid,grams:s.grams,training:true,fiado:!!s.fiado});
    if(!actor){t.introduced=false;return;}
    t.actor=actor.id;
   }
   openDialog('Passo '+(t.step+1)+' de '+TUTORIAL_STEPS.length+' · '+s.title,`<p>${s.text}</p><p>Hoje você aprende no seu ritmo: um freguês por vez, sem prazo para entregar.</p><button class="primary" data-act="close">Vamos lá</button>`,'tutorial');save();return;
  }
- if(s.id==='upgrade'&&G.up.trago&&!phoneOpen||s.id==='mate'&&t.mate||s.id==='refill'&&G.mateHerb===500||s.id==='clean'&&!G.tables[0].dirty&&!G.tables[0].group)tutorialAdvance();
+ if(s.id==='upgrade'&&G.up.trago&&!phoneOpen||s.id==='mate'&&t.mate||s.id==='clean'&&!G.tables[0].dirty&&!G.tables[0].group)tutorialAdvance();
 }
 function tutorialXisHint(){
  const press=G.kitchen.press,h=held(),b=G.kitchen.bench.find(Boolean);
@@ -58,4 +58,4 @@ function tutorialHint(){
  const text=G.phase==='prep'?'Abra a bodega no botão do menu lateral para receber seu primeiro freguês.':G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
  return '<b>'+(G.tutorial.step+1)+' / '+TUTORIAL_STEPS.length+' · '+s.title+'</b><p>'+text+'</p>';
 }
-function tutorialWelcome(){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje vamos atender um freguês por vez: cigarro, cerveja e xis. Depois você ganha sua primeira melhoria e aprende a servir trago, pesar erva e cuidar do mate.</p><p>As instruções acompanham cada etapa. Não há prazo para entregar nem encerramento pelo relógio neste dia. Amanhã começam os eventos e os pedidos com tempo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
+function tutorialWelcome(){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje vamos atender um freguês por vez: cigarro, cerveja e xis. Depois você ganha sua primeira melhoria e aprende a servir trago, pesar erva, vender fiado e tomar mate. No domingo tem costelão no campo!</p><p>As instruções acompanham cada etapa. Não há prazo para entregar nem encerramento pelo relógio neste dia. Amanhã começam os eventos e os pedidos com tempo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
