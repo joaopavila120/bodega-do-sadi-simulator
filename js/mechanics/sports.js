@@ -41,7 +41,7 @@ function settleSport(type,match,won){
  if(match.bracket)recordSportMatch(won);
 }
 function prepareAfterHours(){
- const s=sportState();if(s.challengeDay===G.day)return;s.challengeDay=G.day;
+ const s=sportState();if(s.challengeDay===G.day)return;s.challengeDay=G.day;queueAfterHoursGifts();
  if(G.day===1&&G.tutorial.complete&&!s.tutorialDone&&!s.tutorialOffered){s.tutorialOffered=true;s.challenge={person:PEOPLE.findIndex(p=>p.id==='manolima'),wager:0,tutorial:true};}
  else if(G.day>1&&contactPeople().length&&Math.random()<.25)s.challenge={person:pick(contactPeople()),wager:pick([5,10,25]),tutorial:false};
 }
@@ -66,16 +66,21 @@ function boccePeople(){const mano=PEOPLE.findIndex(p=>p.id==='manolima');return 
 // ---------- Desafiante entrando na bodega ----------
 // Depois do expediente, quem propõe a bocha entra pela porta e caminha até você; só então aparece o convite.
 function startChallengeVisit(){
- const c=sportState().challenge;if(!c||G.challengeVisit)return false;
+ const c=sportState().challenge;if(!c)return false;return startVisit(c.person,'challenge');
+}
+// Presentes também chegam em pessoa: quem presenteia entra e caminha até você.
+function startGiftVisit(){const item=G.giftQueue?.[0];return item?startVisit(item.person,'gift'):false;}
+function startVisit(person,kind){
+ if(G.challengeVisit&&!G.challengeVisit.leaving)return false;
  const near={x:clamp(G.player.x+90,80,W-80),y:clamp(G.player.y+10,450,860)};
- const actor={id:G.next++,person:c.person,x:ENTRY.x,y:ENTRY.y,path:[],dest:null,dx:0,dy:-1,arrived:false,leaving:false};
- setDestination(actor,near);G.challengeVisit=actor;if(modal)closeDialog(true);announceArrivals([c.person]);save();return true;
+ const actor={id:G.next++,person,kind,x:ENTRY.x,y:ENTRY.y,path:[],dest:null,dx:0,dy:-1,arrived:false,leaving:false};
+ setDestination(actor,near);G.challengeVisit=actor;if(modal)closeDialog(true);if(kind==='challenge')announceArrivals([person]);save();return true;
 }
 function challengeVisitTick(dt){
  const v=G.challengeVisit;if(!v)return;
  const done=moveActor(v,dt,130);
  if(v.leaving){if(done)G.challengeVisit=null;return;}
- if(done&&!v.arrived){v.arrived=true;v.dx=G.player.x<v.x?-1:1;save();showSportChallenge();}
+ if(done&&!v.arrived){v.arrived=true;v.dx=G.player.x<v.x?-1:1;save();if(v.kind==='gift')showGiftVisit();else showSportChallenge();}
 }
 function challengeVisitLeave(){const v=G.challengeVisit;if(!v)return;v.leaving=true;v.dest=null;setDestination(v,EXIT);}
 function drawChallengeVisit(layers){const v=G.challengeVisit;if(v)layers.push({y:v.y,draw:()=>{if(isSpecial(v.person))specialRing(v.x,v.y);personDraw(PEOPLE[v.person].sprite,v.x,v.y,!!v.path?.length,false,v.dx);}});}

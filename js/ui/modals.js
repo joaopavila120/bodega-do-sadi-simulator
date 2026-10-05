@@ -24,7 +24,7 @@ function renderPhone(){document.querySelectorAll('[data-act="tab"]').forEach(b=>
  else if(phoneTab==='fiado')html=fiadoPanel();
  else if(phoneTab==='contacts')html=contactsPanel();
  else if(tutorialActive()&&tutorialStep().id==='upgrade')html='<div class="phone-intro"><h3>Sua primeira melhoria</h3><p>Instale a Mesa de tragos gratuitamente e feche o celular com C para continuar.</p></div>'+upgradeCatalog();
- else html=`<div class="phone-intro"><h3>Faça a bodega crescer</h3><p>${improvementCount()} melhorias compradas. Escolha a categoria e confira os requisitos. Peças de decoração ficam na aba Estética.</p><button data-act="guide">Guia e progresso</button><button data-act="tab" data-id="decor">Ver Estética</button></div>`+gearPanel()+tablePanel()+upgradeCatalog()+`<button class="aid" data-act="save">Salvar progresso</button>`;
+ else html=`<div class="phone-intro"><h3>Faça a bodega crescer</h3><p>${improvementCount()} melhorias compradas. Escolha a categoria e confira os requisitos. Peças de decoração ficam na aba Estética.</p><button data-act="guide">Guia e progresso</button><button data-act="tab" data-id="decor">Ver Estética</button></div>`+upgradeCatalog()+`<button class="aid" data-act="save">Salvar progresso</button>`;
  // O celular atualiza a cada meio segundo; só refaz a tela quando algo mudou.
  if(setHTML($('phoneContent'),html)&&phoneTab==='contacts')drawContactPortraits();
 
@@ -38,7 +38,9 @@ function buyUpgrade(id){const u=UPGRADES.find(u=>u.id===id);if(!u||G.up[id])retu
 
 function equipGear(id){if(!GEAR[id]||(id!=='feet'&&!G.up[id]))return;if(!['prep','closed'].includes(G.phase)){say('Troque de botas antes de abrir ou após fechar.');return;}G.gear=id;save();renderPhone();}
 
-function gearPanel(){return `<div class="upgrade"><h3>Equipamento · ${GEAR[G.gear].name}</h3><p>Velocidade permanente: +${Math.round(movementBonus()*100)}%. Botas dão velocidade permanente; o mate dá um impulso temporário.</p><div class="gear-options">${Object.entries(GEAR).filter(([id])=>id==='feet'||G.up[id]).map(([id,v])=>`<button class="small" data-act="gear" data-id="${id}" ${G.gear===id||!['prep','closed'].includes(G.phase)?'disabled':''}>${v.name}${G.gear===id?' ✓':''}</button>`).join('')}</div></div><div class="upgrade"><h3>${mateStats().name}</h3><p>+${Math.round(mateStats().bonus*100)}% por ${mateStats().duration} s. Segure E na cuia central.</p></div>`;}
+function gearPanel(){return bootsPanel()+matePanel();}
+function bootsPanel(){return `<div class="upgrade"><h3>Equipamento · ${GEAR[G.gear].name}</h3><p>Velocidade permanente: +${Math.round(movementBonus()*100)}%. Botas dão velocidade permanente; o mate dá um impulso temporário.</p><div class="gear-options">${Object.entries(GEAR).filter(([id])=>id==='feet'||G.up[id]).map(([id,v])=>`<button class="small" data-act="gear" data-id="${id}" ${G.gear===id||!['prep','closed'].includes(G.phase)?'disabled':''}>${v.name}${G.gear===id?' ✓':''}</button>`).join('')}</div></div>`;}
+function matePanel(){return `<div class="upgrade"><h3>${mateStats().name}</h3><p>+${Math.round(mateStats().bonus*100)}% por ${mateStats().duration} s. Segure E na cuia central.</p></div>`;}
 
 function tablePanel(){return `<div class="upgrade"><h3>Mesas da casa</h3><p>Mesa 2 atende normalmente e também permite jogar truco. As demais são de restaurante; campeonatos usam todas para cartas.</p></div>`;}
 

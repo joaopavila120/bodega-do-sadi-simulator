@@ -3,18 +3,19 @@
  const results=[],check=(v,m)=>{if(!v)throw Error(m);results.push(m);};
  const random=Math.random;
  const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=2000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();bannerQueue=[];['start','overlay','phone','weighUI','mixUI','lassoUI'].forEach(id=>$(id).classList.add('hidden'));};
- const sunday=()=>{reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.costelaoTaught=true;G.stock.costela_crua=9;G.avg.costela_crua=40;campoState().fuel=100;};
+ const sunday=()=>{reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.costelaoTaught=true;G.stock.costela_crua=9;G.avg.costela_crua=40;campoState().fuel=100;campoState().lit=true;};
  const roast=()=>{for(let t=0;t<COOK_SIDE+.2;t+=.05){campoState().fuel=100;campoTick(.05);}};
  const chop=()=>{use('lenha');for(let k=0;k<CHOP_HITS;k++){keys.add('e');holdTick(.05);for(let t=0;t<CHOP_TIME*.7;t+=.05)holdTick(.05);keys.delete('e');holdTick(.05);}};
  const approach=id=>{const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);for(let x=f.x-60;x<=f.x+f.w+60;x+=6)for(let y=f.y-60;y<=f.y+f.h+60;y+=6){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);};
  const use=id=>{approach(id);interact();};
  const tick=(s,fn)=>{for(let t=0;t<s;t+=.05)fn(.05);};
  const weigh=()=>{approach('tabua');interact();keys.add('e');holdTick(G.task.requested/G.task.maxWeight*2.5);keys.delete('e');finishWeigh();};
- const mayo=()=>{use('bin:ovo');use('maionese');use('bin:azeite');use('maionese');interact();for(let i=0;i<14;i++)mixKey(i%2?'a':'e');};
+ const mayo=()=>{use('bin:ovo');use('maionese');use('bin:azeite');use('maionese');interact();for(let i=0;i<=Math.ceil(1/MIX_STEP);i++)mixKey(i%2?'a':'d');};
  try{
   reset();check(calendar(1).name==='Sexta'&&eventForDay(3).id==='costelao','o jogo começa na sexta e o costelão é no domingo (dia 3)');
-  sunday();check(isCampo()&&furniture()===CAMPO_FIXED&&!availableTables().length,'domingo troca para o cenário aberto, sem mesas');
-  for(const f of CAMPO_FIXED)if(f.id!=='fogo')approach(f.id);check(true,'todas as estações do campo são alcançáveis');
+  sunday();check(isCampo()&&furniture().every(f=>CAMPO_FIXED.includes(f))&&furniture().some(f=>f.id==='service:1')&&!availableTables().length,'domingo troca para o cenário aberto, sem mesas e com dois balcões');
+  check(!furniture().some(f=>f.id==='shop:pepino'),'pepino em conserva só aparece depois de desbloqueado');G.up.pepino=true;check(furniture().some(f=>f.id==='shop:pepino'),'pepino desbloqueado tem banca no costelão');
+  for(const f of furniture())if(f.id!=='fogo')approach(f.id);G.up.pepino=false;check(true,'todas as estações do campo são alcançáveis');
   check(['costela_crua','costela_assada','costela','maionese','azeite','costela_queimada'].every(k=>ITEM_ART[k].naturalWidth>0)&&CAMPO_ART.every(([im])=>im.naturalWidth>0),'sprites do costelão carregam');
   // espeto: pôr, assar, virar, retirar
   use('costela_crua');check(held()?.key==='costela_crua'&&G.stock.costela_crua===8,'pega a manta crua');
@@ -33,18 +34,29 @@
   for(let k=0;k<CHOP_HITS;k++){keys.add('e');holdTick(.05);for(let t=0;t<CHOP_TIME*.7;t+=.05)holdTick(.05);keys.delete('e');holdTick(.05);}
   check(!G.task&&held()?.key==='lenha'&&ITEM_ART.lenha.naturalWidth>0,'três golpes na faixa verde racham a lenha');
   use('fogo');check(!held()&&campoState().fuel===LENHA_FUEL,'lenha rachada aviva o fogo');
+  campoState().lit=false;check(fireHeat()===0,'fogo apagado não assa nada');
+  approach('fogo');keys.add('e');interact();check(G.task?.type==='light','segurar E no fogo com lenha começa a acender');tick(LIGHT_TIME+.1,holdTick);keys.clear();
+  check(fireLit()&&!G.task&&campoState().fuel===LENHA_FUEL+KINDLING,'o fogo acende e os gravetos dão um tanto de lenha');
+  campoState().fuel=.01;campoTick(.1);check(!fireLit(),'quando a lenha acaba o fogo apaga');campoState().lit=true;
   campoState().espetos[2]=null;G.stock.costela_crua++;campoState().fuel=100;
   // venda por peso
   G.phase='open';const c=spawnShop({pid:'costela',grams:1000,fiado:false});for(let n=0;n<300;n++)customersTick(.05);
   approach('tabua');interact();check(G.task?.type==='weigh'&&G.task.key==='costela','segurar E na tábua corta a costela');
   keys.add('e');holdTick(G.task.requested/G.task.maxWeight*2.5);keys.delete('e');finishWeigh();check(held()?.pid==='costela'&&held().weight>900,'pesa a costela pedida');
   const cash=G.cash;use('service');check(G.cash>cash&&G.costelaSold>=900&&c.state==='leave','costela vendida por peso no balcão');
+  for(let n=0;n<300;n++)customersTick(.05);const one=spawnShop({pid:'refri',fiado:false}),two=spawnShop({pid:'refri',fiado:false});for(let n=0;n<300;n++)customersTick(.05);
+  check(customerOrderBubbles().length===2,'dois balcões mostram dois pedidos ao mesmo tempo');
+  use('bottle:refri');use('service:1');check(two.state==='leave'&&one.state==='queue','o segundo balcão atende o segundo freguês');use('bottle:refri');use('service');check(one.state==='leave','o primeiro balcão atende o primeiro');
   // maionese
   use('bin:ovo');use('maionese');use('bin:azeite');use('maionese');const b=campoState().bowl;check(b.ovo&&b.azeite,'ovo e azeite vão para a tigela');
   interact();check(G.task?.type==='mix'&&!$('mixUI').classList.contains('hidden'),'tigela cheia começa a bater');
-  mixKey('d');check(G.task.progress===0,'só A e E batem a maionese');for(let i=0;i<14;i++)mixKey('e');
-  check(!G.task&&G.stock.maionese===3&&!b.ovo,'apertar E (ou A) repetidamente dá o ponto: 3 porções');
+  mixKey('e');check(G.task.progress===0,'E não bate a maionese: só A e D');mixKey('a');mixKey('a');check(Math.abs(G.task.progress-MIX_STEP)<1e-9,'repetir a mesma tecla não conta');for(let i=0;i<=Math.ceil(1/MIX_STEP);i++)mixKey(i%2?'a':'d');
+  check(!G.task&&G.stock.maionese===3&&!b.ovo,'alternar A e D dá o ponto: 3 porções');
   interact();check(held()?.pid==='maionese','pega uma porção de maionese');G.hands=[null,null];
+  // pedido em dobro: costela + maionese
+  G.shop=[];G.stock.costela=4000;const combo=spawnShop({pid:'costela',grams:500,extra:['maionese'],fiado:false});for(let n=0;n<300;n++)customersTick(.05);
+  check(orderList(combo).join()==='costela,maionese'&&customerOrderBubbles()[0]?.items.length===2,'domingo: freguês pede costela e maionese juntas');
+  weigh();use('service');check(combo.state==='queue'&&combo.pid==='maionese','entregou a costela, falta a maionese');const cash2=G.cash;use('maionese');use('service');check(combo.state==='leave'&&G.cash>cash2,'com a maionese o pedido em dobro é pago');
   // mantas do açougue, mais caras
   const before=G.cash,mantas=G.stock.costela_crua;phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyManta"]'),'fornecedor vende mantas avulsas');phoneOpen=false;
   buyManta();deliveryTick(8.1);check(G.cash===before-MANTA_BUY_COST&&G.stock.costela_crua===mantas+1&&MANTA_BUY_COST>BOI_COST/MANTAS_PER_BOI*2,'manta do açougue chega sem laçar, bem mais cara');
@@ -54,7 +66,10 @@
   reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.stock.costela_crua=0;openDay();
   check(modal==='costelao'&&costelaoTutorialActive()&&G.stock.costela_crua>=2,'primeiro costelão abre com tutorial e mantas de treino');closeDialog(true);
   simulate(1);check(!G.shop.length,'no tutorial ninguém chega antes da hora');
-  use('costela_crua');use('espeto:0');check(costelaoStep().id==='lenha'&&campoState().fuel<30,'etapa: lenha no fogo');chop();use('fogo');check(costelaoStep().id==='virar','etapa: virar');
+  check(costelaoStep().id==='rachar'&&!fireLit()&&campoState().fuel===0,'o costelão começa com o fogo apagado: rachar lenha');
+  chop();check(costelaoStep().id==='fogo','etapa: lenha no fogo');use('fogo');check(costelaoStep().id==='acender','etapa: acender o fogo');
+  approach('fogo');keys.add('e');interact();tick(LIGHT_TIME+.1,holdTick);keys.clear();check(fireLit()&&costelaoStep().id==='espeto','etapa: costela no espeto');
+  use('costela_crua');use('espeto:0');check(costelaoStep().id==='virar','etapa: virar');
   approach('espeto:0');roast();interact();check(costelaoStep().id==='retirar','etapa: retirar');
   roast();interact();check(costelaoStep().id==='tabua','etapa: tábua');use('tabua');check(costelaoStep().id==='cortar','etapa: cortar');
   simulate(.05);const first=G.shop[0];check(first?.pid==='costela'&&first.grams===500&&first.training,'primeiro freguês pede 500 g sem prazo');
@@ -64,19 +79,32 @@
   check(!costelaoTutorialActive()&&G.costelaoTaught,'tutorial do costelão concluído');
   // laçada de sábado
   reset();G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};nextDay();check(modal==='lassoIntro','sábado exige a laçada antes do próximo dia');
-  action('lassoStart');const L=G.lasso;check(L&&L.bois.length===5&&isCampo()&&!$('lassoUI').classList.contains('hidden'),'campo com o rebanho para laçar');
-  finishLasso();check(G.lasso,'não termina com menos de 3 bois');
-  for(let k=0;k<3;k++){
-   const boi=L.bois.find(b=>b.state==='free');G.player={x:boi.x-200,y:boi.y+40,dx:1,dy:0};L.fx=1;L.fy=0;lassoCharge();
+  action('lassoStart');const L=G.lasso;L.queros=[];check(L&&L.bois.length===5&&isCampo()&&!$('lassoUI').classList.contains('hidden'),'campo com o rebanho para laçar');
+  finishLasso();check(G.lasso,'não termina sem laçar nenhum boi');
+  const boi=L.bois.find(b=>b.state==='free');
+  for(let k=0;k<LASSO_HITS;k++){G.player={x:boi.x-200,y:boi.y+40,dx:1,dy:0};L.fx=1;L.fy=0;lassoCharge();
    let best=0,bd=1e9;for(let t=0;t<1.4;t+=.01){L.charge=t;const a=lassoAim(),d=Math.hypot(a.x-boi.x,a.y-(boi.y-28));if(d<bd){bd=d;best=t;}}L.charge=best;
    for(const other of L.bois)if(other!==boi&&other.state==='free'){other.x=1300;other.y=860;}boi.speed=0;boi.dx=boi.dy=0;boi.t=99;lassoRelease();for(let t=0;t<1;t+=.05){boi.t=99;lassoTick(.05);}
   }
-  check(L.caught===3,'laçar três bois soltando o laço sobre eles');
-  const day=G.day,stock=G.stock.costela_crua;finishLasso();check(!G.lasso&&G.herd===2&&G.stock.costela_crua===stock+9&&G.lassoDay===day,'três bois viram 9 mantas e saem do rebanho');
+  check(boi.state!=='free'&&L.caught===1,'seis laços certeiros enchem a barra e laçam o boi');
+  // quero-quero: rasante acerta, deixa tonto, e Shift esquiva
+  L.queros=makeQueros();L.queros.length=1;const q=L.queros[0];G.player={x:700,y:700,dx:1,dy:0};q.state='warn';q.t=0;q.x=500;q.y=700;q.h=180;q.tx=700;q.ty=700;
+  let hitAt=null;for(let t=0;t<.6;t+=.02){querosTick(L,.02);if(L.knock>0&&!hitAt)hitAt={x:G.player.x};}check(hitAt&&!(L.stun>0)&&L.immune>0,'rasante do quero-quero acerta sem atordoar');
+  lassoCharge();check(!L.charging,'empurrado pelo rasante não gira o laço');const x0=G.player.x;for(let t=0;t<QUERO_KNOCK;t+=.02)lassoTick(.02);check(G.player.x>x0+100,'o rasante joga o peão para trás');L.knock=0;L.immune=0;lassoKeyDown({key:'q',repeat:false,preventDefault(){}});check(L.dash>0,'Q dá o pique para esquivar');L.dash=0;L.queros=[];
+  const day=G.day,stock=G.stock.costela_crua;finishLasso();check(!G.lasso&&G.herd===4&&G.stock.costela_crua===stock+MANTAS_PER_BOI&&G.lassoDay===day,'um boi laçado basta e vira mantas para o costelão');
   check(modal==='planning','depois da laçada aparece a previsão de amanhã');action('chooseEvent','automatic');check(G.day===3&&G.event.id==='costelao','e o dia seguinte é o domingo de costelão');
-  reset();G.herd=1;G.day=2;G.phase='closed';nextDay();check(modal==='lassoIntro'&&$('dialogContent').textContent.includes('Comprar bois'),'rebanho pequeno pede compra de bois');
-  buyBoi();buyBoi();check(G.herd===3&&G.cash===2000-2*BOI_COST,'compra de bois no celular');closeDialog(true);
+  reset();G.herd=0;G.day=2;G.phase='closed';nextDay();check(modal==='lassoIntro'&&$('dialogContent').textContent.includes('Comprar bois'),'sem bois o jogo pede compra de bois');
+  buyBoi();buyBoi();check(G.herd===2&&G.cash===2000-2*BOI_COST,'compra de bois no celular');closeDialog(true);
   phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyBoi"]'),'fornecedor tem a categoria Campo com bois');phoneOpen=false;
+  // quero-queros de visita enquanto a costela assa
+  sunday();campoBirds=[];G.player={x:525,y:640,dx:1,dy:0};campoState().espetos[0]={heat:[0,0],fire:0,burned:false,cost:1,turns:0};Math.random=()=>.001;campoBirdsTick(.05);Math.random=random;
+  check(campoBirds.length===1,'com a costela assando pode chegar um quero-quero');const bird=campoBirds[0];for(let t=0;t<6;t+=.05)campoBirdsTick(.05);check(bird.state==='ground','o quero-quero pousa no campo');
+  Math.random=()=>.9;bird.aggr=1;G.player={x:bird.x+40,y:bird.y-10,dx:1,dy:0};campoBirdsTick(.05);check(bird.state==='warn','passar perto do quero-quero provoca um rasante');const px=G.player.x;for(let t=0;t<1.2;t+=.05)campoBirdsTick(.05);check(Math.abs(G.player.x-px)>40,'o rasante joga o peão para trás');
+  for(let t=0;t<8;t+=.05)campoBirdsTick(.05);check(!campoBirds.includes(bird),'e o quero-quero vai embora');Math.random=random;campoState().espetos[0]=null;
+  campoState().espetos[0]={heat:[0,0],fire:0,burned:false,cost:1,turns:0};G.player={x:525,y:640,dx:1,dy:0};campoBirds=[];spawnCampoBird();const calm=campoBirds[0];for(let t=0;t<6;t+=.05)campoBirdsTick(.05);calm.aggr=0;calm.state='ground';calm.t=9;G.player={x:calm.x+40,y:calm.y-10,dx:1,dy:0};campoBirdsTick(.05);check(calm.state==='ground'&&calm.calm>0,'quero-quero manso só grita e se afasta');campoBirds=[];campoState().espetos[0]=null;
+  // sobras do costelão
+  sunday();G.phase='open';G.stock.costela=1500;G.stock.costela_crua=2;campoState().espetos[1]={heat:[1,0],fire:1,burned:false,cost:40,turns:1};finishDay(true);
+  check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&G.report.waste>0,'carne que sobra no fim do costelão é descartada');check(G.report.power===0,'no costelão não há gasto de luz e querosene');closeDialog(true);
   // mate sem reposição no campo
   sunday();approach('mate');keys.add('e');interact();tick(1.2,holdTick);keys.clear();check(G.boost>0,'campo tem estação de mate, sem reposição de erva');
   save();check(readSave().herd===G.herd&&readSave().version===15,'rebanho e campo persistem no salvamento');

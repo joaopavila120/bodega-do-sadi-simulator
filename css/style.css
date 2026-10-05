@@ -222,3 +222,19 @@
 .upgrade-icon img{max-width:38px;max-height:38px;image-rendering:pixelated}
 .upgrade-icon .pixel-item{width:38px;height:38px}
 .upgrade-stars{position:absolute;right:-4px;bottom:-6px;font-size:11px;color:#e8a21c;text-shadow:0 1px 0 #5a3a10,0 0 2px #5a3a10;letter-spacing:-1px}
+
+/* Menu inicial e menu do Esc */
+.start-menu{width:min(460px,calc(100vw - 36px));text-align:center}
+.main-menu{display:grid;gap:10px;width:min(320px,100%);margin:16px auto 6px}
+.main-menu button{font-size:18px;padding:13px 16px}
+.start-setup{display:flex;gap:12px;align-items:center;justify-content:center;margin:14px auto 6px;text-align:left}
+.start-setup label{display:grid;gap:5px;font-size:13px;font-weight:bold}
+.start-setup input{padding:8px 10px;font:inherit;font-weight:normal;color:#352719;border:1px solid #a98b58;border-radius:5px;background:#fff9e9;width:220px;max-width:52vw}
+.start-note{display:block;opacity:.8;margin-top:8px;line-height:1.35}
+.game-menu{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 16px}
+.game-menu .primary{grid-column:1/-1}
+.volume-panel h3{margin:0 0 8px}
+.volume-row{display:grid;grid-template-columns:130px 1fr 46px;align-items:center;gap:10px;margin:8px 0}
+.volume-row input{width:100%;accent-color:#7a5a2a}
+.volume-row output{text-align:right;font-weight:bold}
+@media(max-width:520px){.game-menu{grid-template-columns:1fr}.volume-row{grid-template-columns:96px 1fr 40px}}

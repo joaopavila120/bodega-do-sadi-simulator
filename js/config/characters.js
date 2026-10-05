@@ -39,6 +39,8 @@ function visitorPool(team = null) { return PEOPLE.map((p,i)=>i).filter(i => !tea
 function pickVisitor(extra=[]) {
  let team=['gremio','inter'].includes(G.event.id)?G.event.id:G.event.id==='grenal'?(Math.random()<.5?'gremio':'inter'):null;
  if(G.event.id==='grenal'&&['gremio','inter'].includes(G.event.result))team=G.event.result;
+ // Todo dia entra um personagem especial, de preferência um que ainda não apareceu.
+ const daily=dailySpecial(extra);if(daily!==null)return daily;
  let pool=visitorPool(team).filter(i=>visitorAvailable(i,extra));
  if(!team){const fans=Math.random()<.18;const subset=pool.filter(i=>fans?!!PEOPLE[i].team:!PEOPLE[i].team);if(subset.length)pool=subset;}
  // Personagens especiais são raros: aparecem em cerca de 12% das chegadas.

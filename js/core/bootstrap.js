@@ -23,6 +23,7 @@ async function initializeGame() {
     try {
       AudioEngine.on = localStorage.getItem('bodega-sound') !== 'false';
       AudioEngine.music = localStorage.getItem('bodega-music') !== 'false';
+      AudioEngine.loadVolumes();
     } catch (_) { /* O modo sem persistência ainda permite jogar. */ }
 
     await Promise.all([

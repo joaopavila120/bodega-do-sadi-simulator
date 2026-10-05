@@ -20,6 +20,7 @@ const GIFTS={
 // Amizade traz o especial mais vezes: a chance geral sobe e, entre eles, quem tem mais afeto vem mais.
 function specialChance(){return Math.min(.35,SPECIAL_CHANCE+specialPeople().reduce((n,i)=>n+(G.friends[i]||0),0)/100*.06);}
 function pickByFriendship(list){const w=list.map(i=>1+(G.friends[i]||0)/20);let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let k=0;k<list.length;k++){if((r-=w[k])<=0)return list[k];}return list[list.length-1];}
+function dailySpecial(extra=[]){if(G.phase!=='open'||tutorialActive()||G.dailySpecialDay===G.day||G.elapsed<DAY*.2)return null;const all=specialPeople().filter(i=>visitorAvailable(i,extra));if(!all.length)return null;const fresh=all.filter(i=>!G.metSpecial?.[PEOPLE[i].id]);return fresh.length?pick(fresh):pickByFriendship(all);}
 function isSpecial(i){return ALWAYS_TALK.has(PEOPLE[i]?.id);}
 function specialPeople(){return PEOPLE.map((p,i)=>i).filter(i=>isSpecial(i)&&PEOPLE[i].id!==G.avatarId);}
 function hasContact(i){return !!G.contacts?.[PEOPLE[i]?.id];}
@@ -29,19 +30,57 @@ function unlockContact(person,silent=false){
  const id=PEOPLE[person]?.id;if(!id||G.contacts[id])return;G.contacts[id]=G.day;
  if(!silent)showBanner('Novo contato: '+PEOPLE[person].name,'Agora dá para convidar para truco e bocha.','friend');
 }
-function giveGift(person,gift){
- const id=PEOPLE[person].id,key=id+':'+gift.at;if(G.giftsGiven[key])return;G.giftsGiven[key]=G.day;
- const names=[];let cash=0;
- for(const d of gift.decor){const item=DECOR.find(x=>x.id===d);if(decorOwned(d))cash+=item.cost;else{decorState()[d]=true;names.push(item.name);}}
- if(cash){G.cash=round(G.cash+cash);G.stats.aid+=cash;}
- showBanner(PEOPLE[person].name+' te deu um presente!',(names.length?names.join(' e '):'')+(cash?(names.length?' · ':'')+money(cash)+' (a peça já era tua)':'')+' · '+gift.text,'gift');AudioEngine.heart();save();
+// Presentes: além da peça decorativa de cada um, os especiais trazem mercadorias da roça
+// conforme a amizade cresce (25, 75 e 100) e, às vezes, depois de uma visita. Quem presenteia
+// vem pessoalmente depois do expediente, quando você encerra o dia.
+const GIFT_GOODS=[
+ {key:'erva',qty:2000,name:'2 kg de erva-mate',text:'“Erva boa, moída grossa, do jeito que o mate pede.”'},
+ {key:'bergamota',qty:2000,name:'2 kg de bergamota do pé',text:'“Bergamota do pé, colhida hoje cedo lá em casa.”'},
+ {key:'pinhao',qty:2000,name:'2 kg de pinhão',text:'“Pinhão da serra, pra sapecar no fogão.”'},
+ {key:'cachaca',qty:6,name:'6 doses de cachaça da colônia',text:'“Da colônia, curtida em barril de carvalho.”'},
+ {key:'queijo',qty:6,name:'6 queijos coloniais',text:'“Queijo colonial da vizinha. Vai bem no xis.”'},
+ {key:'salame',qty:4,name:'4 salames coloniais',text:'“Salame curado no galpão, receita do nono.”'},
+ {key:'pepino',qty:4,name:'4 potes de pepino em conserva',text:'“Conserva da patroa, pra vender no balcão.”'}
+];
+const GOODS_GIFT_AT=[25,75,100],VISIT_GIFT_CHANCE=.2;
+function giftGoodsOptions(){return GIFT_GOODS.filter(g=>GOODS[g.key]&&unlocked(g.key));}
+function giftKey(person,at){return PEOPLE[person].id+':'+at;}
+function queueGift(person,gift){
+ G.giftQueue??=[];G.giftsGiven??={};const key=giftKey(person,gift.at);if(G.giftsGiven[key]||G.giftQueue.some(g=>g.key===key))return false;
+ const item={person,key,text:gift.text};
+ if(gift.decor)item.decor=gift.decor;else{const g=pick(giftGoodsOptions());if(!g)return false;item.goods={key:g.key,qty:g.qty,name:g.name};item.text=g.text;}
+ G.giftQueue.push(item);return true;
 }
+function giftLabel(item){return item.decor?item.decor.map(d=>DECOR.find(x=>x.id===d)?.name).join(' e '):item.goods.name;}
+function deliverGift(item){
+ if(!item||G.giftsGiven[item.key])return;G.giftsGiven[item.key]=G.day;
+ const names=[];let cash=0;
+ if(item.decor){for(const d of item.decor){const dec=DECOR.find(x=>x.id===d);if(decorOwned(d))cash+=dec.cost;else{decorState()[d]=true;names.push(dec.name);}}}
+ else{const{key,qty}=item.goods,units=G.stock[key]||0;G.avg[key]=(G.avg[key]||0)*units/(units+qty);G.stock[key]=units+qty;names.push(item.goods.name);}
+ if(cash){G.cash=round(G.cash+cash);G.stats.aid+=cash;}
+ showBanner(PEOPLE[item.person].name+' te deu um presente!',(names.length?names.join(' e '):'')+(cash?(names.length?' · ':'')+money(cash)+' (a peça já era tua)':'')+' · '+item.text,'gift');AudioEngine.heart();save();
+}
+// Entrega na hora, com a pessoa presente (ex.: fim do tutorial de bocha com o Mano Lima).
+function giveGift(person,gift){const key=giftKey(person,gift.at);G.giftQueue=(G.giftQueue||[]).filter(g=>g.key!==key);deliverGift({person,key,decor:gift.decor,text:gift.text});}
+// Depois do expediente: presentes de visita e a bandeira do Mano Lima no fim do segundo dia.
+function queueAfterHoursGifts(){
+ const mano=PEOPLE.findIndex(p=>p.id==='manolima');
+ if(G.day>=2&&mano>=0&&mano!==PEOPLE.findIndex(p=>p.id===G.avatarId))queueGift(mano,GIFTS.manolima[0]);
+ const today=G.visitedToday?.day===G.day?G.visitedToday.ids:[];
+ for(const id of today){const i=PEOPLE.findIndex(p=>p.id===id);if(i>=0&&(G.friends[i]||0)>=25&&Math.random()<VISIT_GIFT_CHANCE)queueGift(i,{at:'dia'+G.day});}
+}
+function showGiftVisit(){
+ const item=G.giftQueue?.[0];if(!item)return false;const p=PEOPLE[item.person];
+ openDialog('Presente de '+p.name,`<p><b>${p.name}</b> passou na bodega depois do expediente e trouxe um presente.</p><div class="callout"><b>🎁 ${giftLabel(item)}</b><p>${item.text}</p></div><div class="actions"><button class="primary" data-act="giftAccept">Receber o presente</button></div>`,'giftVisit');return true;
+}
+function acceptGiftVisit(){const item=G.giftQueue?.shift();deliverGift(item);closeDialog(true);challengeVisitLeave();save();}
 function socialCheck(){
  G.contacts??={};G.giftsGiven??={};G.playable??={};
  for(const i of specialPeople()){
   const id=PEOPLE[i].id,f=G.friends[i]||0;
   if(f>=CONTACT_AT)unlockContact(i);
-  for(const gift of GIFTS[id]||[])if(typeof gift.at==='number'&&f>=gift.at)giveGift(i,gift);
+  for(const gift of GIFTS[id]||[])if(typeof gift.at==='number'&&f>=gift.at)queueGift(i,gift);
+  for(const at of GOODS_GIFT_AT)if(f>=at)queueGift(i,{at});
   if(f>=MAX_FRIENDSHIP&&!G.playable[id]){G.playable[id]=G.day;showBanner(PEOPLE[i].name+' é teu parceiro de verdade','Agora dá para jogar com '+PEOPLE[i].name+': Celular → Contatos.','friend');}
  }
 }
@@ -51,7 +90,7 @@ function finishBocceTutorial(){const mano=PEOPLE.findIndex(p=>p.id==='manolima')
 function announceArrivals(people){
  G.metSpecial??={};
  for(const i of new Set(people)){
-  if(!isSpecial(i))continue;const p=PEOPLE[i];
+  if(!isSpecial(i))continue;const p=PEOPLE[i];G.dailySpecialDay=G.day;if(G.visitedToday?.day!==G.day)G.visitedToday={day:G.day,ids:[]};if(!G.visitedToday.ids.includes(p.id))G.visitedToday.ids.push(p.id);
   if(!G.metSpecial[p.id]){G.metSpecial[p.id]=G.day;showBanner(p.name+' entrou na bodega!',p.origin||'Um personagem especial. Atenda bem para ganhar o contato.','special');AudioEngine.heart();}
   else say(p.name+' chegou na bodega.');
  }

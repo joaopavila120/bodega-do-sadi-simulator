@@ -11,7 +11,8 @@
  check($('dialogTitle').textContent.includes('Um passo de cada vez')&&$('dialogContent').textContent.includes('um freguês por vez'),'boas-vindas apresentam tutorial sequencial');gameGuide();check(['Bocha','Truco','Contatos','Estética'].every(text=>$('dialogContent').textContent.includes(text)),'guia apresenta lazer, contatos e caminho de progressão');
  closeDialog(true);G.xp=99999;G.levelSeen=7;
  playAs('indavirus');check(G.avatarId==='sadi','sem amizade máxima não dá para jogar com Indavirus');
- G.friends[index('indavirus')]=100;socialCheck();check(G.playable.indavirus&&hasContact(index('indavirus'))&&decorState().alho===true,'amizade máxima libera contato, presente e personagem');
+ G.friends[index('indavirus')]=100;socialCheck();const indaGifts=(G.giftQueue||[]).filter(g=>g.person===index('indavirus'));check(indaGifts.length===4&&!decorState().alho,'presentes ficam guardados para a visita depois do expediente');indaGifts.forEach(deliverGift);G.giftQueue=[];
+ check(G.playable.indavirus&&hasContact(index('indavirus'))&&decorState().alho===true,'amizade máxima libera contato, presente e personagem');
  G.phase='prep';playAs('indavirus');check(G.avatarId==='indavirus','jogar como Indavirus pelo contato');
  G.phase='open';
  check(!visitorAvailable(index('indavirus')),'personagem único escolhido pelo jogador não chega como cliente');
@@ -53,7 +54,7 @@
  G=migrated;const cash=G.cash;buyUpgrade('horse');equipGear('horse');check(G.gear==='bootsBagual'&&G.cash===cash,'cavalo não pode ser comprado nem equipado');
 
  phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Contatos da bodega')&&document.querySelectorAll('[data-contact]').length===ALWAYS_TALK.size,'aba Contatos lista só os especiais, com retratos e afeto; preferências');
- phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&$('phoneContent').querySelectorAll('.upgrade-category').length===4,'melhorias separadas em categorias sem relações');
+ phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&[...$('phoneContent').querySelectorAll('.upgrade-cats button')].map(b=>b.textContent).join()==='Botas,Mate,Cozinha,Balcão,Outros'&&$('phoneContent').querySelectorAll('.upgrade-category').length===1,'melhorias em abas: Botas, Mate, Cozinha, Balcão e Outros');
  for(const id of ['indavirus','lauro','peixinhonabrasa']){const p=index(id);G.friends[p]=100;G.conversations[p]=4;check(!!personalizedProse(p)&&nextProse(p).id?.includes(id),'voz própria permanece com afinidade alta: '+id);}
  const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!line.id?.includes('manolima'))throw Error('Mano perdeu a voz própria');}check(true,'Mano Lima mantém voz própria sem cair nas falas genéricas');
  for(const id of ['guri','manolima','peixinhonabrasa','indavirus','lauro']){const lines=customDialogues[id]||DEFAULT_DIALOGUES[id];check(lines?.length>=12&&!lines.some(l=>/imigração|lobisome do Arvoredo te/.test(l.reply)),'falas novas de '+id);}

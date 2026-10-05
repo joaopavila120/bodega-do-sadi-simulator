@@ -3,19 +3,22 @@
 
 const CAMPO_IMG='assets/images/campo/';
 function campoImage(file){const image=new Image();image.src=CAMPO_IMG+file;return image;}
-const campoArt=campoImage('campo.png'),fogoArt=campoImage('fogo.png'),espetoArt=campoImage('espeto.png'),boisArt=campoImage('bois.png'),lenhaArt=campoImage('lenha.png');
-const CAMPO_ART=[[campoArt,'campo.png'],[fogoArt,'fogo.png'],[espetoArt,'espeto.png'],[boisArt,'bois.png'],[lenhaArt,'lenha.png']];
+const campoArt=campoImage('campo.png'),fogoArt=campoImage('fogo.png'),espetoArt=campoImage('espeto.png'),boisArt=campoImage('bois.png'),lenhaArt=campoImage('lenha.png'),queroArt=campoImage('queroquero.png');
+const CAMPO_ART=[[campoArt,'campo.png'],[fogoArt,'fogo.png'],[espetoArt,'espeto.png'],[boisArt,'bois.png'],[lenhaArt,'lenha.png'],[queroArt,'queroquero.png']];
 const BOI_COATS=['angus','colorado','holandes','hereford','charoles','crioulo'],BOI_W=72,BOI_H=52,ESPETO_W=44,ESPETO_H=96;
-const BOI_COST=120,MANTAS_PER_BOI=3,MANTA_GRAMS=2000,MIN_LASSO=3,MANTA_BUY_COST=95;
+// Basta laçar um boi: cada laço certeiro enche a barra e com LASSO_HITS laços ele está laçado.
+const BOI_COST=120,MANTAS_PER_BOI=4,MANTA_GRAMS=2000,MIN_LASSO=1,LASSO_HITS=6,MANTA_BUY_COST=95;
 // Cada lado da manta leva COOK_SIDE s (com o fogo forte) para chegar ao ponto; passa do ponto e queima em BURN_AT.
 const COOK_SIDE=18,BURN_AT=1.8,PERFECT_MAX=1.35,ESPETO_SCALE=1.95;
 // O fogo de chão gasta lenha: sem lenha sobram só brasas e a costela quase não assa.
-const FUEL_START=70,FUEL_BURN=.7,LENHA_FUEL=35,CHOP_HITS=3,CHOP_TIME=1.1,CHOP_ZONE=[.62,.84];
+// O domingo começa com o fogo apagado: lenha rachada no fogo e segurar E acende (com um tanto de gravetos).
+const FUEL_START=70,FUEL_BURN=.7,LENHA_FUEL=35,CHOP_HITS=3,CHOP_TIME=1.1,CHOP_ZONE=[.62,.84],LIGHT_TIME=1.6,KINDLING=15;
 function fireFuel(){return campoState().fuel;}
-function fireHeat(){const f=fireFuel();return f<=0?.1:.35+.65*Math.min(1,f/50);}
+function fireLit(){return !!campoState().lit;}
+function fireHeat(){const c=campoState();return !c.lit?0:c.fuel<=0?.1:.35+.65*Math.min(1,c.fuel/50);}
 
 function isCampo(state=G){return state?.event?.id==='costelao'||!!state?.lasso;}
-function campoState(state=G){state.campo??={espetos:[null,null,null,null],bowl:{ovo:false,azeite:false,cost:0},tutorial:null,fuel:FUEL_START};state.campo.fuel??=FUEL_START;state.campo.espetos??=[null,null,null,null];state.campo.bowl??={ovo:false,azeite:false,cost:0};return state.campo;}
+function campoState(state=G){state.campo??={espetos:[null,null,null,null],bowl:{ovo:false,azeite:false,cost:0},tutorial:null,fuel:FUEL_START};state.campo.fuel??=FUEL_START;state.campo.lit??=state.campo.fuel>0;state.campo.espetos??=[null,null,null,null];state.campo.bowl??={ovo:false,azeite:false,cost:0};return state.campo;}
 
 // Fogo ao fundo, espetos plantados na frente dele, mesas de apoio à direita.
 const CAMPO_FIXED=[
@@ -30,7 +33,8 @@ const CAMPO_FIXED=[
  {id:'bin:ovo',x:1066,y:560,w:72,h:57,label:'Ovos'},{id:'bin:azeite',x:1150,y:560,w:72,h:57,label:'Óleo vegetal'},
  {id:'bottle:refri',x:1262,y:530,w:62,h:88,label:'Caixa térmica · refrigerante'},
  {id:'mate',x:860,y:740,w:66,h:54,label:'Chimarrão · segure E'},
- {id:'service',x:1150,y:770,w:200,h:55,label:'Balcão do costelão'},
+ {id:'service',x:1030,y:770,w:150,h:55,label:'Balcão 1 do costelão'},{id:'service:1',x:1215,y:770,w:150,h:55,label:'Balcão 2 do costelão'},
+ {id:'shop:pepino',x:1345,y:545,w:52,h:57,label:'Pepino em conserva',unlock:'pepino'},
  {id:'trash',x:50,y:815,w:48,h:52,label:'Lixeira'}
 ];
 
@@ -38,10 +42,11 @@ const CAMPO_FIXED=[
 function espetoReady(e){return e&&!e.burned&&e.heat[0]>=1&&e.heat[1]>=1;}
 function campoTick(dt){
  if(!isCampo()||G.lasso)return;
+ campoBirdsTick(dt);
  const c=campoState(),before=c.fuel;
- c.fuel=Math.max(0,c.fuel-FUEL_BURN*dt);
- if(before>=25&&c.fuel<25){AudioEngine.warning();effect('O fogo está baixando: traga lenha!',525,430,'#ffc875');}
- if(before>0&&c.fuel<=0){effect('Só brasa: a costela quase não assa',525,430,'#ff9a70');}
+ if(c.lit)c.fuel=Math.max(0,c.fuel-FUEL_BURN*dt);
+ if(c.lit&&before>=25&&c.fuel<25){AudioEngine.warning();effect('O fogo está baixando: traga lenha!',525,430,'#ffc875');}
+ if(c.lit&&before>0&&c.fuel<=0){c.lit=false;AudioEngine.fireOut();effect('O fogo apagou! Traga lenha e acenda de novo',525,430,'#ff9a70');}
  const heat=fireHeat();
  c.espetos.forEach((e,i)=>{
   if(!e||e.burned)return;
@@ -93,14 +98,15 @@ function useMaionese(){
  say(b.ovo||b.azeite?'Falta '+(b.ovo?'o óleo':'o ovo')+' na tigela.':'Traga um ovo e o óleo para a tigela.');
 }
 function startMix(){G.task={type:'mix',target:'maionese',progress:0,last:null,time:0};$('mixUI').classList.remove('hidden');updateMixUI();}
-// Depois de começar com E, cada toque em A ou E bate a maionese.
+// Depois de começar com E, bata alternando A e D: repetir a mesma tecla não conta.
+const MIX_STEP=.045;
 function mixKey(k){
- const t=G.task;if(t?.type!=='mix')return;if(!['a','e'].includes(k))return;
- t.progress+=.075;t.last=k;AudioEngine.noise(.05,.12,1600);
+ const t=G.task;if(t?.type!=='mix')return;if(!['a','d'].includes(k)||k===t.last)return;
+ t.progress+=MIX_STEP;t.last=k;AudioEngine.noise(.05,.12,1600);
  if(t.progress>=1)finishMix();else updateMixUI();
 }
 function mixTick(dt){const t=G.task;if(t?.type!=='mix')return;t.time+=dt;t.progress=Math.max(0,t.progress-.1*dt);updateMixUI();}
-function updateMixUI(){const t=G.task;if(t?.type!=='mix')return;$('mixFill').style.width=Math.round(t.progress*100)+'%';$('mixStatus').textContent=t.progress<.3?'Aperte A e E repetidamente':t.progress<.75?'Está engrossando… continue!':'Quase no ponto!';}
+function updateMixUI(){const t=G.task;if(t?.type!=='mix')return;$('mixFill').style.width=Math.round(t.progress*100)+'%';$('mixStatus').textContent=t.progress<.3?'Alterne A e D sem parar':t.progress<.75?'Está engrossando… continue!':'Quase no ponto!';}
 function finishMix(){
  const b=campoState().bowl,n=3,units=G.stock.maionese;
  G.avg.maionese=(G.avg.maionese*units+b.cost)/(units+n);G.stock.maionese+=n;b.ovo=b.azeite=false;b.cost=0;
@@ -121,33 +127,14 @@ function chopRelease(){
  const fill=t.time/CHOP_TIME,good=fill>=CHOP_ZONE[0]&&fill<=CHOP_ZONE[1];t.swinging=false;t.time=0;
  if(good){t.hits++;AudioEngine.chop();burst(G.player.x+30,G.player.y-40);effect('Toc! '+t.hits+'/'+CHOP_HITS,G.player.x,G.player.y-110,'#e1ff9e');}
  else{AudioEngine.bad();effect(fill<CHOP_ZONE[0]?'Golpe fraco':'Passou do ponto',G.player.x,G.player.y-110,'#ffc0a0');}
- if(t.hits>=CHOP_HITS){G.task=null;$('chopUI').classList.add('hidden');putHeld({id:G.next++,kind:'ingredient',key:'lenha',cost:0,ready:true});AudioEngine.ready();effect('Lenha rachada! Leve ao fogo',G.player.x,G.player.y-130,'#fff2b0');save();return;}
+ if(t.hits>=CHOP_HITS){G.task=null;$('chopUI').classList.add('hidden');putHeld({id:G.next++,kind:'ingredient',key:'lenha',cost:0,ready:true});AudioEngine.ready();effect('Lenha rachada! Leve ao fogo',G.player.x,G.player.y-130,'#fff2b0');costelaoTutorialEvent('rachar');save();return;}
  updateChopUI();
 }
 function abortChop(){if(G.task?.type!=='chop')return;G.task=null;$('chopUI').classList.add('hidden');}
 function updateChopUI(){const t=G.task;if(t?.type!=='chop')return;$('chopTitle').textContent='Rachando lenha · golpe '+Math.min(CHOP_HITS,t.hits+1)+' de '+CHOP_HITS;$('chopFill').style.width=Math.min(100,t.time/CHOP_TIME*100)+'%';}
-function feedFire(){const c=campoState();takeHeld();c.fuel=Math.min(100,c.fuel+LENHA_FUEL);AudioEngine.sizzle();burst(525,500);effect('Fogo avivado · '+Math.round(c.fuel)+'%',525,430,'#ffd56a');costelaoTutorialEvent('lenha');save();}
-function buyManta(){if(!hasCash(MANTA_BUY_COST)){say('Uma manta do açougue custa '+money(MANTA_BUY_COST)+'.');AudioEngine.bad();return;}spendCash(MANTA_BUY_COST);G.stats.purchases+=MANTA_BUY_COST;G.deliveries.push({id:G.next++,key:'costela_crua',qty:1,cost:MANTA_BUY_COST,left:8,total:8});AudioEngine.phone();say('Manta encomendada no açougue: chega em 8 s.');save();if(phoneOpen)renderPhone();}
-
-// ---------- Lenha: rachar no cepo (3 golpes no ponto) e levar ao fogo ----------
-function startChop(){if(!freeHand()){say('Libere as mãos para pegar o machado.');return;}G.task={type:'chop',target:'lenha',time:0,hits:0,swinging:false};$('chopUI').classList.remove('hidden');updateChopUI();}
-function chopTick(dt,holding,n){
- const t=G.task;if(phoneOpen||!n||n.id!=='lenha'){abortChop();return;}
- if(holding){t.swinging=true;t.time+=dt;if(t.time/CHOP_TIME>1.25)chopRelease();}
- else if(t.swinging)chopRelease();
- updateChopUI();
-}
-function chopRelease(){
- const t=G.task;if(t?.type!=='chop'||!t.swinging)return;
- const fill=t.time/CHOP_TIME,good=fill>=CHOP_ZONE[0]&&fill<=CHOP_ZONE[1];t.swinging=false;t.time=0;
- if(good){t.hits++;AudioEngine.chop();burst(G.player.x+30,G.player.y-40);effect('Toc! '+t.hits+'/'+CHOP_HITS,G.player.x,G.player.y-110,'#e1ff9e');}
- else{AudioEngine.bad();effect(fill<CHOP_ZONE[0]?'Golpe fraco':'Passou do ponto',G.player.x,G.player.y-110,'#ffc0a0');}
- if(t.hits>=CHOP_HITS){G.task=null;$('chopUI').classList.add('hidden');putHeld({id:G.next++,kind:'ingredient',key:'lenha',cost:0,ready:true});AudioEngine.ready();effect('Lenha rachada! Leve ao fogo',G.player.x,G.player.y-130,'#fff2b0');save();return;}
- updateChopUI();
-}
-function abortChop(){if(G.task?.type!=='chop')return;G.task=null;$('chopUI').classList.add('hidden');}
-function updateChopUI(){const t=G.task;if(t?.type!=='chop')return;$('chopTitle').textContent='Rachando lenha · golpe '+Math.min(CHOP_HITS,t.hits+1)+' de '+CHOP_HITS;$('chopFill').style.width=Math.min(100,t.time/CHOP_TIME*100)+'%';}
-function feedFire(){const c=campoState();takeHeld();c.fuel=Math.min(100,c.fuel+LENHA_FUEL);AudioEngine.sizzle();burst(525,500);effect('Fogo avivado · '+Math.round(c.fuel)+'%',525,430,'#ffd56a');costelaoTutorialEvent('lenha');save();}
+function feedFire(){const c=campoState();takeHeld();c.fuel=Math.min(100,c.fuel+LENHA_FUEL);AudioEngine.logDrop();burst(525,500);effect(c.lit?'Fogo avivado · '+Math.round(c.fuel)+'%':'Lenha no fogo · segure E para acender',525,430,'#ffd56a');costelaoTutorialEvent('fogo');save();}
+function startLight(){G.task={type:'light',target:'fogo',time:0};AudioEngine.matchStrike();}
+function finishLight(){const c=campoState();G.task=null;c.lit=true;c.fuel=Math.min(100,c.fuel+KINDLING);AudioEngine.ignite();burst(525,500);fxPuffs(525,505,10,160,'#d8cfc0');effect('Fogo aceso!',525,430,'#ffd56a');costelaoTutorialEvent('acender');save();}
 function buyManta(){if(!hasCash(MANTA_BUY_COST)){say('Uma manta do açougue custa '+money(MANTA_BUY_COST)+'.');AudioEngine.bad();return;}spendCash(MANTA_BUY_COST);G.stats.purchases+=MANTA_BUY_COST;G.deliveries.push({id:G.next++,key:'costela_crua',qty:1,cost:MANTA_BUY_COST,left:8,total:8});AudioEngine.phone();say('Manta encomendada no açougue: chega em 8 s.');save();if(phoneOpen)renderPhone();}
 
 function campoInteract(n){
@@ -157,7 +144,7 @@ function campoInteract(n){
  if(id==='tabua'){useTabua();return true;}
  if(id==='maionese'){useMaionese();return true;}
  if(id==='lenha'){startChop();return true;}
- if(id==='fogo'){if(held()?.key==='lenha'){feedFire();return true;}say('O fogo é alimentado com lenha rachada no cepo. As mantas vão nos espetos.');return true;}
+ if(id==='fogo'){if(held()?.key==='lenha'){feedFire();return true;}const c=campoState();if(!c.lit&&c.fuel>0){startLight();return true;}say(c.lit?'O fogo é alimentado com lenha rachada no cepo. As mantas vão nos espetos.':'Fogo apagado: rache lenha no cepo e traga para cá.');return true;}
  return false;
 }
 function campoHint(n){
@@ -165,16 +152,18 @@ function campoHint(n){
  if(id==='espeto'){const e=campoState().espetos[Number(arg)];if(!e)return '<strong>E</strong> colocar manta de costela crua';if(e.burned)return '<strong>E</strong> retirar costela queimada';if(espetoReady(e))return '<strong>E</strong> retirar a costela no ponto';return '<strong>E</strong> virar a manta · lado no fogo: '+Math.round(Math.min(1,e.heat[e.fire])*100)+'%';}
  if(id==='costela_crua')return '<strong>E</strong> pegar manta crua · '+G.stock.costela_crua+' mantas';
  if(id==='tabua'){const c=G.shop.find(c=>c.state==='queue'&&c.pid==='costela');return held()?.key==='costela_assada'?'<strong>E</strong> apoiar a costela na tábua':'<strong>Segure E</strong> cortar '+(c?formatWeight(c.grams):'costela')+' · '+formatWeight(G.stock.costela)+' na tábua';}
- if(id==='maionese'){const b=campoState().bowl;return b.ovo&&b.azeite?'<strong>E</strong> bater a maionese (depois A e E repetidamente)':G.stock.maionese>0&&!held()?'<strong>E</strong> pegar maionese · '+G.stock.maionese+' porções':'Tigela: '+(b.ovo?'ovo ✓':'falta ovo')+' · '+(b.azeite?'óleo ✓':'falta óleo');}
- if(id==='fogo')return held()?.key==='lenha'?'<strong>E</strong> colocar lenha no fogo':'Fogo de chão · '+Math.round(fireFuel())+'% de lenha'+(fireFuel()<25?' · traga lenha!':'');
+ if(id==='maionese'){const b=campoState().bowl;return b.ovo&&b.azeite?'<strong>E</strong> bater a maionese (depois A e D alternados)':G.stock.maionese>0&&!held()?'<strong>E</strong> pegar maionese · '+G.stock.maionese+' porções':'Tigela: '+(b.ovo?'ovo ✓':'falta ovo')+' · '+(b.azeite?'óleo ✓':'falta óleo');}
+ if(id==='fogo'){if(held()?.key==='lenha')return '<strong>E</strong> colocar lenha no fogo';if(G.task?.type==='light')return 'Acendendo… continue segurando E';if(!fireLit())return fireFuel()>0?'<strong>Segure E</strong> para acender o fogo':'Fogo apagado · rache lenha no cepo e traga aqui';return 'Fogo de chão · '+Math.round(fireFuel())+'% de lenha'+(fireFuel()<25?' · traga lenha!':'');}
  if(id==='lenha')return '<strong>E</strong> rachar lenha · segure e solte na faixa verde · '+CHOP_HITS+' golpes';
  return null;
 }
+function maioneseAvailable(){return G.stock.maionese>0||G.stock.ovo>0&&G.stock.azeite>0;}
 function campoOrder(){
  const options=[];
  if(G.stock.costela_crua>0||G.stock.costela>0||campoState().espetos.some(Boolean))options.push(['costela',.62]);
  if(G.stock.maionese>0||G.stock.ovo>0&&G.stock.azeite>0)options.push(['maionese',.24]);
  if(G.stock.refri>0)options.push(['refri',.14]);
+ if(G.up.pepino&&G.stock.pepino>0)options.push(['pepino',.12]);
  if(!options.length)return null;let r=Math.random()*options.reduce((n,o)=>n+o[1],0);
  for(const[k,w]of options){if((r-=w)<=0)return k;}return options[0][0];
 }
@@ -200,9 +189,11 @@ function drawEspetoCell(cell,x,y,alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.i
 function drawCampoStation(f){
  if(!isCampo())return false;const{x,y,w,h}=f,[id,arg]=f.id.split(':');
  if(id==='fogo'){
-  const fuel=fireFuel(),row=fuel>40?0:fuel>0?1:2,frame=Math.floor(frameClock*7)%4;ctx.save();ctx.imageSmoothingEnabled=false;
+  const fuel=fireFuel(),lit=fireLit(),row=!lit?2:fuel>40?0:fuel>0?1:2,frame=lit?Math.floor(frameClock*7)%4:0;ctx.save();ctx.imageSmoothingEnabled=false;if(!lit)ctx.filter='grayscale(.85) brightness(.55)';
   if(fogoArt.complete&&fogoArt.naturalWidth)ctx.drawImage(fogoArt,frame*150,row*70,150,70,x-5,y-112,480,224);ctx.restore();
-  rect(x+w/2-70,y-118,140,12,'#2a1d12',5,'#d2b982');rect(x+w/2-68,y-116,136*fuel/100,8,fuel<25?'#e0603a':'#f0a030',3);txt('Lenha '+Math.round(fuel)+'%',x+w/2,y-131,12,fuel<25?'#ffb08a':'#fff0c3');
+  rect(x+w/2-70,y-118,140,12,'#2a1d12',5,'#d2b982');rect(x+w/2-68,y-116,136*fuel/100,8,!lit?'#8a7a6a':fuel<25?'#e0603a':'#f0a030',3);txt(lit?'Lenha '+Math.round(fuel)+'%':fuel>0?'Apagado · segure E para acender':'Apagado · traga lenha',x+w/2,y-131,12,!lit||fuel<25?'#ffb08a':'#fff0c3');
+  if(G.task?.type==='light'){const k=clamp(G.task.time/LIGHT_TIME,0,1);bar(x+w/2-60,y-152,120,k,'#ffb347');for(let i=0;i<3;i++){const ph=(frameClock*1.4+i*.33)%1;ellipse(x+w/2-20+i*20,y+20-ph*60,5+ph*8,6+ph*9,`rgba(200,195,185,${.5*(1-ph)})`);}ellipse(x+w/2,y+30,6+k*22,5+k*16,`rgba(255,${150+Math.round(k*60)},60,${.4+k*.4})`);}
+  if(!lit)return true;
   ctx.save();ctx.globalCompositeOperation='lighter';const fl=(.35+.65*Math.min(1,fuel/50))*(1+Math.sin(frameClock*9)*.06);const g=ctx.createRadialGradient(x+w/2,y+40,10,x+w/2,y+40,300*fl);g.addColorStop(0,'rgba(255,140,40,.22)');g.addColorStop(1,'rgba(255,140,40,0)');ctx.fillStyle=g;ctx.fillRect(x-200,y-260,w+400,520);ctx.restore();
   return true;
  }
@@ -219,7 +210,6 @@ function drawCampoStation(f){
   if(!e.burned&&!espetoReady(e))for(let k=0;k<3;k++){const p=(frameClock*.5+k*.33)%1;ellipse(x+w/2+Math.sin(p*7+k)*8,y+20-p*50,4+p*5,5+p*6,`rgba(230,220,200,${.3*(1-p)})`);}
   return true;
  }
- if(id==='lenha'){ctx.save();ctx.imageSmoothingEnabled=false;if(lenhaArt.complete&&lenhaArt.naturalWidth)ctx.drawImage(lenhaArt,x-22,y+h-124,168,126);ctx.restore();if(G.task?.type==='chop')bar(x,y-24,w,G.task.hits/CHOP_HITS,'#e8b65d');return true;}
  if(id==='lenha'){ctx.save();ctx.imageSmoothingEnabled=false;if(lenhaArt.complete&&lenhaArt.naturalWidth)ctx.drawImage(lenhaArt,x-22,y+h-124,168,126);ctx.restore();if(G.task?.type==='chop')bar(x,y-24,w,G.task.hits/CHOP_HITS,'#e8b65d');return true;}
  if(id==='costela_crua'){counter(f,'wood');ctx.save();if(!G.stock.costela_crua)ctx.globalAlpha=.25;food('costela_crua',x+w/2,y+18,62);ctx.restore();rect(x+w/2-22,y+h-10,44,17,'#382e1f',3,'#b99250');txt(G.stock.costela_crua,x+w/2,y+h-1,13,G.stock.costela_crua?'#ffe4a9':'#ffad83');return true;}
  if(id==='tabua'){counter(f,'wood');ellipse(x+w/2,y+20,44,16,'#b8803e');ellipse(x+w/2,y+18,40,13,'#d4a058');if(G.stock.costela>0)food('costela',x+w/2,y+14,56);txt(formatWeight(G.stock.costela),x+w/2,y+h-8,12,'#fff0c3');if(G.task?.type==='weigh'&&G.task.target==='tabua')bar(x,y-14,w,G.task.grams/G.task.requested);return true;}
@@ -239,13 +229,15 @@ function drawCampoStation(f){
 
 // ---------- Tutorial do primeiro costelão ----------
 const COSTELAO_STEPS=[
+ {id:'rachar',title:'Rache a lenha',text:'Domingo começa com o fogo apagado. Vá ao cepo ao lado da pilha de lenha, segure E e solte na faixa verde três vezes para rachar a lenha.'},
+ {id:'fogo',title:'Lenha no fogo',text:'Leve a lenha rachada até o fogo de chão e aperte E para colocá-la.'},
+ {id:'acender',title:'Acenda o fogo',text:'Segure E no fogo de chão até acender. A barra mostra a lenha: quando ela acaba, o fogo apaga e é preciso acender de novo.'},
  {id:'espeto',title:'Costela no espeto',text:'Pegue uma manta de costela crua na mesa à esquerda do fogo e coloque num espeto com E.'},
- {id:'lenha',title:'Lenha no fogo',text:'O fogo está fraco e sem lenha a costela quase não assa. Vá ao cepo ao lado da pilha de lenha, segure E e solte na faixa verde três vezes. Depois leve a lenha rachada ao fogo e aperte E.'},
  {id:'virar',title:'Vire a manta',text:'Só o lado virado para o fogo assa. A barra de cima é a carne; a de baixo, o osso. Quando o lado no fogo ficar verde, aperte E no espeto para virar.'},
  {id:'retirar',title:'No ponto: retire',text:'Com os dois lados no ponto, aperte E para retirar. Não demore: passando da marca, queima.'},
  {id:'tabua',title:'Para a tábua',text:'Leve a costela assada à tábua de corte e aperte E. Cada manta rende 2 kg.'},
  {id:'cortar',title:'Corte no peso',text:'Chegou o primeiro freguês. Segure E na tábua, solte no peso pedido e entregue no balcão.'},
- {id:'maionese',title:'Maionese da casa',text:'Leve um ovo e o óleo até a tigela. Depois aperte E uma vez e bata apertando A e E repetidamente até dar o ponto.'},
+ {id:'maionese',title:'Maionese da casa',text:'Leve um ovo e o óleo até a tigela. Depois aperte E uma vez e bata alternando A e D até dar o ponto.'},
  {id:'servir',title:'Maionese no balcão',text:'Pegue uma porção na tigela com E e entregue ao freguês no balcão.'}
 ];
 function costelaoTutorial(){return campoState().tutorial;}
@@ -263,15 +255,17 @@ function costelaoTutorialDelivered(c){const t=costelaoTutorial();if(costelaoTuto
 function costelaoTutorialHint(){const t=costelaoTutorial(),s=costelaoStep();return s?'<b>Costelão '+(t.step+1)+' / '+COSTELAO_STEPS.length+' · '+s.title+'</b><p>'+s.text+'</p>':'';}
 function costelaoWelcome(){
  const first=!G.costelaoTaught;
- if(first){campoState().tutorial={step:0,done:false,actor:null};campoState().fuel=22;if(G.stock.costela_crua<2){G.stock.costela_crua=2;G.avg.costela_crua=BOI_COST/MANTAS_PER_BOI;}}
- openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<div class="event-card"><span class="event-symbol">🔥</span><div><h3>Fogo de chão aceso no campo</h3><p>Hoje a bodega vai para fora: costela no fogo de chão, maionese caseira e chimarrão. A freguesia vem comprar costela por peso.</p></div></div><div class="callout"><b>Como funciona</b><br>Manta crua no espeto · mantenha o fogo com lenha rachada no cepo · vire quando o lado no fogo ficar verde · com os dois lados no ponto, retire e leve à tábua · segure E para cortar no peso pedido. Maionese: ovo + óleo na tigela, E para começar e depois A e E repetidamente.</div><p>${first?'Hoje vamos passo a passo: os fregueses só chegam quando você estiver pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
+ // Cada domingo começa do zero: fogo apagado, espetos vazios e tigela limpa.
+ {const c=campoState();c.fuel=0;c.lit=false;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
+ if(first){campoState().tutorial={step:0,done:false,actor:null};if(G.stock.costela_crua<2){G.stock.costela_crua=2;G.avg.costela_crua=BOI_COST/MANTAS_PER_BOI;}}
+ openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<div class="event-card"><span class="event-symbol">🔥</span><div><h3>Fogo de chão apagado no campo</h3><p>Hoje a bodega vai para fora: costela no fogo de chão, maionese caseira e chimarrão. A freguesia vem comprar costela por peso.</p></div></div><div class="callout"><b>Como funciona</b><br>Rache lenha no cepo, coloque no fogo e segure E para acender · manta crua no espeto · mantenha o fogo com lenha · vire quando o lado no fogo ficar verde · com os dois lados no ponto, retire e leve à tábua · segure E para cortar no peso pedido. Maionese: ovo + óleo na tigela, E para começar e depois A e D alternados.</div><p>${first?'Hoje vamos passo a passo: os fregueses só chegam quando você estiver pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
 }
 
 // ---------- Laçada de sábado ----------
 function lassoNeeded(){return G.phase==='closed'&&calendar().weekday===5&&G.lassoDay!==G.day&&!tutorialActive();}
 function lassoIntro(){
  const herd=G.herd||0,need=Math.min(MIN_LASSO,herd);
- openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão. Vá ao campo e lace <b>pelo menos ${MIN_LASSO} bois</b> do teu rebanho: cada boi rende ${MANTAS_PER_BOI} mantas de costela.</p><div class="callout"><b>Como laçar</b><br>WASD anda pelo campo · <b>segure E</b> (ou Espaço) para girar o laço: o alvo vai e volta · <b>solte</b> quando o círculo estiver em cima de um boi. Chegar muito perto espanta o gado.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
+ openDialog(G.lassoTaught?'Laçada de sábado':'Hora de laçar os bois!',`<p>Amanhã tem costelão. Vá ao campo e lace <b>pelo menos um boi</b> do teu rebanho: cada laço certeiro enche a barra do boi e com <b>${LASSO_HITS} laços</b> ele está laçado. Cada boi rende ${MANTAS_PER_BOI} mantas de costela.</p><div class="callout"><b>Como laçar</b><br>WASD anda pelo campo · <b>segure E</b> (ou Espaço) para girar o laço: o alvo vai e volta · <b>solte</b> quando o círculo estiver em cima de um boi. Chegar muito perto espanta o gado, e cada laço faz o boi disparar.</div><div class="callout"><b>Cuidado com os quero-queros!</b><br>Eles não dão sossego no campo e dão rasantes de tempos em tempos: quando aparecer o <b>alvo vermelho no chão</b>, saia dele ou aperte <b>Q</b> (ou Shift) para esquivar. Cada rasante joga o peão para trás e faz soltar o laço.</div><p>Rebanho: <b>${herd} bois</b>${herd<MIN_LASSO?' · faltam bois! Compre no celular (Fornecedor → Campo).':''}</p><div class="actions"><button class="primary" data-act="lassoStart" ${herd<1?'disabled':''}>Ir ao campo laçar</button>${herd<MIN_LASSO?'<button data-act="lassoBuy">Comprar bois</button>':''}${herd<1&&!hasCash(BOI_COST)?'<button data-act="lassoSkip">Sem bois nem dinheiro · pular</button>':''}</div>`,'lassoIntro');
 }
 function buyBoi(){if(!hasCash(BOI_COST)){say('Um boi custa '+money(BOI_COST)+'.');AudioEngine.bad();return;}spendCash(BOI_COST);G.stats.purchases+=BOI_COST;G.herd=(G.herd||0)+1;AudioEngine.heart();say('Boi comprado! Rebanho: '+G.herd+'.');save();if(phoneOpen)renderPhone();else if(modal==='lassoIntro')lassoIntro();}
 function startLasso(){
@@ -285,10 +279,13 @@ function startLasso(){
 const CURRAL={x:1360,y:470,w:200,h:190};
 function lassoTick(dt){
  const L=G.lasso;if(!L||modal||paused)return;L.time+=dt;for(const e of sparks)e.life-=dt;sparks=sparks.filter(e=>e.life>0);
+ L.stun=Math.max(0,(L.stun||0)-dt);L.immune=Math.max(0,(L.immune||0)-dt);L.dashCool=Math.max(0,(L.dashCool||0)-dt);querosTick(L,dt);fxTick(dt);
  let dx=(keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0),dy=(keys.has('s')||keys.has('ArrowDown')?1:0)-(keys.has('w')||keys.has('ArrowUp')?1:0);const len=Math.hypot(dx,dy);
- G.player.walk=!!len&&!L.charging;
- if(len&&!L.throw){dx/=len;dy/=len;L.fx=dx;L.fy=dy;G.player.dx=dx;G.player.dy=dy;const sp=L.charging?90:230;G.player.x=clamp(G.player.x+dx*sp*dt,60,1340);G.player.y=clamp(G.player.y+dy*sp*dt,450,870);}
- if(L.charging){L.charge+=dt;}
+ G.player.walk=!!len&&!L.charging&&!L.stun;
+ if(L.dash>0){L.dash-=dt;G.player.walk=true;G.player.x=clamp(G.player.x+L.dashX*640*dt,60,1340);G.player.y=clamp(G.player.y+L.dashY*640*dt,450,870);}
+ else if(L.knock>0){L.knock-=dt;G.player.x=clamp(G.player.x+L.knockX*dt,60,1340);G.player.y=clamp(G.player.y+L.knockY*dt,450,870);}
+ else if(len&&!L.throw&&!L.stun){dx/=len;dy/=len;L.fx=dx;L.fy=dy;G.player.dx=dx;G.player.dy=dy;const sp=L.charging?90:230;G.player.x=clamp(G.player.x+dx*sp*dt,60,1340);G.player.y=clamp(G.player.y+dy*sp*dt,450,870);}
+ if(L.charging){L.charge+=dt;L.whirl=(L.whirl||0)-dt;if(L.whirl<=0){L.whirl=.3;AudioEngine.whirl();}}
  for(const b of L.bois){
   if(b.state==='caught'){const tx=CURRAL.x+40+(b.id%4)*40,ty=CURRAL.y+60+Math.floor(b.id/4)*60,d=Math.hypot(tx-b.x,ty-b.y);if(d<4){b.state='pen';continue;}b.dx=(tx-b.x)/d;b.x+=b.dx*70*dt;b.y+=(ty-b.y)/d*70*dt;continue;}
   if(b.state!=='free')continue;
@@ -302,24 +299,27 @@ function lassoTick(dt){
   const t=L.throw;t.time+=dt;
   if(t.time>=t.total&&!t.done){
    t.done=true;const hit=L.bois.filter(b=>b.state==='free').map(b=>({b,d:Math.hypot(b.x-t.tx,b.y-28-t.ty)})).filter(o=>o.d<52).sort((a,b)=>a.d-b.d)[0];
-   if(hit){hit.b.state='caught';L.caught++;AudioEngine.heart();AudioEngine.moo(.11,fxRand(.85,1.1));burst(hit.b.x,hit.b.y-40,'leaf');effect('Laçou! '+L.caught+'/'+L.need,hit.b.x,hit.b.y-90,'#e1ff9e');gainXP(8);}
-   else{AudioEngine.bad();effect('Errou o laço',t.tx,t.ty-20,'#ffc0a0');}
+   if(hit){const b=hit.b;b.rope=(b.rope||0)+1;AudioEngine.ropeHit();
+    if(b.rope>=LASSO_HITS){b.state='caught';L.caught++;AudioEngine.heart();AudioEngine.moo(.11,fxRand(.85,1.1));burst(b.x,b.y-40,'leaf');effect('Laçou! '+L.caught+(L.caught>1?' bois':' boi'),b.x,b.y-90,'#e1ff9e');gainXP(8);}
+    else{const d=Math.hypot(b.x-G.player.x,b.y-G.player.y)||1;b.dx=(b.x-G.player.x)/d;b.dy=(b.y-G.player.y)/d*.6;b.speed=170;b.t=1.3;AudioEngine.moo(.06,1.1+Math.random()*.15);effect('Laço! '+b.rope+'/'+LASSO_HITS,b.x,b.y-100,'#ffe9a8');}}
+   else{AudioEngine.thud();effect('Errou o laço',t.tx,t.ty-20,'#ffc0a0');}
    updateLassoUI();save();
   }
   if(t.time>=t.total+.35)L.throw=null;
  }
 }
-function lassoCharge(){const L=G.lasso;if(!L||L.throw||L.charging)return;L.charging=true;L.charge=0;}
+function lassoCharge(){const L=G.lasso;if(!L||L.throw||L.charging||L.stun>0||L.knock>0)return;L.charging=true;L.charge=0;}
 function lassoAim(){const L=G.lasso,p=.5-.5*Math.cos(L.charge*Math.PI*1.4),dist=110+p*380;return {x:clamp(G.player.x+L.fx*dist,40,W-40),y:clamp(G.player.y-40+L.fy*dist,430,880),p};}
-function lassoRelease(){const L=G.lasso;if(!L?.charging)return;L.charging=false;const a=lassoAim();L.throw={sx:G.player.x,sy:G.player.y-110,tx:a.x,ty:a.y,time:0,total:.32+a.p*.25};AudioEngine.noise(.25,.1,900);}
+function lassoRelease(){const L=G.lasso;if(!L?.charging)return;L.charging=false;const a=lassoAim();L.throw={sx:G.player.x,sy:G.player.y-110,tx:a.x,ty:a.y,time:0,total:.32+a.p*.25};AudioEngine.lassoThrow();}
 function lassoKeyDown(e){
  const key=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','e'].includes(key))e.preventDefault();
  if(key==='Escape'){pauseGame('Laçada pausada.');return;}
  if((key==='e'||key===' ')&&!e.repeat){lassoCharge();return;}
+ if(key==='q'||key==='Shift'){if(!e.repeat)lassoDash();return;}
  keys.add(key);
 }
 function lassoKeyUp(e){const key=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(key);if(key==='e'||key===' ')lassoRelease();}
-function updateLassoUI(){const L=G.lasso;if(!L)return;$('lassoCount').textContent=L.caught+' / '+L.need+' bois laçados';$('lassoHerd').textContent='Rebanho no campo: '+L.bois.filter(b=>b.state==='free').length;$('lassoFinish').disabled=L.caught<L.need;$('lassoFinish').textContent=L.caught<L.need?'Lace pelo menos '+L.need:'Levar '+L.caught+' bois para o costelão';}
+function updateLassoUI(){const L=G.lasso;if(!L)return;const best=Math.max(0,...L.bois.filter(b=>b.state==='free').map(b=>b.rope||0));$('lassoCount').textContent=(L.caught?L.caught+(L.caught>1?' bois laçados':' boi laçado'):'Nenhum boi laçado')+(best?' · laço '+best+'/'+LASSO_HITS:'');$('lassoHerd').textContent='Rebanho no campo: '+L.bois.filter(b=>b.state==='free').length;$('lassoFinish').disabled=L.caught<L.need;$('lassoFinish').textContent=L.caught<L.need?'Lace pelo menos um boi':'Levar '+L.caught+(L.caught>1?' bois':' boi')+' para o costelão';}
 function finishLasso(){
  const L=G.lasso;if(!L||L.caught<L.need)return;
  const mantas=L.caught*MANTAS_PER_BOI,units=G.stock.costela_crua;
@@ -327,14 +327,143 @@ function finishLasso(){
  G.player={...L.saved};G.lasso=null;G.lassoDay=G.day;G.lassoTaught=true;keys.clear();$('lassoUI').classList.add('hidden');
  showBanner(L.caught+' bois laçados!',mantas+' mantas de costela prontas para o costelão de amanhã.','gift');save();refreshHUD();nextDay();
 }
+// ---------- Quero-queros ----------
+// Cada quero-quero guarda um ninho. Perto dele, levanta voo, circula, marca um alvo no chão e dá o rasante.
+const QUERO_W=48,QUERO_H=36,QUERO_ALERT=230,QUERO_HIT=40,QUERO_KNOCK=.35,QUERO_GRACE=1;
+function makeQueros(){
+ const nests=[];for(let tries=0;nests.length<3&&tries<200;tries++){const n={x:360+Math.random()*880,y:520+Math.random()*310};if(Math.hypot(n.x-220,n.y-700)>320&&nests.every(o=>Math.hypot(o.x-n.x,o.y-n.y)>300))nests.push(n);}
+ const fallback=[{x:560,y:560},{x:1000,y:800},{x:1220,y:540}];while(nests.length<3)nests.push(fallback[nests.length]);
+ return nests.map((n,i)=>({id:i,nest:n,x:n.x,y:n.y,h:0,state:'guard',t:0,wake:1.5+i*3.5,face:i%2?-1:1,flap:i*.3,vx:0,vy:0}));
+}
+// Os três quero-queros levantam voo logo no começo, um depois do outro, e não largam mais o peão.
+function activeQueros(L){return L.queros||[];}
+function startleBois(x,y){for(const b of G.lasso.bois){if(b.state!=='free')continue;const d=Math.hypot(b.x-x,b.y-y);if(d<320){b.dx=(b.x-x)/(d||1);b.dy=(b.y-y)/(d||1)*.6;b.speed=150;b.t=1.4;}}}
+function querosTick(L,dt){
+ L.queros??=makeQueros();const p=G.player;
+ for(const q of activeQueros(L)){
+  q.t-=dt;q.flap+=dt;const near=Math.hypot(p.x-q.nest.x,p.y-q.nest.y),ox=q.x;
+  if(q.state==='guard'){q.x=q.nest.x;q.y=q.nest.y;q.h=0;if(near<QUERO_ALERT||L.time>=(q.wake??0)){q.state='rise';q.t=.55;AudioEngine.queroquero(.09,3);effect('Quero-quero!',q.x,q.y-100,'#ffe28a');startleBois(q.x,q.y);}}
+  else if(q.state==='rise'){q.h=Math.min(180,q.h+330*dt);if(q.t<=0){q.state='circle';q.t=.9+Math.random()*.6;}}
+  else if(q.state==='circle'){
+   const a=L.time*1.9+q.id*2.1,tx=p.x+Math.cos(a)*230,ty=p.y+Math.sin(a)*90,k=Math.min(1,dt*2.6);q.h+=(180-q.h)*Math.min(1,dt*3);q.x+=(tx-q.x)*k;q.y+=(ty-q.y)*k;
+   if(q.t<=0){q.state='warn';q.t=.75;q.tx=clamp(p.x+(p.walk?p.dx*55:0),60,1340);q.ty=clamp(p.y+(p.walk?p.dy*35:0),450,870);if(Math.random()<.6)AudioEngine.queroquero(.06,2);}
+  }
+  else if(q.state==='warn'){q.h+=(200-q.h)*Math.min(1,dt*3);if(q.t<=0){const d=Math.hypot(q.tx-q.x,q.ty-q.y)||1;q.state='dive';q.vx=(q.tx-q.x)/d;q.vy=(q.ty-q.y)/d;q.dist=d;q.travel=0;q.h0=q.h;AudioEngine.swoosh();}}
+  else if(q.state==='dive'){
+   const step=720*dt;q.x+=q.vx*step;q.y+=q.vy*step;q.travel+=step;const k=q.travel/q.dist;q.h=k<1?q.h0+(34-q.h0)*k:34+(k-1)*q.h0*1.3;
+   if(!(L.immune>0)&&!(L.dash>0)&&q.h<90&&Math.hypot(p.x-q.x,p.y-q.y)<QUERO_HIT)queroHit(L,q);
+   if(k>1.7){q.state='circle';q.t=1.4+Math.random()*1.1;}
+  }
+  else if(q.state==='return'){
+   const d=Math.hypot(q.nest.x-q.x,q.nest.y-q.y);q.h=Math.max(0,q.h-110*dt);
+   if(d<6&&q.h<=0)q.state='guard';else{const s=Math.min(d,280*dt);q.x+=(q.nest.x-q.x)/(d||1)*s;q.y+=(q.nest.y-q.y)/(d||1)*s;}
+   if(near<QUERO_ALERT&&q.h>0){q.state='circle';q.t=.8;}
+  }
+  if(Math.abs(q.x-ox)>.2)q.face=q.x>ox?1:-1;
+ }
+}
+function queroHit(L,q){
+ const p=G.player;L.immune=QUERO_GRACE;L.charging=false;L.knock=QUERO_KNOCK;L.knockX=q.vx*680;L.knockY=q.vy*430;L.pecks=(L.pecks||0)+1;
+ AudioEngine.ouch();AudioEngine.queroquero(.1,2);effect('Rasante de quero-quero!',p.x,p.y-150,'#ffb3a0');fxPuffs(p.x,p.y-70,6,90,'#efece6');
+}
+function lassoDash(){const L=G.lasso;if(!L||L.dash>0||L.dashCool>0||L.stun>0)return;L.charging=false;L.dash=.2;L.dashCool=.7;L.dashX=L.fx;L.dashY=L.fy;AudioEngine.swoosh(.05);fxPuffs(G.player.x,G.player.y,4,60,'#9c8a52');}
+function drawQuero(frame,x,y,scale=2,flip=false,angle=0){
+ if(!queroArt.complete||!queroArt.naturalWidth)return;const w=QUERO_W*scale,h=QUERO_H*scale;
+ ctx.save();ctx.imageSmoothingEnabled=false;ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.rotate(angle);ctx.drawImage(queroArt,frame*QUERO_W,0,QUERO_W,QUERO_H,-w/2,-h/2,w,h);ctx.restore();
+}
+function drawQueroGround(L){
+ for(const q of activeQueros(L)){
+  // ninho no chão com os ovos pintados
+  const n=q.nest;ellipse(n.x,n.y+2,30,10,'#5a4a2a');ellipse(n.x,n.y,24,7,'#8a7444');
+  for(let i=0;i<3;i++){const ex=n.x-9+i*9,ey=n.y-2+(i%2)*2;ellipse(ex,ey,5,4,'#8a8a5a');ellipse(ex-1,ey-1,1.2,1.2,'#2a2418');ellipse(ex+2,ey+1,1,1,'#2a2418');}
+  if(q.state!=='guard')ellipse(q.x,q.y+4,26*(1-q.h/420),7*(1-q.h/420),'#1c140c55');
+  if(q.state==='warn'){
+   const pulse=.5+.5*Math.sin(L.time*18);ellipse(q.tx,q.ty,QUERO_HIT,QUERO_HIT*.4,`rgba(230,50,36,${.18+.14*pulse})`);ctx.strokeStyle=`rgba(235,52,40,${.7+.3*pulse})`;ctx.lineWidth=4;
+   ctx.beginPath();ctx.ellipse(q.tx,q.ty,QUERO_HIT,QUERO_HIT*.4,0,0,Math.PI*2);ctx.stroke();
+   ctx.beginPath();ctx.moveTo(q.tx-12,q.ty-5);ctx.lineTo(q.tx+12,q.ty+5);ctx.moveTo(q.tx+12,q.ty-5);ctx.lineTo(q.tx-12,q.ty+5);ctx.stroke();
+   ctx.setLineDash([6,8]);ctx.strokeStyle='rgba(220,52,40,.45)';ctx.beginPath();ctx.moveTo(q.x,q.y);ctx.lineTo(q.tx,q.ty);ctx.stroke();ctx.setLineDash([]);
+  }
+ }
+}
+function drawQueroAir(L){
+ for(const q of activeQueros(L)){
+  if(q.state==='guard')continue;
+  const frame=q.state==='dive'?3:Math.floor(q.flap*(q.state==='warn'?14:9))%2?1:2;
+  drawQuero(frame,q.x,q.y-q.h,2.2,q.face<0,q.state==='dive'&&q.travel<q.dist?.3:0);
+ }
+ // tontura depois da bicada
+ if(L.stun>0)for(let i=0;i<3;i++){const a=L.time*7+i*2.1;txt('★',G.player.x+Math.cos(a)*22,G.player.y-142+Math.sin(a)*6,14,'#ffd75e');}
+}
+// ---------- Quero-queros de visita no costelão ----------
+// Enquanto a costela assa, às vezes pousa um quero-quero: cisca um tempo, grita e vai embora.
+// Cada um tem seu gênio: perto deles, uns dão rasante (que joga o peão para trás), outros só gritam e se afastam.
+// Às vezes um desiste, vai embora e volta um tempo depois.
+let campoBirds=[],campoKnock={t:0,vx:0,vy:0},campoBirdReturns=[];
+const CAMPO_BIRD_SPOTS=[[170,860],[600,700],[720,845],[960,680],[1480,700],[1500,860]];
+function campoRoasting(){return fireLit()&&campoState().espetos.some(e=>e&&!e.burned);}
+function spawnCampoBird(){
+ const free=CAMPO_BIRD_SPOTS.filter(([x,y])=>Math.hypot(G.player.x-x,G.player.y-y)>220&&campoBirds.every(b=>Math.hypot(b.tx-x,b.ty-y)>120));if(!free.length)return;
+ const [x,y]=pick(free),left=x<W/2;campoBirds.push({x:left?-60:W+60,y,tx:x+fxRand(-30,30),ty:y,h:230,state:'in',face:left?1:-1,flap:Math.random(),t:0,hop:0,peck:0,calm:0,aggr:.2+Math.random()*.5});AudioEngine.birdCall(.05,3);
+}
+function campoBirdsTick(dt){
+ if(campoKnock.t>0){campoKnock.t-=dt;const nx=G.player.x+campoKnock.vx*dt,ny=G.player.y+campoKnock.vy*dt;if(canWalk(nx,G.player.y))G.player.x=nx;if(canWalk(G.player.x,ny))G.player.y=ny;}
+ const roasting=campoRoasting();
+ for(const r of campoBirdReturns)r.t-=dt;
+ if(roasting&&campoBirds.length<2&&(campoBirdReturns.some(r=>r.t<=0)||Math.random()<dt/22)){campoBirdReturns=campoBirdReturns.filter(r=>r.t>0);spawnCampoBird();}
+ for(const b of campoBirds){
+  b.flap+=dt;const near=Math.hypot(G.player.x-b.x,G.player.y-b.y);
+  if(b.state==='in'){const d=Math.hypot(b.tx-b.x,b.ty-b.y),s=Math.min(d,280*dt);b.x+=(b.tx-b.x)/(d||1)*s;b.y+=(b.ty-b.y)/(d||1)*s;b.h=Math.max(0,b.h-(d<220?260:60)*dt);if(d<4&&b.h<=0){b.state='ground';b.t=8+Math.random()*10;}}
+  else if(b.state==='ground'){
+   b.t-=dt;b.calm=Math.max(0,(b.calm||0)-dt);
+   if(near<110&&!b.calm){if(Math.random()<(b.aggr??.5)){b.state='warn';b.t=.7;b.tx=G.player.x;b.ty=G.player.y;b.face=b.tx>b.x?1:-1;AudioEngine.queroquero(.09,3);continue;}
+    b.calm=3+Math.random()*3;b.face=G.player.x<b.x?1:-1;b.hop=1.5;b.peck=.5;AudioEngine.birdCall(.07,2);}
+   if(b.t<=0||!roasting&&b.t>2){b.state='out';b.face=b.x<W/2?-1:1;continue;}
+   b.hop-=dt;if(b.hop<=0){b.hop=1+Math.random()*2.2;b.face=Math.random()<.5?-1:1;b.peck=.5;}
+   b.peck=Math.max(0,b.peck-dt);if(b.peck>.25)b.x=clamp(b.x+b.face*(b.calm>2?70:34)*dt,40,W-40);
+   if(Math.random()<dt/7)AudioEngine.birdCall(.03,2);
+  }
+  else if(b.state==='warn'){b.t-=dt;b.h=Math.min(70,b.h+180*dt);if(b.t<=0){const d=Math.hypot(b.tx-b.x,b.ty-b.y)||1;b.state='dive';b.vx=(b.tx-b.x)/d;b.vy=(b.ty-b.y)/d;b.dist=d;b.travel=0;b.h0=b.h;AudioEngine.swoosh();}}
+  else if(b.state==='dive'){const step=620*dt;b.x+=b.vx*step;b.y+=b.vy*step;b.travel+=step;const k=b.travel/b.dist;b.h=k<1?b.h0+(30-b.h0)*k:30+(k-1)*120;
+   if(!b.hit&&b.h<60&&Math.hypot(G.player.x-b.x,G.player.y-b.y)<40){b.hit=true;campoKnock={t:.3,vx:b.vx*650,vy:b.vy*420};AudioEngine.ouch();effect('Rasante de quero-quero!',G.player.x,G.player.y-150,'#ffb3a0');fxPuffs(G.player.x,G.player.y-70,6,90,'#efece6');}
+   if(k>1.6){b.hit=false;b.calm=4+Math.random()*4;
+    // depois do rasante: metade pousa de novo noutro canto, metade vai embora
+    const spot=Math.random()<.5&&CAMPO_BIRD_SPOTS.filter(([x,y])=>Math.hypot(G.player.x-x,G.player.y-y)>260);
+    if(spot&&spot.length){const[x,y]=pick(spot);b.state='in';b.tx=x+fxRand(-30,30);b.ty=y;b.face=b.tx>b.x?1:-1;}else{b.state='out';b.face=b.vx<0?-1:1;b.ty=b.y;}}}
+  else{b.h+=160*dt;b.x+=b.face*280*dt;}
+ }
+ campoBirds=campoBirds.filter(b=>{if(b.state!=='out'||(b.x>-90&&b.x<W+90))return true;if(Math.random()<.4)campoBirdReturns.push({t:8+Math.random()*8});return false;});
+}
+function drawCampoBirds(layers){
+ if(!isCampo()||G.lasso)return;
+ for(const b of campoBirds)layers.push({y:b.state==='dive'?b.y:b.ty,draw:()=>{
+  if(b.state==='ground'){const pecking=b.peck>0&&b.peck<=.25;drawQuero(0,b.x,b.y-28+(pecking?3:0),1.6,b.face<0,pecking?.4:0);return;}
+  if(b.state==='warn'){const pulse=.5+.5*Math.sin(frameClock*18);ellipse(b.tx,b.ty,40,16,`rgba(230,50,36,${.18+.14*pulse})`);}
+  if(b.state==='dive'){ellipse(b.x,b.y+3,16,5,'#1c140c44');drawQuero(3,b.x,b.y-28-b.h,1.9,b.face<0,.25);return;}
+  ellipse(b.x,b.y+3,18*(1-Math.min(.7,b.h/400)),5,'#1c140c33');drawQuero(Math.floor(b.flap*9)%2?1:2,b.x,b.y-28-b.h,1.9,b.face<0,b.state==='out'?-.15:.1);
+ }});
+}
+// Fim do costelão: carne que sobrou (crua, no espeto, na tábua ou na mão) vai fora e entra como desperdício.
+function discardCostelao(){
+ const c=campoState(),meat=i=>i&&['costela_crua','costela_assada'].includes(i.key)||i?.pid==='costela';let cost=0,any=false;
+ if(G.stock.costela_crua>0){cost+=G.stock.costela_crua*(G.avg.costela_crua||0);G.stock.costela_crua=0;any=true;}
+ if(G.stock.costela>0){cost+=G.stock.costela/MANTA_GRAMS*(G.avg.costela_crua||0);G.stock.costela=0;any=true;}
+ c.espetos.forEach((e,i)=>{if(e){cost+=e.cost||0;c.espetos[i]=null;any=true;}});
+ G.hands=G.hands.map(i=>{if(meat(i)){cost+=i.cost||0;any=true;return null;}return i;});
+ G.floor=G.floor.filter(f=>{if(meat(f.item)){cost+=f.item.cost||0;any=true;return false;}return true;});
+ if(any){G.stats.waste=round((G.stats.waste||0)+cost);say('Sobrou carne do costelão: foi descartada.');}
+ return any;
+}
 function skipLasso(){G.lassoDay=G.day;closeDialog(true);say('Sem bois, o costelão de amanhã fica só com o que sobrou no estoque.');nextDay();}
 function drawLasso(){
  const L=G.lasso;beginWorld();drawCampoBackground();
  // curral
  const c=CURRAL;rect(c.x,c.y+c.h-8,c.w,10,'#5a3a20');for(let k=0;k<=5;k++){wood(c.x+k*(c.w/5)-4,c.y,9,c.h,true);}for(const y of [c.y+30,c.y+90,c.y+150])wood(c.x,y,c.w,9);txt('CURRAL',c.x+c.w/2,c.y-12,13,'#fff0c3');
- const layers=L.bois.map(b=>({y:b.y,draw:()=>{ellipse(b.x,b.y+2,40,9,'#1c140c44');drawBoi(b.coat,b.state==='free'&&b.speed===0?2:Math.floor(L.time*(b.speed>60?9:4)+b.id)%2,b.x,b.y,1.6,b.dx<0);if(b.state==='caught'){ctx.strokeStyle='#d8b878';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(b.x+(b.dx<0?-40:40),b.y-60,12,6,0,0,Math.PI*2);ctx.stroke();}}}));
+ drawQueroGround(L);
+ const layers=L.bois.map(b=>({y:b.y,draw:()=>{ellipse(b.x,b.y+2,40,9,'#1c140c44');drawBoi(b.coat,b.state==='free'&&b.speed===0?2:Math.floor(L.time*(b.speed>60?9:4)+b.id)%2,b.x,b.y,1.6,b.dx<0);if(b.state==='free'&&b.rope){bar(b.x-32,b.y-100,64,b.rope/LASSO_HITS,'#e8cc8a');}if(b.state==='caught'){ctx.strokeStyle='#d8b878';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(b.x+(b.dx<0?-40:40),b.y-60,12,6,0,0,Math.PI*2);ctx.stroke();}}}));
  layers.push({y:G.player.y,draw:()=>personDraw(avatarSprite(),G.player.x,G.player.y,G.player.walk,true,G.player.dx)});
+ for(const q of activeQueros(L))if(q.state==='guard')layers.push({y:q.y,draw:()=>drawQuero(0,q.x,q.y-30,1.8,q.face<0)});
  layers.sort((a,b)=>a.y-b.y).forEach(l=>l.draw());
+ drawQueroAir(L);drawFx();
  ctx.strokeStyle='#e8cc8a';ctx.lineWidth=3;
  if(L.charging){const a=lassoAim(),ang=L.time*14;ctx.beginPath();ctx.ellipse(G.player.x+Math.cos(ang)*8,G.player.y-132,30,10,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([8,8]);ctx.strokeStyle='#fff4c488';ctx.beginPath();ctx.moveTo(G.player.x,G.player.y-60);ctx.lineTo(a.x,a.y);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle='#ffe28a';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(a.x,a.y,52,20,0,0,Math.PI*2);ctx.stroke();}
  if(L.throw){const t=L.throw,k=clamp(t.time/t.total,0,1),x=t.sx+(t.tx-t.sx)*k,y=t.sy+(t.ty-t.sy)*k-Math.sin(k*Math.PI)*90;ctx.beginPath();ctx.moveTo(G.player.x,G.player.y-80);ctx.quadraticCurveTo((G.player.x+x)/2,Math.min(y,G.player.y)-60,x,y);ctx.stroke();ctx.beginPath();ctx.ellipse(x,y,34*(.5+k*.5),12*(.5+k*.5),0,0,Math.PI*2);ctx.stroke();}

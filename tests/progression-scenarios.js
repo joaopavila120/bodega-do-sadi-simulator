@@ -29,14 +29,20 @@
   check(specials>80&&specials<400,'especiais são raros entre os visitantes ('+specials+'/2000)');
   reset();G.phase='open';const badinIdx=index('badin');G.friends[badinIdx]=100;let withFriend=0,badinVisits=0;for(let i=0;i<2000;i++){const v=pickVisitor();if(isSpecial(v))withFriend++;if(v===badinIdx)badinVisits++;}
   check(withFriend>specials&&specialChance()>SPECIAL_CHANCE&&badinVisits>withFriend/6,'amizade faz o especial aparecer mais seguido ('+withFriend+' especiais, '+badinVisits+' do Badin)');
+  reset();G.phase='open';G.elapsed=DAY*.3;const daily=pickVisitor();check(isSpecial(daily)&&!G.metSpecial?.[PEOPLE[daily].id],'todo dia entra um personagem especial que ainda não veio');announceArrivals([daily]);check(G.dailySpecialDay===G.day&&[...Array(50)].every(()=>dailySpecial()===null),'depois da visita do dia, os especiais voltam a ser raros');
   reset();G.phase='open';const mano=index('manolima');  const c=(()=>{const original=pickVisitor;pickVisitor=()=>mano;try{return spawnShop();}finally{pickVisitor=original;}})();
   check(c&&G.metSpecial.manolima===2&&shown('Mano Lima entrou na bodega'),'primeira visita de especial mostra aviso em destaque');
   // Afeto só com especiais; contato com 15
   reset();deliveryConversation(0,{});check(!G.friends[0],'fregueses comuns não somam afeto');
   G.friends[index('badin')]=15;socialCheck();check(hasContact(index('badin'))&&contactPeople().includes(index('badin')),'com 15 de afeto o especial vira contato');
-  G.friends[index('badin')]=50;socialCheck();check(decorState().chapeu===true&&G.giftsGiven['badin:50'],'com 50 de afeto chega um presente');
-  const giftCash=G.cash;G.giftsGiven={};socialCheck();check(G.cash===giftCash+DECOR.find(d=>d.id==='chapeu').cost,'presente repetido de peça já comprada vira dinheiro');
+  G.friends[index('badin')]=50;socialCheck();const chapeu=G.giftQueue.find(g=>g.key==='badin:50');check(chapeu&&!decorState().chapeu,'com 50 de afeto o presente fica para a visita');deliverGift(chapeu);check(decorState().chapeu===true&&G.giftsGiven['badin:50'],'com 50 de afeto chega um presente');
+  const giftCash=G.cash;G.giftsGiven={};G.giftQueue=[];socialCheck();deliverGift(G.giftQueue.find(g=>g.key==='badin:50'));check(G.cash===giftCash+DECOR.find(d=>d.id==='chapeu').cost,'presente repetido de peça já comprada vira dinheiro');
   phoneOpen=true;phoneTab='contacts';renderPhone();check(document.querySelector('[data-act="invite"]')&&$('phoneContent').textContent.includes('???'),'contatos mostram convites e escondem quem não apareceu');phoneOpen=false;
+  reset();G.up.bergamota=true;const random0=Math.random;Math.random=()=>.2;queueGift(index('lauro'),{at:25});Math.random=random0;const goods=G.giftQueue[0];check(goods?.goods&&goods.goods.qty>0,'presentes também são mercadorias: '+goods?.goods?.name);const before0=G.stock[goods.goods.key];deliverGift(goods);check(G.stock[goods.goods.key]===before0+goods.goods.qty,'mercadoria presenteada entra no estoque');
+  check(giftGoodsOptions().some(g=>g.key==='bergamota')&&(G.up.bergamota=false,!giftGoodsOptions().some(g=>g.key==='bergamota')),'bergamota do pé só com a melhoria da bergamota');
+  reset();G.giftQueue=[];queueAfterHoursGifts();check(G.giftQueue.some(g=>g.key==='manolima:tutorial'),'no fim do segundo dia o Mano Lima traz a bandeira mesmo sem a bocha');
+  G.phase='closed';G.report={};nextDay();check(G.challengeVisit?.kind==='gift'&&!modal,'o presente chega em pessoa ao encerrar o dia');for(let n=0;n<600&&!G.challengeVisit?.arrived;n++)challengeVisitTick(.05);
+  check(modal==='giftVisit'&&$('dialogContent').textContent.includes('Bandeira'),'quem presenteia caminha até você e mostra o presente');action('giftAccept');check(decorState().bandeira===true&&!G.giftQueue.length,'presente recebido');G.challengeVisit=null;
 
   // Fiado
   reset();G.phase='open';Math.random=()=>.05;const debtor=index('rosa');const original=pickVisitor;pickVisitor=()=>debtor;const f=spawnShop({pid:'codorna'});pickVisitor=original;Math.random=random;
@@ -61,11 +67,12 @@
   // Ícones das melhorias e placa do fiado
   check(UPGRADES.every(u=>upgradeIconHTML(u.id).includes('upgrade-icon')),'toda melhoria tem ícone');
   reset();check(fiadoChance()===.18,'sem placa, 18% pedem fiado');G.xp=99999;G.levelSeen=7;G.cash=500;buyUpgrade('placaFiado');check(G.up.placaFiado&&fiadoChance()===.04,'placa Fiado só amanhã derruba os pedidos de fiado');
-  phoneOpen=true;phoneTab='upgrades';renderPhone();check(document.querySelectorAll('#phoneContent .upgrade-icon').length>=UPGRADES.length&&$('phoneContent').textContent.includes('Fiado só amanhã'),'aba Melhorias mostra ícones e a placa');phoneOpen=false;
+  phoneOpen=true;phoneTab='upgrades';let icons=0,upText='';for(const tab of UPGRADE_TABS){upgradeTab=tab;renderPhone();icons+=document.querySelectorAll('#phoneContent .upgrade-category .upgrade-icon').length;upText+=$('phoneContent').textContent;}upgradeTab='Cozinha';check(icons>=UPGRADES.length&&upText.includes('Fiado só amanhã'),'aba Melhorias mostra ícones e a placa');phoneOpen=false;
   // Calendário e eventos
   check(calendar(1).name==='Sexta'&&fixedEventFor(2)==='normal'&&fixedEventFor(3)==='costelao'&&fixedEventFor(6)==='grenal'&&!EVENTS.truco&&!EVENTS.motos&&!EVENTS.rodeio&&fixedEventFor(10)==='costelao'&&!EVENTS.farroupilha&&!EVENTS.junina&&nameOf('cachaca')==='Dose de cachaça','calendário tem Gre-Nal, truco e rodeio; sem Farroupilha, junina ou quentão');
   // Modo de testes escolhe o evento
   reset();G.testMode=true;G.phase='closed';planDay();check($('testEvent'),'modo de testes mostra a escolha de evento');$('testEvent').value='feira';action('chooseTestEvent');check(plannedEvent().id==='feira','modo de testes define o evento do próximo dia');closeDialog(true);
+  reset();G.testMode=true;G.phase='closed';G.herd=0;planDay();check([...$('testEvent').options].some(o=>o.value==='lasso'),'seleção de eventos tem a laçada');$('testEvent').value='lasso';action('chooseTestEvent');check(G.lasso&&G.herd===1&&!modal,'modo de testes leva direto à laçada de gado');G.lasso=null;$('lassoUI').classList.add('hidden');
   reset();G.phase='closed';planDay();check(!$('testEvent'),'partida normal não escolhe evento');closeDialog(true);
 
   // Noite

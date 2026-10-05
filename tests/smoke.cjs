@@ -220,7 +220,8 @@ async function main() {
     if (send) { try { await Promise.race([send('Browser.close'),delay(2000)]); } catch (_) {} }
     ws?.close();
     if (browser.exitCode === null) await Promise.race([new Promise(resolve => browser.once('exit', resolve)), delay(3000)]);
-    if (browser.exitCode === null) browser.kill();
+    // No Windows, matar só o processo principal deixa filhos do Chrome vivos (inclusive o de áudio).
+    if (browser.exitCode === null) { if (process.platform === 'win32') spawnSync('taskkill', ['/T', '/F', '/PID', String(browser.pid)], { stdio: 'ignore' }); else browser.kill(); }
     server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
     // O perfil é exclusivo deste teste e fica estritamente dentro do diretório temporário.
     const absolute = path.resolve(profile), temp = path.resolve(os.tmpdir());

@@ -74,7 +74,8 @@ function achievementsHTML(){
 // ---------- Despesas ----------
 function litLamps(){return DECOR.filter(d=>d.light&&decorVisible(d)).length;}
 function dailyCosts(){
- const share=Math.min(G.elapsed/DAY,1),power=round(6+6*share+litLamps()),rent=G.day===1?0:rentForLevel();
+ // No costelão a bodega fica fechada: sem luz nem querosene, só o fogo de chão.
+ const share=Math.min(G.elapsed/DAY,1),power=G.event.id==='costelao'?0:round(6+6*share+litLamps()),rent=G.day===1?0:rentForLevel();
  return {power,rent};
 }
 

@@ -47,12 +47,13 @@ function fxTick(dt) {
     if (p.drag) { const k = Math.max(0, 1 - p.drag * dt); p.vx *= k; p.vy *= k; }
     p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
     if (p.floor !== undefined && p.y >= p.floor && p.vy > 0) {
-      if (p.type === 'cup') { p.life = 0; fxShatter(p.x, p.floor, 6); fxPuffs(p.x, p.floor, 3, 50, '#cdb894'); }
+      if (p.type === 'cup') { p.life = 0; fxShatter(p.x, p.floor, 6); fxPuffs(p.x, p.floor, 3, 50, '#cdb894'); AudioEngine.glassBreak(AudioEngine.near(p.x, p.floor)); }
+      else if (p.type === 'plank') { p.life = 0; fxPuffs(p.x, p.floor, 4, 70, '#b08a5a'); for (let i = 0; i < 3; i++) fxAdd('splinter', p.x, p.floor, { vx: fxRand(-120, 120), vy: fxRand(-160, -60), g: 600, life: .7, size: fxRand(5, 9), vr: fxRand(-12, 12), floor: p.floor + fxRand(4, 16) }); AudioEngine.woodCrash(AudioEngine.near(p.x, p.floor)); }
       else { p.y = p.floor; p.vy *= -.25; p.vx *= .5; p.vr *= .4; }
     }
   }
   fx = fx.filter(p => p.life > 0);
-  brawlTick(dt); walkDust(dt); fryingSpatter(dt); campoEmbers(dt); doorBell();
+  brawlTick(dt); walkDust(dt); fryingSpatter(dt); campoEmbers(dt); doorBell(); stationsTick(dt);
 }
 
 function brawlTick(dt) {
@@ -62,9 +63,10 @@ function brawlTick(dt) {
     const urgency = 1 - f.left / f.total; f.throwClock = fxRand(.35, .8) - urgency * .2;
     const cx = t.x + t.w / 2, cy = t.y + t.h / 2 - 20, roll = Math.random();
     const o = { vx: fxRand(-190, 190), vy: fxRand(-300, -170), g: 680, life: 2, vr: fxRand(-10, 10), floor: t.y + t.h + fxRand(14, 60) };
-    if (roll < .35) fxAdd('card', cx, cy, o);
-    else if (roll < .6) fxAdd('cup', cx, cy, { ...o, key: pick(['cerveja', 'cachaca', 'refri']), size: 24 });
-    else if (roll < .8) fxAnger(cx + fxRand(-t.w / 2, t.w / 2), cy - fxRand(70, 110));
+    if (roll < .3) fxAdd('card', cx, cy, o);
+    else if (roll < .55) fxAdd('cup', cx, cy, { ...o, key: pick(['cerveja', 'cachaca', 'refri']), size: 24 });
+    else if (roll < .67) fxAdd('plank', cx, cy, { ...o, size: 26 });
+    else if (roll < .82) fxAnger(cx + fxRand(-t.w / 2, t.w / 2), cy - fxRand(70, 110));
     else fxPuffs(cx + fxRand(-50, 50), cy + fxRand(-10, 20), 3, 90);
   }
 }
@@ -89,7 +91,7 @@ function fryingSpatter(dt) {
 
 // Brasas sobem do fogo de chão enquanto ainda há lenha.
 function campoEmbers(dt) {
-  if (!isCampo() || G.lasso) return; const fuel = campoState().fuel ?? 0; if (fuel <= 0) return;
+  if (!isCampo() || G.lasso || !campoState().lit) return; const fuel = campoState().fuel ?? 0; if (fuel <= 0) return;
   fxEmber -= dt; if (fxEmber > 0) return; fxEmber = fuel > 25 ? .08 : .22;
   fxAdd('ember', fxRand(310, 740), fxRand(470, 520), { vx: fxRand(-14, 14), vy: fxRand(-80, -45), life: fxRand(.8, 1.5), size: fxRand(2.6, 4.2) });
 }
@@ -100,7 +102,7 @@ function doorBell() {
   for (const id of fresh) {
     if (fxSeen.has(id)) continue; fxSeen.add(id);
     const c = id[0] === 's' ? G.shop.find(c => 's' + c.id === id) : G.groups.find(g => 'g' + g.id === id);
-    if (c && Math.hypot(c.x - ENTRY.x, c.y - ENTRY.y) < 90 && !isCampo()) fxAdd('ring', ENTRY.x, ENTRY.y - 150, { life: .9, size: 18 });
+    if (c && Math.hypot(c.x - ENTRY.x, c.y - ENTRY.y) < 90 && !isCampo()) { fxAdd('ring', ENTRY.x, ENTRY.y - 150, { life: .9, size: 18 }); AudioEngine.doorChime(); }
   }
   if (fxSeen.size > 400) fxSeen.clear();
 }
@@ -140,14 +142,6 @@ function drawBrawl(t) {
   }
 }
 
-// Reticências de conversa nas mesas que estão proseando.
-function drawChatDots(g, x, y, j) {
-  if (g.state !== 'chat' || g.size < 1) return;
-  if (Math.floor(frameClock / 2.4 + g.id) % g.size !== j) return;
-  rect(x - 22, y - 160, 44, 22, '#fff4d4', 9, '#7a5a35');
-  for (let i = 0; i < 3; i++) ellipse(x - 11 + i * 11, y - 149 - Math.max(0, Math.sin(frameClock * 6 - i * .8)) * 3, 3, 3, '#6b4a26');
-}
-
 // ---------- Desenho das partículas ----------
 function fxHeart(x, y, s, color) {
   ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y + s * .9);
@@ -172,6 +166,7 @@ function drawFx() {
       case 'puff': ctx.globalAlpha = .75 * fade; ellipse(p.x, p.y, p.size * (1 + age * 1.3), p.size * (.8 + age), p.color || '#ece2c6'); break;
       case 'dust': ctx.globalAlpha = .45 * fade; ellipse(p.x, p.y, p.size * (1 + age), p.size * (.55 + age * .5), p.color); break;
       case 'drop': ctx.globalAlpha = .85 * fade; ellipse(p.x, p.y, p.size, p.size * 1.3, '#b9def0'); break;
+      case 'sweat': ctx.globalAlpha = fade; ctx.fillStyle = '#9fd3ef'; ctx.beginPath(); ctx.moveTo(p.x, p.y - p.size * 1.8); ctx.quadraticCurveTo(p.x + p.size, p.y, p.x, p.y + p.size); ctx.quadraticCurveTo(p.x - p.size, p.y, p.x, p.y - p.size * 1.8); ctx.fill(); break;
       case 'spatter': ctx.globalAlpha = fade; rect(p.x, p.y, p.size, p.size, '#fff2b0'); break;
       case 'ember': ctx.globalAlpha = fade * (.6 + .4 * Math.sin(p.life * 30)); rect(p.x, p.y, p.size, p.size, age < .4 ? '#ffe08a' : '#ff8a3a'); break;
       case 'heart': ctx.globalAlpha = fade; fxHeart(p.x, p.y, p.size, '#4a1a16'); fxHeart(p.x, p.y - 1, p.size * .82, '#e8564d'); break;
@@ -194,9 +189,72 @@ function drawFx() {
         else if (p.type === 'shard') { ctx.fillStyle = '#d7eef2'; ctx.strokeStyle = '#6d8f95'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.lineTo(p.size * .7, p.size * .6); ctx.lineTo(-p.size * .5, p.size * .4); ctx.closePath(); ctx.fill(); ctx.stroke(); }
         else if (p.type === 'card') { rect(-7, -10, 14, 20, '#f4e3b3', 2, '#8f7a4c'); txt(['♠', '♥', '♣', '♦'][Math.floor(p.total * 10) % 4], 0, 0, 10, '#9a3b2a', 'center', 'Arial', false); }
         else if (p.type === 'cup') food(p.key, 0, 0, p.size);
+        else if (p.type === 'plank') { rect(-p.size / 2, -4, p.size, 8, '#9d6736', 2, '#4a2e18'); rect(-p.size / 2 + 3, -2, p.size - 6, 1, '#d8a868'); }
+        else if (p.type === 'splinter') rect(-p.size / 2, -1.5, p.size, 3, '#b8834a', 1);
         ctx.restore();
       }
     }
   }
   ctx.globalAlpha = 1;
+}
+
+// ---------- Estações e clientes ----------
+// Quanto a tampa da prensa está fechada: desce ao começar, sobe quando fica pronto.
+function pressLid(p) { if (!p || p.waitingToast) return 0; return p.ready ? 1 - clamp((p.heat - 6) / .4, 0, 1) : clamp(p.heat / .3, 0, 1); }
+function drawPressLid(x, y, w, p) {
+  const down = pressLid(p); if (down <= 0) return;
+  const ly = y - 30 + down * 46;
+  rect(x + w / 2 - 3, y - 34, 6, ly - y + 38, '#3a3f39');
+  rect(x + 5, ly, w - 10, 17, '#a7aea3', 4, '#3c423b'); rect(x + 9, ly + 3, w - 18, 3, '#d8ddd2', 1);
+  for (let j = 0; j < 4; j++) rect(x + 14 + j * (w - 28) / 3 - 2, ly + 9, 4, 5, '#6f776d', 1);
+  rect(x + w / 2 - 26, ly - 9, 52, 7, '#2b2a28', 3, '#141413');
+}
+function drawCoffeeBrew(x, y, w) {
+  if (G.task?.type !== 'coffee') return;
+  // bolhas subindo no reservatório e o fio de café caindo na xícara
+  for (let i = 0; i < 5; i++) { const ph = (frameClock * 1.6 + i * .21) % 1; ellipse(x + 17 + (i * 11) % (w - 30), y - 10 - ph * 10, 1.6 + ph, 1.6 + ph, `rgba(214,236,222,${.8 * (1 - ph)})`); }
+  rect(x + w / 2 - 1, y + 9, 2, 9 + Math.sin(frameClock * 30) * 1.5, '#3b220f');
+}
+function drawCupSteam(x, y) {
+  for (let k = 0; k < 2; k++) { const a = (frameClock * .5 + k * .5) % 1; ellipse(x - 4 + k * 8 + Math.sin(a * 7 + k) * 3, y - a * 24, 2 + a * 3, 3 + a * 4, `rgba(255,241,215,${.4 * (1 - a)})`); }
+}
+// Caixas do fornecedor empilhadas ao lado de quem entrega.
+const DELIVERY_TIME = 3.5;
+function crateLanding(i) { return .35 + i * .45 + .22; }
+function drawDeliveryCrates() {
+  const e = DELIVERY_TIME - deliveryVisitor, bx = ENTRY.x + 52, by = ENTRY.y - 18;
+  ctx.globalAlpha = clamp(deliveryVisitor / .4, 0, 1);
+  for (let i = 0; i < 3; i++) {
+    const k = clamp((e - (.35 + i * .45)) / .22, 0, 1); if (k <= 0) continue;
+    const y = by - i * 25 - (1 - k) * (1 - k) * 80, x = bx + (i === 1 ? 4 : i === 2 ? -3 : 0);
+    rect(x - 18, y - 25, 36, 25, '#a8763d', 3, '#4a3018'); rect(x - 15, y - 17, 30, 2, '#7e5428'); rect(x - 15, y - 9, 30, 2, '#7e5428');
+    rect(x - 7, y - 22, 14, 6, '#e8d6a8', 1); rect(x - 4, y - 20, 8, 1, '#8a5a2a');
+  }
+  ctx.globalAlpha = 1;
+}
+let fxDeliveryPrev = 0;
+function deliveryThuds() {
+  const e = deliveryVisitor > 0 ? DELIVERY_TIME - deliveryVisitor : 0;
+  for (let i = 0; i < 3; i++) { const t = crateLanding(i); if (fxDeliveryPrev < t && e >= t) { AudioEngine.drop(); fxPuffs(ENTRY.x + 52, ENTRY.y - 20 - i * 25, 3, 45, '#cdb894'); } }
+  fxDeliveryPrev = e;
+}
+// Impaciência de 0 (acabou de chegar) a 1 (vai desistir).
+function customerMood(c) { return c.state === 'queue' && !c.training && c.maxPatience ? 1 - c.patience / c.maxPatience : 0; }
+function dinerMood(g, j) { if (g.state !== 'seated' || g.training) return 0; const d = g.diners?.[j]; return d?.status === 'waiting' && d.maxPatience ? 1 - d.patience / d.maxPatience : 0; }
+function drawPatienceClock(x, y, left) {
+  const shake = Math.sin(frameClock * 40) * (left < .15 ? 1.5 : .6), cx = x + shake, red = left < .15;
+  ellipse(cx, y, 9, 9, red ? '#ffd2c4' : '#fff4d4'); ctx.strokeStyle = red ? '#a8321f' : '#6b4a26'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, y, 9, 0, Math.PI * 2); ctx.stroke();
+  rect(cx - 3, y - 13, 6, 3, ctx.strokeStyle, 1);
+  const a = frameClock * 6; ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx + Math.cos(a) * 6, y + Math.sin(a) * 6); ctx.moveTo(cx, y); ctx.lineTo(cx, y - 4); ctx.stroke();
+}
+let fxSweat = 0, fxPress = 0;
+function stationsTick(dt) {
+  deliveryThuds();
+  // vapor saindo pelos lados da prensa fechada
+  fxPress -= dt; const p = G.kitchen.press;
+  if (!isCampo() && pressLid(p) > .8 && !p.ready && fxPress <= 0) { fxPress = .12; const f = FIXED.find(f => f.id === 'press'), side = Math.random() < .5 ? 0 : 1; fxAdd('puff', f.x + 8 + side * (f.w - 16), f.y + 22, { vx: (side ? 1 : -1) * fxRand(10, 30), vy: fxRand(-60, -35), drag: 1.5, life: .8, size: fxRand(5, 8), color: '#f4f0e6' }); }
+  // suor de quem está quase desistindo
+  fxSweat -= dt; if (fxSweat > 0) return; fxSweat = .45;
+  for (const c of G.shop) if (customerMood(c) > .7) fxAdd('sweat', c.x + fxRand(-12, 12), c.y - 112, { vx: fxRand(-20, 20), vy: -25, g: 260, life: .7, size: 3 });
+  for (const g of G.groups) for (let j = 0; j < g.size; j++) if (dinerMood(g, j) > .7) { const s = groupSeatPosition(g, j); fxAdd('sweat', s.x + fxRand(-12, 12), s.y - 100, { vx: fxRand(-20, 20), vy: -25, g: 260, life: .7, size: 3 }); }
 }
