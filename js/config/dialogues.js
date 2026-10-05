@@ -2,55 +2,19 @@
 'use strict';
 const DEFAULT_DIALOGUES={
   "badin": [
-    {
-      "player": "Como anda a colônia?",
-      "reply": "CUDIO! Plantei alface e nasceu visita querendo salame. A terra é generosa demais!"
-    },
-    {
-      "player": "Vai um xis caprichado?",
-      "reply": "DIO MADONA! Se vier desse tamanho, vou ter que chamar os primos pra ajudar."
-    },
-    {
-      "player": "E a safra, Badin?",
-      "reply": "CUDIO, a uva ficou uma beleza. O problema é o nono contando os cachos todo dia."
-    },
-    {
-      "player": "Hoje tem salame da colônia.",
-      "reply": "Dio madona, agora sim! Corta fino que daí eu posso dizer que comi só umas fatias."
-    },
-    {
-      "player": "Tá com pressa?",
-      "reply": "Na colônia só se corre atrás de galinha. E geralmente é a galinha que ganha."
-    },
-    {
-      "player": "O que tu trouxe da roça?",
-      "reply": "Uma sacola de bergamota e três conselho do nono. A sacola pesava menos."
-    },
-    {
-      "player": "Gostou do atendimento?",
-      "reply": "CUDIO, ligeiro assim nem a nona quando percebe que esqueceram o pão no forno!"
-    },
-    {
-      "player": "Mais um café?",
-      "reply": "DIO MADONA, bota! Café fraco é água que ouviu falar de café."
-    },
-    {
-      "player": "E o domingo na família?",
-      "reply": "Era pra ser almoço de quatro. A nona fez comida pra quarenta, por garantia."
-    },
-    {
-      "player": "Tem causo novo?",
-      "reply": "Fui economizar na cerca. As galinha fizeram turismo e agora conhecem a colônia inteira."
-    },
-    {
-      "player": "Como tá o tempo lá fora?",
-      "reply": "CUDIO! Saí de casa com sol, peguei chuva e cheguei com vontade de polenta."
-    },
-    {
-      "player": "Vai levar erva?",
-      "reply": "Me pesa bem certinho. O nono desconfia até da balança da farmácia."
-    }
-  ],
+  {"player": "E aí, Badin?", "reply": "Ô, buenas! Badin, o colono, direto da colônia de Erechim. Vim de carroça de luxo: a caminhonete do cunhado."},
+  {"player": "Como começou essa fama?", "reply": "Gravei um áudio falando das coisas de Erechim, mandei no grupo da família e foi parar na rádio. Quando vi, tava sete minutos no ar!"},
+  {"player": "Tu não era engenheiro?", "reply": "Era, rapaz! Engenheiro mecânico. Hoje só conserto o humor da colonada. Dá menos graxa e mais risada."},
+  {"player": "Como tá a mãe?", "reply": "A mãe tá boa! Ligou três vezes pra saber se eu comi. Na quarta ligação já perguntou se eu tô namorando."},
+  {"player": "Vai um xis?", "reply": "Vai, mas capricha! Colono não pede pouco: se sobrar, leva pra casa num pote de margarina."},
+  {"player": "E a família?", "reply": "Família de colono é grande! Almoço de domingo começa com dez pessoas e termina com trinta, porque sempre chega mais um primo."},
+  {"player": "Tem salame da colônia?", "reply": "Se não tiver, eu trago! Salame da nona é patrimônio da família. Corta fininho que rende mais."},
+  {"player": "Já foi pra cidade grande?", "reply": "Fui, até virou filme: um colono na cidade! Lá ninguém dá bom dia pro vizinho. Eu dei bom dia pra prédio inteiro."},
+  {"player": "Que história é essa da enchente?", "reply": "Quando o Rio Grande precisou, a colonada se juntou. Teve gente do Brasil inteiro ajudando. Coração de colono é grande, rapaz."},
+  {"player": "Vai levar erva?", "reply": "Me pesa bem certinho! A mãe confere na balança da cozinha e, se faltar um grama, eu volto aqui."},
+  {"player": "Mais um café?", "reply": "Bota! Café de colono tem que ser passado na hora, com cuca do lado. Café sem cuca é visita sem prosa."},
+  {"player": "Qual o segredo do teu humor?", "reply": "É só contar como é a vida na colônia, sem desfazer de ninguém. A colonada se reconhece e ri junto."}
+ ],
   "guri": [
   {"player": "E aí, Guri?", "reply": "Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam."},
   {"player": "Como tá a fronteira?", "reply": "Tranquila! Atravessei a ponte pra Paso de los Libres, comprei uma erva e voltei. Só se fala de outra coisa!"},

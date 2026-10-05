@@ -2,7 +2,7 @@
  const results=[],check=(v,label)=>{if(!v)throw Error(label);results.push(label);};
  const step=(seconds)=>{for(let t=0;t<seconds;t+=1/60)bocceTick(1/60);};
  const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.contacts=Object.fromEntries([...ALWAYS_TALK].map(id=>[id,1]));started=true;paused=false;modal=null;phoneOpen=false;keys.clear();AudioEngine.on=false;G.cash=500;['start','overlay'].forEach(id=>$(id).classList.add('hidden'));};
- const begin=(wager=25,level='normal')=>{G.phase='closed';G.report={...G.stats,end:G.cash,profit:0};bocceMenu();$('bocceWager').value=String(wager);$('bocceLevel').value=level;startBocceGame();};
+ const begin=(wager=25)=>{G.phase='closed';G.report={...G.stats,end:G.cash,profit:0};bocceMenu();$('bocceWager').value=String(wager);startBocceGame();};
  reset();bocceMenu();check(!G.bocce&&modal==='bocceSetup','bocha disponível antes de abrir a bodega');closeDialog(true);
  begin();check(G.bocce.wager===25&&G.cash===475&&G.stats.bocceStakes===25,'aposta da bocha sai do caixa uma única vez');
  startBocceGame();check(G.cash===475,'duplo clique não desconta outra aposta');
@@ -36,15 +36,17 @@
    bocceTick(1/60);
  }
  check(G.bocce.used.every(n=>n===4)&&G.bocce.balls.length===9&&G.bocce.phase==='between','rodada completa alterna oito lançamentos e mede o resultado');
- check(G.bocce.score.reduce((a,b)=>a+b,0)<=4,'somente um lado pontua por rodada');
- const balance=G.cash;G.bocce.score=[5,0];G.bocce.phase='rolling';G.bocce.balls=[{owner:-1,x:300,y:200},...[0,1].flatMap(owner=>[0,1,2,3].map(i=>({owner,x:300+20+i*20+owner*100,y:200})))];finishBocceRound();
- check(G.bocce.phase==='over'&&G.bocce.score[0]>=6,'atingir seis pontos encerra a partida automaticamente');
+ check(G.bocce.score.reduce((a,b)=>a+b,0)<=1,'cada rodada vale uma vitória para um só lado');
+ const balance=G.cash;G.bocce.score=[1,0];G.bocce.phase='rolling';G.bocce.balls=[{owner:-1,x:300,y:200},...[0,1].flatMap(owner=>[0,1,2,3].map(i=>({owner,x:300+20+i*20+owner*100,y:200})))];finishBocceRound();
+ check(G.bocce.phase==='over'&&G.bocce.score[0]===2,'vencer 2 de 3 rodadas encerra a partida automaticamente');
  settleBocce(0);check(G.cash===balance+50&&G.stats.bocceReturns===50&&G.report.end===G.cash,'vitória paga o dobro uma vez e atualiza o relatório');
  const settled=readSave();G=settled;settleBocce(0);check(G.cash===balance+50,'recarregar uma vitória não duplica prêmio');
  leaveBocce();check(!G.bocce&&G.phase==='closed'&&modal==='report','retorno ao caixa preserva o fim do dia');closeDialog(true);
  begin(10);settleBocce(1);check(G.cash===balance+40&&G.stats.bocceReturns===50,'derrota perde somente a entrada');leaveBocce();closeDialog(true);
- begin(0,'easy');check(G.bocce.wager===0&&G.bocce.level==='easy','treino sem aposta funciona');settleBocce(1);leaveBocce();closeDialog(true);
+ begin(0);check(G.bocce.wager===0&&G.bocce.level===bocceSkill(G.bocce.opponent),'treino sem aposta funciona');settleBocce(1);leaveBocce();closeDialog(true);
  begin(5);const cashBeforeExit=G.cash,confirmBefore=window.confirm;try{window.confirm=()=>false;leaveBocce();check(!!G.bocce&&!G.bocce.settled,'cancelar desistência mantém a partida');window.confirm=()=>true;leaveBocce();check(!G.bocce&&G.cash===cashBeforeExit,'desistência perde a entrada, sem segunda cobrança');}finally{window.confirm=confirmBefore;}closeDialog(true);
- check(BOCCE_LEVELS.easy.angle>BOCCE_LEVELS.normal.angle&&BOCCE_LEVELS.normal.angle>BOCCE_LEVELS.hard.angle,'três dificuldades regulam a precisão da IA');
+ const id=k=>PEOPLE.findIndex(p=>p.id===k),err=k=>BOCCE_LEVELS[bocceSkill(id(k))].angle;
+ check(err('marcio')>err('peixinhonabrasa')&&err('peixinhonabrasa')>err('indavirus')&&err('indavirus')>err('lauro')&&err('lauro')===err('manolima')&&err('badin')===err('lauro')&&err('guri')===err('lauro')&&err('marcelo')===err('marcio'),'cada adversário tem seu nível: Márcio e Marcelo muito mal, Peixinho mal, Indavirus médio, Lauro, Mano Lima, Badin e Guri bem');
+ check(BOCCE_LEVELS.tutorial.angle>BOCCE_LEVELS.fraco.angle&&!$('bocceLevel'),'tutorial bem mais fácil e sem seletor de dificuldade');
  reset();begin(25);step(1.3);return results;
 })()

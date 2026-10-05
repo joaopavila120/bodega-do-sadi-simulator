@@ -17,6 +17,9 @@ const GIFTS={
  peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]
 };
 
+// Amizade traz o especial mais vezes: a chance geral sobe e, entre eles, quem tem mais afeto vem mais.
+function specialChance(){return Math.min(.35,SPECIAL_CHANCE+specialPeople().reduce((n,i)=>n+(G.friends[i]||0),0)/100*.06);}
+function pickByFriendship(list){const w=list.map(i=>1+(G.friends[i]||0)/20);let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let k=0;k<list.length;k++){if((r-=w[k])<=0)return list[k];}return list[list.length-1];}
 function isSpecial(i){return ALWAYS_TALK.has(PEOPLE[i]?.id);}
 function specialPeople(){return PEOPLE.map((p,i)=>i).filter(i=>isSpecial(i)&&PEOPLE[i].id!==G.avatarId);}
 function hasContact(i){return !!G.contacts?.[PEOPLE[i]?.id];}

@@ -6,18 +6,18 @@ window.BODEGA_DIALOGUE_SOURCE = function () { /*
 # Uma conversa por linha. Linhas começadas com # são comentários.
 
 [badin]
-Como anda a colônia? | CUDIO! Plantei alface e nasceu visita querendo salame. A terra é generosa demais!
-Vai um xis caprichado? | DIO MADONA! Se vier desse tamanho, vou ter que chamar os primos pra ajudar.
-E a safra, Badin? | CUDIO, a uva ficou uma beleza. O problema é o nono contando os cachos todo dia.
-Hoje tem salame da colônia. | Dio madona, agora sim! Corta fino que daí eu posso dizer que comi só umas fatias.
-Tá com pressa? | Na colônia só se corre atrás de galinha. E geralmente é a galinha que ganha.
-O que tu trouxe da roça? | Uma sacola de bergamota e três conselho do nono. A sacola pesava menos.
-Gostou do atendimento? | CUDIO, ligeiro assim nem a nona quando percebe que esqueceram o pão no forno!
-Mais um café? | DIO MADONA, bota! Café fraco é água que ouviu falar de café.
-E o domingo na família? | Era pra ser almoço de quatro. A nona fez comida pra quarenta, por garantia.
-Tem causo novo? | Fui economizar na cerca. As galinha fizeram turismo e agora conhecem a colônia inteira.
-Como tá o tempo lá fora? | CUDIO! Saí de casa com sol, peguei chuva e cheguei com vontade de polenta.
-Vai levar erva? | Me pesa bem certinho. O nono desconfia até da balança da farmácia.
+E aí, Badin? | Ô, buenas! Badin, o colono, direto da colônia de Erechim. Vim de carroça de luxo: a caminhonete do cunhado.
+Como começou essa fama? | Gravei um áudio falando das coisas de Erechim, mandei no grupo da família e foi parar na rádio. Quando vi, tava sete minutos no ar!
+Tu não era engenheiro? | Era, rapaz! Engenheiro mecânico. Hoje só conserto o humor da colonada. Dá menos graxa e mais risada.
+Como tá a mãe? | A mãe tá boa! Ligou três vezes pra saber se eu comi. Na quarta ligação já perguntou se eu tô namorando.
+Vai um xis? | Vai, mas capricha! Colono não pede pouco: se sobrar, leva pra casa num pote de margarina.
+E a família? | Família de colono é grande! Almoço de domingo começa com dez pessoas e termina com trinta, porque sempre chega mais um primo.
+Tem salame da colônia? | Se não tiver, eu trago! Salame da nona é patrimônio da família. Corta fininho que rende mais.
+Já foi pra cidade grande? | Fui, até virou filme: um colono na cidade! Lá ninguém dá bom dia pro vizinho. Eu dei bom dia pra prédio inteiro.
+Que história é essa da enchente? | Quando o Rio Grande precisou, a colonada se juntou. Teve gente do Brasil inteiro ajudando. Coração de colono é grande, rapaz.
+Vai levar erva? | Me pesa bem certinho! A mãe confere na balança da cozinha e, se faltar um grama, eu volto aqui.
+Mais um café? | Bota! Café de colono tem que ser passado na hora, com cuca do lado. Café sem cuca é visita sem prosa.
+Qual o segredo do teu humor? | É só contar como é a vida na colônia, sem desfazer de ninguém. A colonada se reconhece e ri junto.
 
 [guri]
 E aí, Guri? | Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam.
@@ -30,7 +30,7 @@ Como foi o show? | Theatro São Pedro lotado em Porto Alegre! Gaúcho rindo de g
 Tu usa WhatsApp? | Uso, mas no meu ritmo. Mando áudio de sete minutos e começo com bom dia, que educação vem antes da tecnologia.
 Mais um mate? | Mas bah, sempre! Cuia bem cevada, água no ponto e conversa sem pressa. O resto é modernagem.
 Vai jogar truco? | Truco com gaudério da fronteira é perigoso, tchê. Eu já peço o truco olhando pro horizonte, que é pra não entregar a carta.
-Tá pilchado hoje? | Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece. Nem a Silvia Helena.
+Tá pilchado hoje? | Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece. 
 Qual a novidade? | A novidade é que não tem novidade! Mas que falta de opção, tchê. Por isso vim pra bodega: aqui sempre tem causo.
 
 [marcio]
@@ -44,7 +44,7 @@ Tem novidade? | É o quê? botamo os vidrão verde na casona, é mentirada que t
 E a partida? | É o quê? Showww de bola, só um recadinho ai pra brigada de erechim
 
 [marcelo]
-Bem-vindo, Marcelo! | É o quê? Show de bola! tá limpando o banherão podre de chique e já vem aí
+Bem-vindo, Marcelo! | É o quê? Show de bola! mas olha podre de chique essa bodega ai ó
 Márcio já pediu? | Umas reineken e carnage e o que? show de bola
 O que achou da casa? | podre de chique, casona podre de chique aí não é marcio? é oq?
 Vai um refrigerante? | É o quê? Show de bola! eu só tomo rainekem que tamo com os pila, é oq?
@@ -160,36 +160,44 @@ Qual o conselho do dia? | Homem Valente e Cavalo Manso, vivente. Valentia é pra
 
 [badin.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
+Vamos pra cancha? | Vamos! Na colônia a bocha é coisa séria: o nono jogava de domingo até a janta.
 
 [badin.bocha.direcao]
 # Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira no bolim, rapaz! Não é na tia que tá olhando da cerca.
 
 [badin.bocha.forca]
 # Escreva as falas abaixo, uma por linha.
 
 [badin.bocha.lancamento]
 # Escreva as falas abaixo, uma por linha.
+Foi bem? | Essa saiu bonita! Parecia jogada de campeonato da comunidade.
 
 [badin.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Mais grudado que filho de colono na saia da mãe.
 
 [badin.bocha.rodada]
 # Escreva as falas abaixo, uma por linha.
 
 [badin.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou do Badin! Vou contar pra mãe, mas ela vai dizer que eu deixei.
 
 [badin.bocha.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Perdeu pro colono, rapaz! Treina mais no domingo que eu te espero na cancha.
 
 [badin.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Truco? | Truco é com colono! Embaralha que eu já tô fazendo cara de quem não tem nada.
 
 [badin.truco.carta]
 # Escreva as falas abaixo, uma por linha.
 
 [badin.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | Retruco! Aqui na colônia ninguém corre de truco, só de chuva na colheita.
 
 [badin.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
@@ -202,9 +210,11 @@ Qual o conselho do dia? | Homem Valente e Cavalo Manso, vivente. Valentia é pra
 
 [badin.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Bah, ganhou honesto. Não conta pros primos, que eles vão rir até o Natal.
 
 [badin.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Perdeu pro Badin! Mas fica tranquilo, que colono ganha e ainda paga o café.
 
 [guri.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
@@ -288,27 +298,35 @@ Perdi… | Mas que falta de opção! Paga um mate e fica tudo certo.
 
 [marcio.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Bora um truco? | É o quê? Show de bola! Truco podre de chique, igual lá na casona
 
 [marcio.truco.carta]
 # Escreva as falas abaixo, uma por linha.
+Joga aí, Márcio! | É o quê? Joguei a carta, show de bola! nem sei se era boa mas joguei
 
 [marcio.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | É o quê?? Truco é oq? Marcelo vem cá me ajuda que eu não sei se aceito
 
 [marcio.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
+Aceita? | Aceito sim! show de bola, quem tem os pila não corre, é oq?
 
 [marcio.truco.correr]
 # Escreva as falas abaixo, uma por linha.
+Vai correr? | Corri, é mentirada que eu tinha carta boa, show de bola mesmo assim
 
 [marcio.truco.rodada]
 # Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | É o quê? Showww de bola! bota mais uma raineken pra comemorar
 
 [marcio.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | É o quê? Ganhou do Márcio? podre de chique tu, show de bola
 
 [marcio.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei é oq? Show de bola! vou contar pro Marcelo lá na casona
 
 [marcelo.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.
@@ -336,27 +354,35 @@ Perdi… | Mas que falta de opção! Paga um mate e fica tudo certo.
 
 [marcelo.truco.inicio]
 # Escreva as falas abaixo, uma por linha.
+Bora um truco? | É o quê márcio? eu prefiro a carnage mas bora, show de bola
 
 [marcelo.truco.carta]
 # Escreva as falas abaixo, uma por linha.
+Tua vez! | Joguei a de espada, é oq? vidrão de carta essa, show de bola
 
 [marcelo.truco.truco]
 # Escreva as falas abaixo, uma por linha.
+TRUCO! | É o quê?? Truco no Marcelo? o portonzon não tá a venda e nem essa mão!
 
 [marcelo.truco.aceitar]
 # Escreva as falas abaixo, uma por linha.
+Aceita? | Aceito, tamo com os pila é oq? show de bola
 
 [marcelo.truco.correr]
 # Escreva as falas abaixo, uma por linha.
+Vai correr? | Corri, é mentirada isso aí, eu só fui pegar uma raineken
 
 [marcelo.truco.rodada]
 # Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | É o quê? Show de bola! essa rodada foi podre de chique
 
 [marcelo.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou do Marcelo direto de Erechim, é oq? show de bola pra ti
 
 [marcelo.truco.derrota]
 # Escreva as falas abaixo, uma por linha.
+Perdi… | É o quê? Ganhei! vou guardar essa vitória na bauzona, show de bola
 
 [indavirus.bocha.inicio]
 # Escreva as falas abaixo, uma por linha.

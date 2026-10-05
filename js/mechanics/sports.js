@@ -29,7 +29,7 @@ function updateBocceSocial(){
  $('bocceMatchUI').classList.toggle('guided',!!b.tutorial);
  const token=(b.talkLife>0?b.talkSequence:0)+':'+b.phase+':'+b.paused+':'+b.tutorial;
  if(host.dataset.token===token)return;host.dataset.token=token;
- const tips={jack:'1 · A bolinha pequena é o bolim. Ganha quem deixar suas bochas mais perto dele.',direction:'2 · Mova com A/D. Quando a mira apontar para o bolim, aperte Espaço para travar a direção.',power:'3 · A força está subindo. Aperte Espaço para lançar. Aproximadamente 70% alcança o fundo da cancha.',rolling:'4 · Observe onde sua bocha para. Na próxima, ajuste a direção e a força.',ai:'Agora observe o lançamento do Mano Lima. Cada lado tem quatro bochas.',between:'5 · Pontuam as bochas mais próximas que a melhor do rival. Aperte Próxima rodada. A partida vai até 6 pontos.',over:'Tutorial concluído! Você pode apostar e organizar campeonatos na cancha.'};
+ const tips={jack:'1 · A bolinha pequena é o bolim. Ganha quem deixar suas bochas mais perto dele.',direction:'2 · Mova com A/D. Quando a mira apontar para o bolim, aperte Espaço para travar a direção.',power:'3 · A força está subindo. Aperte Espaço para lançar. Aproximadamente 70% alcança o fundo da cancha.',rolling:'4 · Observe onde sua bocha para. Na próxima, ajuste a direção e a força.',ai:'Agora observe o lançamento do Mano Lima. Cada lado tem quatro bochas.',between:'5 · Quem deixou a bocha mais perto do bolim vence a rodada. Aperte Próxima rodada. A partida é melhor de 3: vence quem ganhar 2 rodadas.',over:'Tutorial concluído! Você pode apostar e organizar campeonatos na cancha.'};
  host.innerHTML='<p><b>Contra '+escapeHTML(sportName(b.opponent))+'</b></p>'+(b.tutorial?'<div class="callout">'+tips[b.phase]+'</div>':'')+sportTalkHTML(b);
 }
 function settleSport(type,match,won){
@@ -84,9 +84,9 @@ function launchSportNow(type,opponent,options={}){
  if(G.bocce||G.game||G.task)return false;
  if(type==='bocha'){
   bocceMenu();if(modal!=='bocceSetup')return false;
-  $('bocceWager').value=String(options.wager||0);$('bocceLevel').value=options.tutorial?'easy':'normal';$('bocceOpponent').value=String(opponent);
+  $('bocceWager').value=String(options.wager||0);$('bocceOpponent').value=String(opponent);
   startBocceGame();if(!G.bocce)return false;
-  Object.assign(G.bocce,{tutorial:!!options.tutorial,bracket:!!options.bracket});updateBocceSocial();
+  Object.assign(G.bocce,{tutorial:!!options.tutorial,bracket:!!options.bracket});if(options.tutorial)G.bocce.level='tutorial';updateBocceSocial();
  }else{
   cardsMenu();$('opponent').value=String(opponent);$('trucoWager').value='0';startTruco();if(!G.game)return false;G.game.bracket=!!options.bracket;showCards();
  }

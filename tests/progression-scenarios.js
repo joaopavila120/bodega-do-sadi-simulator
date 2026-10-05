@@ -27,6 +27,8 @@
   // Personagens especiais raros
   reset();G.phase='open';let specials=0;for(let i=0;i<2000;i++)if(isSpecial(pickVisitor()))specials++;
   check(specials>80&&specials<400,'especiais são raros entre os visitantes ('+specials+'/2000)');
+  reset();G.phase='open';const badinIdx=index('badin');G.friends[badinIdx]=100;let withFriend=0,badinVisits=0;for(let i=0;i<2000;i++){const v=pickVisitor();if(isSpecial(v))withFriend++;if(v===badinIdx)badinVisits++;}
+  check(withFriend>specials&&specialChance()>SPECIAL_CHANCE&&badinVisits>withFriend/6,'amizade faz o especial aparecer mais seguido ('+withFriend+' especiais, '+badinVisits+' do Badin)');
   reset();G.phase='open';const mano=index('manolima');  const c=(()=>{const original=pickVisitor;pickVisitor=()=>mano;try{return spawnShop();}finally{pickVisitor=original;}})();
   check(c&&G.metSpecial.manolima===2&&shown('Mano Lima entrou na bodega'),'primeira visita de especial mostra aviso em destaque');
   // Afeto só com especiais; contato com 15
