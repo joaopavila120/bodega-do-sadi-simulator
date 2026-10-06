@@ -47,6 +47,7 @@ async function initializeGame() {
     document.querySelector('#start [data-act="new"]').disabled = false;
     document.querySelector('#start [data-act="test"]').disabled = false;
     document.querySelector('#start [data-act="test2"]').disabled = false;
+    document.querySelectorAll('#start [data-act="testNew"]').forEach(b => b.disabled = false);
     status.classList.add('hidden');
     document.documentElement.dataset.gameReady = 'true';
     lastFrame = performance.now();

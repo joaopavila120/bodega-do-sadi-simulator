@@ -72,7 +72,7 @@
   check(calendar(1).name==='Sexta'&&fixedEventFor(2)==='normal'&&fixedEventFor(3)==='costelao'&&fixedEventFor(6)==='grenal'&&!EVENTS.truco&&!EVENTS.motos&&!EVENTS.rodeio&&fixedEventFor(10)==='costelao'&&!EVENTS.farroupilha&&!EVENTS.junina&&nameOf('cachaca')==='Dose de cachaça','calendário tem Gre-Nal, truco e rodeio; sem Farroupilha, junina ou quentão');
   // Modo de testes escolhe o evento
   reset();G.testMode=true;G.phase='closed';planDay();check($('testEvent'),'modo de testes mostra a escolha de evento');$('testEvent').value='feira';action('chooseTestEvent');check(plannedEvent().id==='feira','modo de testes define o evento do próximo dia');closeDialog(true);
-  {const before=G,confirmBefore=window.confirm;window.confirm=()=>true;localStorage.removeItem(TEST2_KEY);startGame(true,'eventos');
+  {const before=G,confirmBefore=window.confirm;window.confirm=()=>true;localStorage.removeItem(TEST2_KEY);startGame(true,'eventos');G.day=7;save();action('testNew','eventos');check(G.eventMode&&G.day===1,'botão Novo recomeça o modo sem tutorial do zero');
    check(G.eventMode&&!G.testMode&&!tutorialActive()&&!scene&&modal==='event'&&!hasCash(G.cash+1),'testes sem tutorial: começa direto, sem dinheiro infinito');
    closeDialog(true);G.phase='closed';planDay();check($('testEvent'),'testes sem tutorial também escolhem o evento do dia');save();check(localStorage.getItem(TEST2_KEY)&&readSave('eventos')?.eventMode&&!readSave('eventos').testMode,'progresso separado dos outros modos');
    closeDialog(true);localStorage.removeItem(TEST2_KEY);window.confirm=confirmBefore;started=true;G=before;}

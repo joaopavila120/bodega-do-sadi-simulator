@@ -290,3 +290,6 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 .old-photo-img{width:min(300px,70vw);height:220px;background:url('../assets/images/room2.png') 35% 60%/260% auto;filter:sepia(1) contrast(1.1) brightness(.92);display:flex;align-items:flex-end;justify-content:center;overflow:hidden;box-shadow:inset 0 0 40px #3a2a1688}
 .old-photo p{margin:10px 0 0;text-align:center;color:#4a3218;font:20px 'Segoe Script','Lucida Handwriting','Brush Script MT',cursive}
 .portrait-phone{display:flex!important;align-items:center;justify-content:center;font-size:56px;background:#1b2550}
+
+.mode-row{display:grid;grid-template-columns:1fr auto;gap:6px}
+.mode-row .mode-new{padding:8px 12px;font-size:14px}
