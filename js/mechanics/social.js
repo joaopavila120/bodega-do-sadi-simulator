@@ -14,6 +14,12 @@ const GIFTS={
  marcelo:[{at:GIFT_AT,decor:['cabaca'],text:'“Porongo da roça lá de casa.”'}],
  indavirus:[{at:GIFT_AT,decor:['alho'],text:'“Réstia da colônia. Espanta até mau-olhado.”'}],
  lauro:[{at:'tutorial',decor:['lampada'],text:'“Uma lâmpada pra clarear a bodega. E treina, que a revanche vem!”'},{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
+ dianho:[{at:GIFT_AT,decor:['bancada_lenha'],text:'“Bancada que eu mesmo reformei, todo Nicolas Cagezinho!”'}],
+ mitodosul:[{at:GIFT_AT,decor:['planta_esq'],text:'“O chat escolheu: uma samambaia pro cantinho da bodega.”'}],
+ loligebien:[{at:GIFT_AT,decor:['prateleira_potes','frigideiras'],text:'“Panelas da oma, de Pomerode. Prosit!”'}],
+ jayme:[{at:GIFT_AT,decor:['comoda','kit_chimarrao'],text:'“Cômoda e cuia: todo galpão precisa de um canto pro mate e pro verso.”'}],
+ gaudencio:[{at:GIFT_AT,decor:['fogao_lenha'],text:'“Fogão a lenha de verdade, não essas modernagem. Agora sim é galpão!”'}],
+ baitaca:[{at:GIFT_AT,decor:['lampiao_centro'],text:'“Um lampião pra iluminar os bailes da bodega.”'}],
  peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]
 };
 

@@ -162,6 +162,8 @@ function campoHint(n){
 }
 const FIRST_COSTELAO_ORDERS=3;
 function firstCostelao(){return G.event.id==='costelao'&&campoState().firstDay===G.day&&!costelaoTutorialActive();}
+// Depois do primeiro costelão, sem carne e sem dinheiro para boi ou manta, o domingo vira dia normal.
+function costelaoPossible(){if(!G.costelaoTaught||G.testMode)return true;return G.stock.costela_crua>0||G.stock.costela>0||hasCash(Math.min(BOI_COST,MANTA_BUY_COST));}
 function maioneseAvailable(){return G.stock.maionese>0||G.stock.ovo>0&&G.stock.azeite>0;}
 function campoOrder(){
  const options=[];

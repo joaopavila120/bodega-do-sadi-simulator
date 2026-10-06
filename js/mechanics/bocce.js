@@ -12,7 +12,7 @@ const BOCCE_LEVELS={
  // Níveis antigos, mantidos para partidas salvas.
  easy:{name:'Fácil',angle:.065,power:.085,attack:.2},normal:{name:'Normal',angle:.027,power:.04,attack:.35},hard:{name:'Difícil',angle:.012,power:.018,attack:.45}
 };
-const BOCCE_SKILL={marcio:'pessimo',marcelo:'pessimo',peixinhonabrasa:'fraco',indavirus:'medio',lauro:'bom',manolima:'bom',badin:'bom',guri:'bom'};
+const BOCCE_SKILL={marcio:'pessimo',marcelo:'pessimo',peixinhonabrasa:'fraco',indavirus:'medio',lauro:'bom',manolima:'bom',badin:'bom',guri:'bom',dianho:'fraco',mitodosul:'medio',loligebien:'fraco',jayme:'bom',baitaca:'bom',gaudencio:'medio'};
 function bocceSkill(person){return BOCCE_SKILL[PEOPLE[person]?.id]||'medio';}
 const bocceArt=new Image();bocceArt.src='assets/images/bocha.png';
 const bocceCanvas=$('bocceCanvas'),bocceContext=bocceCanvas.getContext('2d');

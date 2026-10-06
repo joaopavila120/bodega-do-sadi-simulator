@@ -119,6 +119,10 @@
   // sobras do costelão
   sunday();G.phase='open';G.stock.costela=1500;G.stock.costela_crua=2;campoState().espetos[1]={heat:[1,0],fire:1,burned:false,cost:40,turns:1};finishDay(true);
   check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&G.report.waste>0,'carne que sobra no fim do costelão é descartada');check(G.report.power===0&&G.report.supplies===COSTELAO_SUPPLIES&&!G.report.rent,'no costelão não há luz: vão lenha e sal');closeDialog(true);
+  // sem carne e sem dinheiro, o domingo vira dia normal (menos no primeiro costelão)
+  reset();G.costelaoTaught=true;G.day=2;G.phase='closed';G.lassoDay=2;G.event={id:'normal',seen:true,fired:{}};G.stock.costela_crua=0;G.stock.costela=0;G.cash=20;nextDay('automatic');
+  check(G.day===3&&G.event.id==='normal'&&G.event.noCostelao&&$('dialogContent').textContent.includes('Sem costelão hoje'),'sem carne nem dinheiro, o domingo vira dia normal com aviso');closeDialog(true);
+  reset();G.costelaoTaught=false;G.day=2;G.phase='closed';G.lassoDay=2;G.event={id:'normal',seen:true,fired:{}};G.stock.costela_crua=0;G.cash=0;nextDay('automatic');check(G.event.id==='costelao','o primeiro costelão acontece sempre (o tutorial dá a carne)');closeDialog(true);
   // mate sem reposição no campo
   sunday();approach('mate');keys.add('e');interact();tick(1.2,holdTick);keys.clear();check(G.boost>0,'campo tem estação de mate, sem reposição de erva');
   save();check(readSave().herd===G.herd&&readSave().version===15,'rebanho e campo persistem no salvamento');

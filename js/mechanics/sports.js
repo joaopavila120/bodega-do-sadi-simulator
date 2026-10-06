@@ -18,7 +18,7 @@ function sportTalk(match,type,action){
  match.talk=[match.opponent].map(person=>{const line=sportLine(person,type,action);return {person,player:line.player,reply:line.reply};});
  match.talkLife=15;match.talkSequence=(match.talkSequence||0)+1;
 }
-function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<div class="talk-line">'+portraitHTML(line.person,52)+'<p><b>'+escapeHTML(sportName(line.person))+'</b><small>Você: '+escapeHTML(line.player)+'</small>'+escapeHTML(line.reply)+'</p></div>').join('')+'</div>':'';}
+function sportTalkHTML(match){return match?.talk?.length?'<div class="sport-talk" aria-live="polite">'+match.talk.map(line=>'<div class="talk-line">'+portraitFromSprite(avatarSprite(),52)+'<p><b>'+escapeHTML(avatarName())+'</b>'+escapeHTML(line.player)+'</p></div><div class="talk-line">'+portraitHTML(line.person,52)+'<p><b>'+escapeHTML(sportName(line.person))+'</b>'+escapeHTML(line.reply)+'</p></div>').join('')+'</div>':'';}
 function sportTalkTick(dt){
  const match=G.bocce||G.game;if(!match||document.hidden||match.paused||!match.talkLife)return;
  match.talkLife=Math.max(0,match.talkLife-dt);
@@ -28,7 +28,7 @@ function sportTalkTick(dt){
 function placeBocceTalk(){const c=$('bocceCanvas'),box=$('bocceTalkUI');if(!c||!box||innerWidth<=750)return;const cw=c.clientWidth,ch=c.clientHeight,k=Math.min(cw/1672,ch/941);box.style.bottom=Math.max(8,(ch-941*k)/2+14)+'px';box.style.right=Math.max(8,(cw-1672*k)/2+16)+'px';}
 addEventListener('resize',placeBocceTalk);
 function updateBocceTalk(){placeBocceTalk();const b=G.bocce,line=b&&b.talkLife>0&&b.talk?.[0];showRpgBox('bocceTalk',line&&{person:line.person,name:sportName(line.person)+(PEOPLE[line.person]?.id==='lauro'?' Boleador':''),player:line.player,reply:line.reply});}
-function bocceTalkClick(){if(rpgTyping('bocceTalk')){finishRpgTyping('bocceTalk');return;}const b=G.bocce;if(b){b.talkLife=0;b.talk=[];}updateBocceTalk();}
+function bocceTalkClick(){if(rpgAdvance('bocceTalk'))return;const b=G.bocce;if(b){b.talkLife=0;b.talk=[];}updateBocceTalk();}
 function updateBocceSocial(){
  const b=G.bocce,host=$('bocceSocial');if(!b||!host)return;
  $('bocceMatchUI').classList.toggle('guided',!!b.tutorial);

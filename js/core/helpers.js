@@ -49,6 +49,15 @@ function snackPool(){return ['codorna','pepino','salame','amendoim'].filter(k=>u
 
 function drinkPool(){return ['refri','cerveja','cachaca','cafe','bitter'].filter(unlocked);}
 
+// Preferências de cada especial: sem álcool, sem bebida nenhuma ou chopp sempre que der.
+const DRINKS=['refri','cerveja','cachaca','cafe','bitter'],ALCOHOL=['cerveja','cachaca','bitter'];
+function fitOrder(person,key){
+ const p=PEOPLE[person];if(!p||!key)return key;
+ if(p.noDrinks&&(DRINKS.includes(key)||key==='cigarro')){const food=snackPool();return food.length?pick(food):'codorna';}
+ if(p.noAlcohol&&ALCOHOL.includes(key))return 'refri';
+ if(p.lovesChopp&&DRINKS.includes(key)&&unlocked('cerveja')&&Math.random()<.85)return 'cerveja';
+ return key;
+}
 function drinksForGroup(g){return G.event.id==='campeonato'?alcoholPool():drinkPool();}
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}

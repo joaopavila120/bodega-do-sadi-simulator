@@ -1845,4 +1845,1326 @@ Perdi o truco… | Bah, partida boa! Mas a vitória é minha.
 Foi tua… | Venci, vivente. Revanche quando quiser.
 Perdi… | Ganhei! Toca outra, Mano Lima!
 Tu ganhou… | Não fica triste, até no M'Bororé eu ganho.
+
+[dianho]
+E aí, quem é tu? | É os guri! Dianho, gângster de galpão, direto de Santa Cruz do Sul. Tá todo Nicolas Cagezinho esse lugar!
+Que história é essa de Nicolas Cagezinho? | Era verão, eu tava bronzeado, de chapéu, cabelo penteado… me achei bonitão. Pronto: todo Nicolas Cagezinho!
+Por que Dianho? | No serviço da estrada eu não lembrava o nome de ninguém, chamava todo mundo de dianho. Aí o apelido voltou pra mim, hehehe.
+Vai uma cerveja? | Não, não! Álcool eu não tomo. Me dá um refri bem gelado que o gângster de galpão tá na dieta da cabeça boa.
+O que tu faz da vida? | Reformo galpão, cuido da roça, viajo e filmo tudo. O povo gosta de ver o Dianho martelando torto, hehehe.
+E essa revoada? | Revoada dos cupinxa, rapaz! Quando junta os guri tudo, é revoada. Ninguém segura.
+Tu é famoso mesmo? | Sou ídolo na Irlanda do Norte! Lá eles não sabem quem eu sou, mas eu sei que sou ídolo, hehehe.
+Gostou da bodega? | Galpão bonito assim dá até vontade de trocar uma tábua só por esporte. Tá todo Nicolas Cagezinho!
+Como tá a roça? | A roça tá linda! Plantei, reguei, filmei. Agora é só esperar o milho virar celebridade.
+Vai um xis? | Vai! Capricha que o gângster de galpão tá com fome de reforma. E um refri, que é os guri!
+
+[dianho.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | É os guri! Bora pra cancha que o gângster de galpão chegou.
+Vamos jogar uma bocha? | Bocha? Tô todo Nicolas Cagezinho pra isso, hehehe.
+Topa uma partida? | Revoada dos cupinxa na cancha! Bora!
+Vamos de bocha? | Bora, mas sem cerveja que eu tô no refri.
+Bora ver quem é bom de bocha? | Já vou avisando: na Irlanda do Norte eu sou campeão de bocha.
+Bora pra cancha? | Bora! Joguei bocha no galpão lá de casa, com tábua de reforma.
+Vamos jogar uma bocha? | Gângster de galpão não recusa desafio, rapaz.
+Topa uma partida? | Vamos! Só deixa eu ajeitar o chapéu primeiro.
+Vamos de bocha? | É os guri! Prepara que eu vim de Santa Cruz pra isso.
+Bora ver quem é bom de bocha? | Partida? Bora, que eu tô bronzeado e confiante, hehehe.
+
+[dianho.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira reto que nem tábua nova.
+Tá boa essa mira? | Mira no bolim, rapaz, não no meu chapéu.
+E essa direção? | Essa direção tá todo Nicolas Cagezinho!
+Mirando no bolim… | Mira igual eu miro o prego: com fé.
+Pra onde eu miro? | Um pouquinho pra esquerda… isso, gângster!
+Tá boa essa mira? | Tá mirando melhor que eu martelando, hehehe.
+E essa direção? | Mira com calma, que pressa é coisa de quem não tem galpão.
+Mirando no bolim… | Olha o bolim lá, parece um cupinxa esperando.
+Pra onde eu miro? | Direção boa! Os guri tão olhando.
+Tá boa essa mira? | Se errar, a gente diz que foi o vento da Irlanda.
+
+[dianho.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de quem carrega saco de cimento.
+Vou com tudo? | Devagarinho, que bocha não é marreta, hehehe.
+Devagar ou forte? | Com tudo não, que tu derruba o galpão!
+E agora, a força? | Força média, igual reforma de domingo.
+Quanta força? | Vai na manha, gângster.
+Vou com tudo? | Forte demais e a bocha vai pra Irlanda do Norte.
+Devagar ou forte? | Meio termo, rapaz. Equilíbrio de galpão.
+E agora, a força? | Solta firme, mas com estilo Nicolas Cage.
+Quanta força? | Força de quem acorda cedo pra roça.
+Vou com tudo? | Dosa bem, que os guri tão filmando.
+
+[dianho.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Ó lá! Todo Nicolas Cagezinho esse lançamento!
+Que tal essa? | Hehehe, essa foi bonita!
+Foi bem? | Lançamento de gângster de galpão.
+E aí? | É os guri! Vai pro vídeo essa.
+Viu o lançamento? | Que curva, rapaz!
+Que tal essa? | Essa até a Irlanda do Norte aplaudiu.
+Foi bem? | Lançou bonito, igual eu pintando parede.
+E aí? | Hehehe, foi meio torta, mas tem charme.
+Viu o lançamento? | Revoada dos cupinxa na cancha!
+Que tal essa? | Essa merece um refri de comemoração.
+
+[dianho.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Tá grudada que nem massa corrida.
+Ficou perto? | Pertinho, rapaz! Hehehe.
+Tá colada no bolim? | Coladinha no bolim, todo Nicolas Cagezinho.
+E essa? | Essa ficou mais perto que vizinho fofoqueiro.
+Encostou? | Ó lá, encostou de leve!
+Ficou perto? | Pertinho igual os guri na revoada.
+Tá colada no bolim? | Ficou perto! Vou até tirar o chapéu.
+E essa? | Encostou bonita, gângster!
+Encostou? | Tá colada! Nem prego segura assim.
+Ficou perto? | Essa foi de profissional da Irlanda.
+
+[dianho.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! É os guri!
+Quem levou essa? | Essa rodada vai pro vídeo, hehehe.
+Próxima rodada? | Próxima! O gângster tá só esquentando.
+E a rodada? | Rodada bonita, rapaz.
+Fechou a rodada! | Fechou! Me passa um refri pra comemorar.
+Quem levou essa? | Essa foi dos cupinxa.
+Próxima rodada? | Rodada de galpão: rápida e barulhenta.
+E a rodada? | Bora a próxima, que eu tô todo Nicolas Cagezinho.
+Fechou a rodada! | Rodada encerrada, cabelo ainda penteado.
+Quem levou essa? | Hehehe, essa foi boa!
+
+[dianho.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhou do gângster de galpão? Respeito, rapaz!
+Venci! | Hehehe, perdi! Vou dizer que foi o chapéu.
+Foi minha! | Tu ganhou! Tá mais Nicolas Cagezinho que eu hoje.
+Ganhei a partida! | Perdi, mas na Irlanda do Norte ninguém vai saber.
+Ganhei! | Bah, vitória tua! Os guri vão rir de mim.
+Venci! | Ganhou bonito. Revanche depois da reforma.
+Foi minha! | Perdi! Vou treinar no galpão lá de casa.
+Ganhei a partida! | É os guri… menos eu hoje, hehehe.
+Ganhei! | Parabéns! Te dou um refri de prêmio.
+Venci! | Venceu o gângster. Tá liberado pra revoada.
+
+[dianho.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! É os guri!
+Tu ganhou… | Hehehe, vitória do gângster de galpão!
+Foi tua… | Ganhei todo Nicolas Cagezinho!
+Perdi a partida… | Vitória! Vai pro vídeo e pra Irlanda do Norte.
+Perdi… | Revoada dos cupinxa comemorando!
+Tu ganhou… | Ganhei, rapaz! Mas jogou bonito.
+Foi tua… | O galpão é meu hoje, hehehe.
+Perdi a partida… | Vitória com refri na mão. Sem álcool e com estilo.
+Perdi… | Ganhei! Ajeita o chapéu que o campeão passou.
+Tu ganhou… | É os guri! Bocha é comigo.
+
+[dianho.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? É os guri! Embaralha aí.
+Vamos de truco? | Bora, mas o meu é refri, hein.
+Topa uma mão? | Gângster de galpão também joga carta, rapaz.
+Embaralha aí? | Vamos! Tô todo Nicolas Cagezinho pra blefar.
+Bora um truco? | Truco com os cupinxa é revoada certa.
+Vamos de truco? | Embaralha que eu já tô rindo, hehehe.
+Topa uma mão? | Bora uma mão, que a reforma pode esperar.
+Embaralha aí? | Truco? Na Irlanda do Norte me chamam de rei do truco.
+Bora um truco? | Topo! Só não me rouba que eu vejo tudo.
+Vamos de truco? | É os guri! Distribui essas carta.
+
+[dianho.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei! Hehehe.
+Tua vez! | Essa carta tá todo Nicolas Cagezinho.
+E essa carta? | Lá vai, gângster.
+Vai, joga! | Carta de quem reforma galpão: firme.
+Joga aí! | Ó essa! Não vale chorar.
+Tua vez! | Joguei a do meio, que é a mais bonita.
+E essa carta? | Essa é dos cupinxa.
+Vai, joga! | Hehehe, nem eu sei se é boa.
+Joga aí! | Vai essa, rapaz!
+Tua vez! | Carta na mesa e refri na mão.
+
+[dianho.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? Hehehe, quero ver!
+Truco nele! | Truco no gângster? Coragem!
+Vai um truco? | Bah, truco! Os guri tão olhando.
+Truco, tchê! | Tá blefando, rapaz? Tá na cara.
+TRUCO! | Truco é revoada de emoção!
+Truco nele! | Ui, truco! Deixa eu ajeitar o chapéu.
+Vai um truco? | Truco pra cima do Dianho? Hehehe.
+Truco, tchê! | Essa eu penso… penso… pensei.
+TRUCO! | Truco! Agora ficou bom.
+Truco nele! | É os guri! Truco na mesa.
+
+[dianho.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou! Corajoso, hehehe.
+Quero! | Topou? Então segura, gângster.
+Topo o truco! | Aceitou o truco, tá todo Nicolas Cagezinho.
+Aceito, bora! | Bora! Vale mais agora.
+Aceito! | Hehehe, quero ver essa carta.
+Quero! | Aceitou, os cupinxa aplaudem.
+Topo o truco! | Topou! Vai ter revoada.
+Aceito, bora! | Aceitou bonito, rapaz.
+Aceito! | Então vale, é os guri!
+Quero! | Aceitou! Agora não tem volta.
+
+[dianho.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu? Hehehe, mais rápido que eu fugindo de reforma.
+Essa eu corro. | Correu do gângster!
+Não quero… | Ui, fugiu! Os guri viram.
+Tô fora dessa. | Correu, mas com estilo.
+Corro… | Hehehe, tava com medo, rapaz?
+Essa eu corro. | Correu pra Irlanda do Norte.
+Não quero… | Fugiu da revoada!
+Tô fora dessa. | Tudo bem, correr também é estratégia.
+Corro… | Correu! Ponto pro Dianho.
+Essa eu corro. | Hehehe, essa foi rápida.
+
+[dianho.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada! É os guri.
+Quem levou? | Hehehe, essa mão foi boa.
+Próxima mão? | Próxima! Tô esquentando.
+E essa mão? | Essa vai pro vídeo.
+Fechou a mão! | Fechou a mão, rapaz.
+Quem levou? | Mão de gângster de galpão.
+Próxima mão? | Bora a próxima, que eu tô com sorte.
+E essa mão? | Hehehe, rodada bonita.
+Fechou a mão! | Essa foi dos cupinxa.
+Quem levou? | Mão encerrada, chapéu no lugar.
+
+[dianho.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi pro Sadi! Hehehe, revanche!
+Venci o truco! | Ganhou do gângster, respeito.
+Foi minha! | Tu ganhou! Vou culpar o refri.
+Ganhei a partida! | Perdi, mas tô todo Nicolas Cagezinho igual.
+Ganhei! | Bah, vitória tua, rapaz!
+Venci o truco! | Ganhou bonito. Os guri vão rir.
+Foi minha! | Perdi! Na Irlanda do Norte eu ganho.
+Ganhei a partida! | É os guri… menos eu.
+Ganhei! | Parabéns! Revoada pra ti.
+Venci o truco! | Venceu! Agora me deve um xis.
+
+[dianho.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! É os guri!
+Tu ganhou… | Hehehe, o gângster venceu!
+Foi tua… | Vitória todo Nicolas Cagezinho!
+Perdi o truco… | Ganhei, rapaz! Mas tu jogou bem.
+Perdi… | Revoada dos cupinxa comemorando!
+Tu ganhou… | Ganhei com refri na mão.
+Foi tua… | Truco é comigo, hehehe.
+Perdi o truco… | Vitória! Vai pro vídeo.
+Perdi… | Ganhei! Ajeita o chapéu.
+Tu ganhou… | É os guri! Ganhei a partida.
+
+[mitodosul]
+Quem é tu? | Mito do Sul, streamer! Gameplay de Farming Simulator, My Summer Car e o que o chat mandar. Manda um salve pra bodega!
+Vai uma bebida? | Não, valeu! Hoje é só comida. Bebida eu deixo pros personagens do jogo.
+Que jogo tu joga? | Farming Simulator, principalmente. Já plantei mais soja virtual que muito produtor de verdade.
+E o My Summer Car? | Ah, esse é sofrimento! Montar carro peça por peça e ver ele pegar fogo na primeira curva. O chat adora.
+Quando são as lives? | Quarta, sexta e domingo, às 20h. Se tiver jogo do Grêmio, a live vira resenha.
+Tu é gremista? | Gremista roxo… quer dizer, azul! O chat sabe: se o Grêmio ganha, a live vai até tarde.
+Gostou da bodega? | Bah, daria um mapa ótimo pro Farming! Galpão, campo, curral… só falta o trator.
+Vai um xis? | Vai! Xis é combustível de streamer. E capricha, que o chat tá olhando.
+O que o chat pediu hoje? | Pediram pra eu comer um xis em live. Missão aceita!
+Tu é mito mesmo? | O nome é Mito do Sul, mas quem decide é o chat. Hoje eles tão me chamando de mito da bodega.
+
+[mitodosul.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bora! Vou avisar o chat que tem bocha.
+Vamos jogar uma bocha? | Bocha? Nunca joguei fora do videogame, mas bora!
+Topa uma partida? | Bora, o chat tá torcendo por mim.
+Vamos de bocha? | Desafio aceito! Salve, bodega!
+Bora ver quem é bom de bocha? | Bocha ao vivo? O chat vai amar.
+Bora pra cancha? | Vamos! Igual Farming: calma e paciência.
+Vamos jogar uma bocha? | Bora pra cancha, que mito não foge de desafio.
+Topa uma partida? | Topo! Mas se eu perder, foi lag.
+Vamos de bocha? | Vamos de bocha, que o Grêmio jogou ontem e tô animado.
+Bora ver quem é bom de bocha? | Bora! Hoje a live é na cancha.
+
+[mitodosul.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira como quem alinha plantadeira.
+Tá boa essa mira? | O chat tá gritando: mais pra direita!
+E essa direção? | Mira no bolim, não na câmera.
+Mirando no bolim… | Direção boa! Até o chat aprovou.
+Pra onde eu miro? | Mira com calma, sem lag.
+Tá boa essa mira? | Tá mirando melhor que meu trator no Farming.
+E essa direção? | Um pouquinho pro lado… isso!
+Mirando no bolim… | Mira azul, que dá sorte de gremista.
+Pra onde eu miro? | Direção de mito, hein!
+Tá boa essa mira? | Se errar, é bug da cancha.
+
+[mitodosul.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de trator em subida.
+Vou com tudo? | Devagar, que bocha não é corrida de My Summer Car.
+Devagar ou forte? | Força média, igual colheita no início.
+E agora, a força? | Com tudo não! A bocha voa pro mapa vizinho.
+Quanta força? | O chat pediu força total… não escuta o chat.
+Vou com tudo? | Dosa bem, igual adubo na lavoura.
+Devagar ou forte? | Solta firme, com fé no Grêmio.
+E agora, a força? | Força de quem joga há horas sem pausa.
+Quanta força? | Meio termo, streamer.
+Vou com tudo? | Vai com calma que a live é longa.
+
+[mitodosul.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Clipa essa! Que lançamento!
+Que tal essa? | O chat foi à loucura!
+Foi bem? | Essa vai pros melhores momentos.
+E aí? | Lançamento de mito!
+Viu o lançamento? | Que curva! Parecia física de jogo.
+Que tal essa? | Essa foi digna de vídeo de segunda.
+Foi bem? | Bah, o chat tá spammando emoji!
+E aí? | Lançou bonito! GG.
+Viu o lançamento? | Essa foi de jogador profissional.
+Que tal essa? | Até o Grêmio queria esse lançamento.
+
+[mitodosul.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Clipa, clipa!
+Ficou perto? | Pertinho! O chat ficou sem ar.
+Tá colada no bolim? | Coladinha no bolim, que nem conquista rara.
+E essa? | Essa foi perfeita, sem lag.
+Encostou? | Encostou bonito! Mito!
+Ficou perto? | Ficou perto! Isso vai pro TikTok.
+Tá colada no bolim? | Tá colada! Até parece trapaça.
+E essa? | Pertinho, igual o Grêmio da Libertadores.
+Encostou? | Encostou! O chat pede replay.
+Ficou perto? | Essa foi na medida.
+
+[mitodosul.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! GG.
+Quem levou essa? | Próxima! O chat quer mais.
+Próxima rodada? | Essa rodada vai pro vídeo.
+E a rodada? | Rodada boa, igual safra cheia.
+Fechou a rodada! | Fechou! Respira e bora.
+Quem levou essa? | Rodada de mito.
+Próxima rodada? | O chat tá dividido nessa.
+E a rodada? | Próxima rodada, sem pausa pro anúncio.
+Fechou a rodada! | Rodada encerrada, live continua.
+Quem levou essa? | Essa foi emocionante!
+
+[mitodosul.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Vou culpar o lag.
+Venci! | Ganhou do Mito! O chat tá rindo de mim.
+Foi minha! | GG, tu jogou muito.
+Ganhei a partida! | Perdi, mas vai dar um vídeo ótimo.
+Ganhei! | Tu ganhou! Revanche na próxima live.
+Venci! | Bah, derrota ao vivo… o chat não perdoa.
+Foi minha! | Ganhou bonito. Respeito!
+Ganhei a partida! | Perdi! Volto pro Farming, que lá eu mando.
+Ganhei! | Vitória tua! Salve pro campeão.
+Venci! | GG! Bocha de verdade é mais difícil que no jogo.
+
+[mitodosul.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Clipa isso, chat!
+Tu ganhou… | GG! Vitória do Mito do Sul!
+Foi tua… | Ganhei! Igual o Grêmio em final.
+Perdi a partida… | Vitória ao vivo! O chat foi à loucura.
+Perdi… | Ganhei, mas tu jogou bem. GG.
+Tu ganhou… | Mito é mito, hein!
+Foi tua… | Vitória! Isso vai pro vídeo de sexta.
+Perdi a partida… | Ganhei sem lag e sem bug.
+Perdi… | GG! Revanche quando quiser.
+Tu ganhou… | Ganhei! Salve, bodega!
+
+[mitodosul.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? Bora, o chat ama carta.
+Vamos de truco? | Embaralha aí, streamer pronto.
+Topa uma mão? | Topo uma mão! Sem trapaça, hein.
+Embaralha aí? | Vamos de truco, que o chat tá apostando em mim.
+Bora um truco? | Bora! Já joguei truco online, deve ser igual.
+Vamos de truco? | Truco ao vivo? Clássico!
+Topa uma mão? | Vamos! Mas o meu pedido é só xis.
+Embaralha aí? | Bora uma mão, que a live tá parada.
+Bora um truco? | Topo! O Grêmio me dá sorte.
+Vamos de truco? | Truco? Mito não corre.
+
+[mitodosul.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei! O chat aprovou.
+Tua vez! | Essa carta é rara, hein.
+E essa carta? | Lá vai, sem lag.
+Vai, joga! | Carta de mito.
+Joga aí! | Joguei a do meio, estratégia de streamer.
+Tua vez! | Ó essa! Clipa.
+E essa carta? | Essa é boa… eu acho.
+Vai, joga! | Carta na mesa, olho no chat.
+Joga aí! | Vai essa, GG.
+Tua vez! | Joguei rápido igual speedrun.
+
+[mitodosul.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? O chat enlouqueceu!
+Truco nele! | Truco no Mito? Coragem!
+Vai um truco? | Bah, truco! Deixa eu ver o chat.
+Truco, tchê! | Tá blefando? O chat acha que sim.
+TRUCO! | Truco! Agora ficou épico.
+Truco nele! | Ui, truco! Pausa dramática.
+Vai um truco? | Truco pra cima do streamer? Hm…
+Truco, tchê! | Essa eu penso… o chat tá votando.
+TRUCO! | Truco! Isso vai pro vídeo.
+Truco nele! | Truco, tchê! GG.
+
+[mitodosul.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou! Coragem, hein.
+Quero! | Topou! O chat aprovou.
+Topo o truco! | Aceitou o truco, agora vale mais.
+Aceito, bora! | Bora! Ninguém foge na live.
+Aceito! | Aceitou bonito.
+Quero! | Topou! Clipa essa mão.
+Topo o truco! | Aceitou, agora é decisão.
+Aceito, bora! | Então vale! GG.
+Aceito! | Aceitou! O chat tá nervoso.
+Quero! | Bora! Vamos ver quem é mito.
+
+[mitodosul.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu? O chat tá rindo.
+Essa eu corro. | Fugiu do Mito!
+Não quero… | Correu, mas foi estratégia… né?
+Tô fora dessa. | Ui, correu! Clipado.
+Corro… | Correu mais rápido que carro no My Summer Car.
+Essa eu corro. | Tudo bem, às vezes tem que recuar.
+Não quero… | Correu! Ponto pro streamer.
+Tô fora dessa. | Fugiu da live!
+Corro… | Correu, o chat viu tudo.
+Essa eu corro. | GG, correu bonito.
+
+[mitodosul.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada! GG.
+Quem levou? | Próxima! O chat quer mais.
+Próxima mão? | Essa mão foi épica.
+E essa mão? | Fechou! Respira.
+Fechou a mão! | Mão de mito.
+Quem levou? | Bora a próxima, sem anúncio.
+Próxima mão? | Essa vai pros melhores momentos.
+E essa mão? | Mão encerrada, live segue.
+Fechou a mão! | Que mão, hein!
+Quem levou? | Próxima mão, chat!
+
+[mitodosul.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Vou culpar o lag.
+Venci o truco! | Ganhou do Mito, respeito.
+Foi minha! | GG, tu é bom de carta.
+Ganhei a partida! | Perdi ao vivo… o chat não perdoa.
+Ganhei! | Tu ganhou! Revanche na live de sexta.
+Venci o truco! | Bah, derrota! Vai dar um vídeo bom.
+Foi minha! | Ganhou bonito. GG.
+Ganhei a partida! | Perdi! Volto pro Farming.
+Ganhei! | Vitória tua, salve!
+Venci o truco! | GG! Truco de verdade é outro nível.
+
+[mitodosul.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Clipa, chat!
+Tu ganhou… | GG! Vitória do Mito do Sul!
+Foi tua… | Ganhei igual o Grêmio em final.
+Perdi o truco… | Vitória ao vivo!
+Perdi… | Ganhei, mas foi parelho. GG.
+Tu ganhou… | Mito é mito!
+Foi tua… | Vitória! Vai pro vídeo.
+Perdi o truco… | Ganhei sem bug.
+Perdi… | GG! Revanche quando quiser.
+Tu ganhou… | Ganhei! Salve, bodega!
+
+[loligebien]
+Quem é tu? | Loli Gebien, o jovem alemão de Pomerode! Prosit! Me vê um chopp bem gelado, ja?
+Que tamancos são esses? | Tamancos de madeira, ja! Fiquei famoso na Festa do Imigrante em Timbó por causa deles. Fazem toc-toc bonito.
+Vai um chopp? | Ja, ja! Um chopp. E depois outro chopp. E depois a gente vê, ja.
+Como tá Pomerode? | A cidade mais alemã do Brasil! Lá até o cachorro late com sotaque, ja.
+Tu conhece o Indavírus? | Ja! O Gustavo e o Lauro vivem lá em casa fazendo vídeo. O Lauro quebrou uma cadeira minha, ja.
+O que tu gosta de comer? | Salsicha, chucrute, cuca… e xis! Xis com chopp é Gemütlichkeit, ja.
+O que é Gemütlichkeit? | É aquele aconchego bom: mesa cheia, chopp gelado, amigo do lado. Igual tua bodega, ja.
+Tu trabalha com o quê? | Já trabalhei no açougue! Sei cortar carne melhor que muito churrasqueiro, ja.
+Gostou da bodega? | Ja! Só falta uma bandinha alemã e um barril de chopp maior. Prosit!
+Mais um chopp? | Ja, bitte! Chopp nunca é demais pra alemão de Santa Catarina.
+
+[loligebien.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Ja! Bocha e chopp, combinação perfeita.
+Vamos jogar uma bocha? | Bora! Mas primeiro um chopp, ja.
+Topa uma partida? | Prosit! Bora pra cancha.
+Vamos de bocha? | Bocha? Em Pomerode a gente joga com chopp na mão.
+Bora ver quem é bom de bocha? | Vamos, ja! Os tamancos tão prontos.
+Bora pra cancha? | Bora! Toc-toc, lá vou eu.
+Vamos jogar uma bocha? | Ja, ja! Partida de alemão é séria.
+Topa uma partida? | Vamos jogar! Depois a gente comemora com chopp.
+Vamos de bocha? | Bora, que eu treinei na Festa do Imigrante.
+Bora ver quem é bom de bocha? | Bocha? Ja! Prosit!
+
+[loligebien.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira reto, igual fila de chopp.
+Tá boa essa mira? | Mira no bolim, ja, não no barril.
+E essa direção? | Direção boa! Prosit!
+Mirando no bolim… | Mais pra esquerda… ja, isso!
+Pra onde eu miro? | Mira com calma, alemão não tem pressa.
+Tá boa essa mira? | Tá mirando bonito, ja.
+E essa direção? | Mira igual corte de açougue: preciso.
+Mirando no bolim… | Direção de Pomerode!
+Pra onde eu miro? | Ja, ja, tá bom assim.
+Tá boa essa mira? | Se errar, a culpa é do chopp.
+
+[loligebien.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de quem carrega barril.
+Vou com tudo? | Devagar, ja! Bocha não é chope derramado.
+Devagar ou forte? | Força média, igual dança de Oktoberfest.
+E agora, a força? | Com tudo não, que os tamancos escorregam.
+Quanta força? | Dosa bem, ja.
+Vou com tudo? | Força de açougueiro, mas com carinho.
+Devagar ou forte? | Solta firme, prosit!
+E agora, a força? | Meio termo, alemão é equilibrado.
+Quanta força? | Vai com calma, ja.
+Vou com tudo? | Força certa, igual chopp na medida.
+
+[loligebien.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Prosit! Que lançamento!
+Que tal essa? | Ja, ja! Essa foi bonita.
+Foi bem? | Lançou igual alemão: com precisão.
+E aí? | Toc-toc! Os tamancos aplaudiram.
+Viu o lançamento? | Essa merece um chopp.
+Que tal essa? | Que curva, ja!
+Foi bem? | Lançamento de Festa do Imigrante.
+E aí? | Bonito! Ja!
+Viu o lançamento? | Essa foi de mestre cervejeiro.
+Que tal essa? | Prosit pra essa jogada!
+
+[loligebien.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Prosit!
+Ficou perto? | Pertinho, ja!
+Tá colada no bolim? | Coladinha, igual espuma no chopp.
+E essa? | Ja, ja, encostou bonito!
+Encostou? | Essa ficou perto, ja.
+Ficou perto? | Encostou! Isso pede um chopp.
+Tá colada no bolim? | Tá colada, igual salsicha no pão.
+E essa? | Pertinho, alemão aprova.
+Encostou? | Encostou de leve, ja.
+Ficou perto? | Essa foi perfeita, prosit!
+
+[loligebien.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! Prosit!
+Quem levou essa? | Próxima, ja! Depois do chopp.
+Próxima rodada? | Essa rodada foi boa, ja.
+E a rodada? | Fechou! Hora de um gole.
+Fechou a rodada! | Rodada de alemão: certinha.
+Quem levou essa? | Ja, ja, bora a próxima.
+Próxima rodada? | Rodada encerrada, chopp na mão.
+E a rodada? | Essa foi Gemütlichkeit.
+Fechou a rodada! | Próxima rodada, toc-toc!
+Quem levou essa? | Prosit pra rodada!
+
+[loligebien.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Ja… mais um chopp pra esquecer.
+Venci! | Tu ganhou! Prosit pra ti.
+Foi minha! | Bah, perdi! Culpa dos tamancos.
+Ganhei a partida! | Ganhou do alemão, respeito, ja.
+Ganhei! | Perdi, mas o chopp tá bom.
+Venci! | Vitória tua! Revanche em Pomerode.
+Foi minha! | Ja, ja, tu é bom.
+Ganhei a partida! | Perdi! Vou contar pro Lauro, ele vai rir.
+Ganhei! | Parabéns! Te pago um chopp.
+Venci! | Tu ganhou. Prosit, campeão!
+
+[loligebien.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Prosit!
+Tu ganhou… | Ja! Vitória do alemão!
+Foi tua… | Ganhei, ja! Chopp pra comemorar.
+Perdi a partida… | Toc-toc! Os tamancos venceram.
+Perdi… | Vitória de Pomerode!
+Tu ganhou… | Ganhei! Mas tu jogou bem, ja.
+Foi tua… | Prosit pra minha vitória!
+Perdi a partida… | Ganhei, igual na Festa do Imigrante.
+Perdi… | Vitória! Mais um chopp, bitte.
+Tu ganhou… | Ja, ja! Bocha é comigo.
+
+[loligebien.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? Ja! Mas primeiro um chopp.
+Vamos de truco? | Bora, prosit!
+Topa uma mão? | Embaralha aí, alemão pronto.
+Embaralha aí? | Vamos de truco, ja!
+Bora um truco? | Topo! Em Pomerode a gente joga escopa, mas truco eu aprendo.
+Vamos de truco? | Bora uma mão, ja.
+Topa uma mão? | Truco e chopp, perfeito!
+Embaralha aí? | Vamos! Toc-toc, puxa a cadeira.
+Bora um truco? | Ja, ja, distribui.
+Vamos de truco? | Truco? Prosit!
+
+[loligebien.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei! Ja.
+Tua vez! | Essa carta é boa, ja.
+E essa carta? | Lá vai, prosit!
+Vai, joga! | Carta de alemão: certeira.
+Joga aí! | Joguei a do meio, ja.
+Tua vez! | Ó essa! Ja, ja.
+E essa carta? | Essa é de Pomerode.
+Vai, joga! | Joguei, agora um gole.
+Joga aí! | Vai essa, ja!
+Tua vez! | Carta na mesa, chopp na mão.
+
+[loligebien.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? Ja, ja!
+Truco nele! | Truco no alemão? Coragem!
+Vai um truco? | Bah, truco! Deixa eu tomar um gole.
+Truco, tchê! | Tá blefando, ja?
+TRUCO! | Truco! Agora ficou bom.
+Truco nele! | Ui, truco! Prosit!
+Vai um truco? | Truco pra cima do Loli? Hm…
+Truco, tchê! | Essa eu penso, ja.
+TRUCO! | Truco! Os tamancos tremeram.
+Truco nele! | Truco, ja!
+
+[loligebien.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou! Ja!
+Quero! | Topou, prosit!
+Topo o truco! | Aceitou, agora vale mais, ja.
+Aceito, bora! | Bora! Alemão não foge.
+Aceito! | Aceitou bonito.
+Quero! | Topou! Ja, ja.
+Topo o truco! | Aceitou, chopp na mão.
+Aceito, bora! | Então vale, ja!
+Aceito! | Aceitou! Prosit pra coragem.
+Quero! | Bora, ja!
+
+[loligebien.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu? Ja, ja!
+Essa eu corro. | Fugiu do alemão!
+Não quero… | Correu, mas com educação, ja.
+Tô fora dessa. | Ui, correu! Prosit.
+Corro… | Correu igual chopp derramado.
+Essa eu corro. | Tudo bem, ja.
+Não quero… | Correu! Ponto pra Pomerode.
+Tô fora dessa. | Fugiu, ja!
+Corro… | Correu, os tamancos viram.
+Essa eu corro. | Ja, ja, correu.
+
+[loligebien.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada! Prosit!
+Quem levou? | Próxima, ja!
+Próxima mão? | Essa mão foi boa.
+E essa mão? | Fechou! Um gole.
+Fechou a mão! | Mão de alemão.
+Quem levou? | Bora a próxima, ja.
+Próxima mão? | Mão encerrada, chopp na mão.
+E essa mão? | Ja, ja, que mão!
+Fechou a mão! | Essa foi Gemütlichkeit.
+Quem levou? | Próxima mão, prosit!
+
+[loligebien.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Mais um chopp, bitte.
+Venci o truco! | Tu ganhou, prosit!
+Foi minha! | Bah, perdi, ja.
+Ganhei a partida! | Ganhou do alemão!
+Ganhei! | Perdi, mas o chopp consola.
+Venci o truco! | Vitória tua, ja!
+Foi minha! | Ja, ja, tu é bom.
+Ganhei a partida! | Perdi! Revanche em Pomerode.
+Ganhei! | Parabéns! Chopp por minha conta.
+Venci o truco! | Tu ganhou, prosit!
+
+[loligebien.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Prosit!
+Tu ganhou… | Ja! Vitória do alemão!
+Foi tua… | Ganhei, chopp pra comemorar.
+Perdi o truco… | Toc-toc! Venci.
+Perdi… | Vitória de Pomerode!
+Tu ganhou… | Ganhei, ja! Jogou bem.
+Foi tua… | Prosit pra vitória!
+Perdi o truco… | Ganhei, igual na Festa do Imigrante.
+Perdi… | Vitória! Mais um chopp.
+Tu ganhou… | Ja, ja! Truco é comigo.
+
+[jayme]
+Quem é o senhor? | Jayme Caetano Braun, pajador de Bossoroca. Não toco instrumento: o meu verso é a gaita que eu tenho.
+O que é payada? | É verso de improviso, vivente, nascido na hora, cru como o vento do pampa e quente como o fogo de chão.
+Me fala um verso? | “Neste galpão de madeira, onde o tempo fez morada, a bodega acordada tem prosa a noite inteira.”
+De onde o senhor é? | De Bossoroca, nas Missões. Terra de chão vermelho e gente que fala pouco e diz muito.
+O senhor fez rádio? | Fiz, na Rádio Guaíba, muitos anos. O verso andava no ar e pousava em cada rancho do Rio Grande.
+Vai um mate? | Mate sim, que o mate é o primeiro verso do dia. Amargo, pra não mentir o gosto.
+Gostou da bodega? | Galpão que volta a ter gente é poema que a vida reescreve. Teu vô ia se orgulhar.
+O que é ser gaúcho? | É carregar o pampa por dentro, mesmo longe dele. É ter querência até em pensamento.
+Vai um xis? | Que venha! Até o pajador precisa de sustância pra rimar.
+O senhor tem pressa? | Pajador não tem pressa, tem compasso. O verso chega na hora que o coração deixa.
+
+[jayme.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bocha e verso, vivente: os dois pedem mira e paciência.
+Vamos jogar uma bocha? | Vamos à cancha, que a bocha também é pajada.
+Topa uma partida? | Topo! E se eu perder, faço verso da derrota.
+Vamos de bocha? | Bora, que o chão da cancha tem rima.
+Bora ver quem é bom de bocha? | Vamos, vivente! Bocha é conversa sem palavra.
+Bora pra cancha? | Aceito, e prometo jogar como quem pala: devagar e certo.
+Vamos jogar uma bocha? | Bora! O bolim é a rima que a gente busca.
+Topa uma partida? | Vamos, que o dia está bom pra pajada e pra bocha.
+Vamos de bocha? | Partida aceita, de coração gaúcho.
+Bora ver quem é bom de bocha? | Bora, que bocha de galpão é tradição.
+
+[jayme.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira como quem escolhe a palavra certa.
+Tá boa essa mira? | O rumo é o bolim, como o verso é a verdade.
+E essa direção? | Direção boa, vivente: reta como o horizonte do pampa.
+Mirando no bolim… | Mira devagar, que a pressa erra a rima.
+Pra onde eu miro? | Um tico pra esquerda… assim, como a sanga que contorna a pedra.
+Tá boa essa mira? | Mira com alma, não só com os olhos.
+E essa direção? | Essa direção tem compasso.
+Mirando no bolim… | Mira firme, como palanque de cerca.
+Pra onde eu miro? | Mira bem, que o bolim é a querência.
+Tá boa essa mira? | Direção certa, vivente. Agora o resto é destino.
+
+[jayme.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força medida, como verso bem pesado.
+Vou com tudo? | Devagar, que o vento do pampa também empurra.
+Devagar ou forte? | Nem forte nem fraco: no compasso.
+E agora, a força? | Força de quem lida no campo desde guri.
+Quanta força? | Solta como quem solta um verso: inteiro.
+Vou com tudo? | Dosa a força, que a cancha é chão de respeito.
+Devagar ou forte? | Força certa, vivente, como a mão do domador.
+E agora, a força? | Com tudo não, que a bocha não é potro xucro.
+Quanta força? | Meio termo, que no meio mora a sabedoria.
+Vou com tudo? | Força de poeta: firme e sem alarde.
+
+[jayme.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Lançamento de quem tem verso na mão!
+Que tal essa? | Bonito, vivente! Essa merece décima.
+Foi bem? | Que curva, como rio que volta pra casa.
+E aí? | Lançou com alma.
+Viu o lançamento? | Essa vai pra memória do galpão.
+Que tal essa? | Bonita jogada, digna de rádio.
+Foi bem? | Lançou como quem declama: sem tremer.
+E aí? | Ah, essa tem rima!
+Viu o lançamento? | Jogada de gaúcho velho.
+Que tal essa? | Essa o pampa aplaudiu.
+
+[jayme.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou como verso no ouvido.
+Ficou perto? | Pertinho, vivente, como querência.
+Tá colada no bolim? | Coladinha no bolim, como rima no fim do verso.
+E essa? | Encostou bonito.
+Encostou? | Essa ficou perto como saudade.
+Ficou perto? | Encostou de mansinho, como a tarde.
+Tá colada no bolim? | Tá colada, como palavra certa.
+E essa? | Pertinho, digno de pajada.
+Encostou? | Encostou, vivente!
+Ficou perto? | Essa foi poesia.
+
+[jayme.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada, como estrofe completa.
+Quem levou essa? | Próxima, que a pajada segue.
+Próxima rodada? | Rodada bonita, vivente.
+E a rodada? | Fechou a rodada; abre-se outro verso.
+Fechou a rodada! | Rodada de respeito.
+Quem levou essa? | Bora a próxima, sem pressa.
+Próxima rodada? | Rodada encerrada, prosa aberta.
+E a rodada? | Essa rodada teve rima.
+Fechou a rodada! | Próxima rodada, que o galpão escuta.
+Quem levou essa? | Rodada de gaúcho.
+
+[jayme.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhaste, vivente. Faço verso da minha derrota.
+Venci! | Perdi, e perder também é verso.
+Foi minha! | Vitória tua, de mão firme.
+Ganhei a partida! | Ganhou bonito; o pampa viu.
+Ganhei! | Perdi pro neto do velho Sadi. Ele ia sorrir.
+Venci! | Derrota aceita, como chuva no verão.
+Foi minha! | Ganhaste com alma.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns, vivente. Revanche em outra pajada.
+Venci! | Venceste. Fica o verso pra contar.
+
+[jayme.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Venci, vivente, mas jogaste com alma.
+Tu ganhou… | Vitória do velho pajador!
+Foi tua… | Ganhei, e já tenho a rima.
+Perdi a partida… | Venci, como verso que acha o fim.
+Perdi… | Vitória de Bossoroca!
+Tu ganhou… | Ganhei, mas a prosa é tua.
+Foi tua… | Venci com calma, como pajada.
+Perdi a partida… | Vitória! E tu ainda aprende.
+Perdi… | Ganhei, vivente. Um mate pra celebrar.
+Tu ganhou… | Vitória, e o galpão escutou.
+
+[jayme.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco e pajada: os dois vivem de improviso.
+Vamos de truco? | Embaralha, vivente, que o verso já vem.
+Topa uma mão? | Topo uma mão, com respeito.
+Embaralha aí? | Vamos ao truco, que a noite é longa.
+Bora um truco? | Bora, que o truco é payada de cartas.
+Vamos de truco? | Distribui, que eu falo pouco e blefo muito.
+Topa uma mão? | Uma mão? Com gosto.
+Embaralha aí? | Truco, vivente! Tradição de galpão.
+Bora um truco? | Vamos, que a carta também tem rima.
+Vamos de truco? | Bora, sem pressa e com malícia.
+
+[jayme.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei, como quem diz verso.
+Tua vez! | Essa carta tem história.
+E essa carta? | Lá vai, vivente.
+Vai, joga! | Carta de pajador.
+Joga aí! | Joguei a do meio, com calma.
+Tua vez! | Ó essa, que tem compasso.
+E essa carta? | Essa é de Bossoroca.
+Vai, joga! | Carta na mesa, verso na boca.
+Joga aí! | Vai essa, com alma.
+Tua vez! | Joguei, e o resto é destino.
+
+[jayme.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | Truco? Que venha, vivente!
+Truco nele! | Truco no pajador? Coragem!
+Vai um truco? | Truco! Agora a pajada esquenta.
+Truco, tchê! | Tá blefando? O verso não mente.
+TRUCO! | Truco, como desafio de payada.
+Truco nele! | Ui, truco! Que bonito.
+Vai um truco? | Truco pra mim? Hm…
+Truco, tchê! | Essa eu penso, como quem rima.
+TRUCO! | Truco! O galpão escuta.
+Truco nele! | Truco, tchê!
+
+[jayme.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitaste, vivente!
+Quero! | Topou, com coragem.
+Topo o truco! | Aceitou, agora vale mais.
+Aceito, bora! | Bora, que gaúcho não foge.
+Aceito! | Aceitou bonito.
+Quero! | Topou! Como desafio de payada.
+Topo o truco! | Aceitou, e o verso continua.
+Aceito, bora! | Então vale!
+Aceito! | Aceitou, com alma.
+Quero! | Bora, vivente!
+
+[jayme.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correste, vivente.
+Essa eu corro. | Fugiu do pajador!
+Não quero… | Correu, mas com prudência.
+Tô fora dessa. | Ui, correu. Faz parte.
+Corro… | Correu como potro xucro.
+Essa eu corro. | Tudo bem, recuar também é sabedoria.
+Não quero… | Correu! Ponto pro velho.
+Tô fora dessa. | Fugiu da rima!
+Corro… | Correu, e o galpão viu.
+Essa eu corro. | Correste bonito.
+
+[jayme.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada, como estrofe.
+Quem levou? | Próxima, que o verso segue.
+Próxima mão? | Essa mão teve rima.
+E essa mão? | Fechou! Mais um mate.
+Fechou a mão! | Mão de gaúcho.
+Quem levou? | Bora a próxima, sem pressa.
+Próxima mão? | Mão encerrada, prosa aberta.
+E essa mão? | Que mão, vivente!
+Fechou a mão! | Essa foi poesia.
+Quem levou? | Próxima mão, que a noite é longa.
+
+[jayme.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Ganhaste, vivente. Faço verso da derrota.
+Venci o truco! | Perdi, e perder também é verso.
+Foi minha! | Vitória tua, com malícia.
+Ganhei a partida! | Ganhou bonito.
+Ganhei! | Perdi pro neto do velho Sadi.
+Venci o truco! | Derrota aceita.
+Foi minha! | Ganhaste com alma.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns, vivente.
+Venci o truco! | Venceste. Fica o verso.
+
+[jayme.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Venci, vivente!
+Tu ganhou… | Vitória do pajador!
+Foi tua… | Ganhei, e já tenho a rima.
+Perdi o truco… | Venci como verso que acha o fim.
+Perdi… | Vitória de Bossoroca!
+Tu ganhou… | Ganhei, mas a prosa é tua.
+Foi tua… | Venci com calma.
+Perdi o truco… | Vitória! E tu aprende.
+Perdi… | Ganhei. Um mate pra celebrar.
+Tu ganhou… | Vitória, e o galpão escutou.
+
+[baitaca]
+Quem é o senhor? | Baitaca, cantor do fundo da grota! Antônio César, criado no Rincão dos Pintos, lá em São Luiz Gonzaga.
+Por que Baitaca? | Herdei do meu avô! Baitaca é parente da maitaca, aquele bicho que fala alto. Combina comigo, né?
+O senhor toca gaita? | Toco gaita, violão e o que tiver! Mas o que eu gosto mesmo é de cantar causo da campanha.
+Que música o senhor canta? | “Do Fundo da Grota”, que fala da vida simples, do mato e da bicharada. O povo canta junto em tudo que é baile.
+Como começou? | Com dez anos já cantava Gildo de Freitas. Com catorze ganhei trova em CTG, lá nas Missões.
+Vai um trago? | Um traguinho de canha, só pra afinar a garganta. Cantor de campanha precisa da voz quente.
+Gostou da bodega? | Bodega boa é igual baile bom: gente simples, prosa farta e ninguém com pressa.
+Me conta um causo? | Lá no fundo da grota o galo canta antes do sol, e o sol, de vergonha, levanta correndo.
+Vai um xis? | Vai! Mas faz caprichado, que gaúcho da campanha come que nem trabalha: com vontade.
+O senhor é famoso? | Que nada, sou um gaúcho simples. A música é que anda mais longe que eu.
+
+[baitaca.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bora pra cancha, que lá no Rincão a gente jogava bocha no domingo!
+Vamos jogar uma bocha? | Bocha? Aceito, mas canto se eu ganhar.
+Topa uma partida? | Vamos, que o fundo da grota também tem cancha.
+Vamos de bocha? | Topo! E se perder, vira causo.
+Bora ver quem é bom de bocha? | Bora, que eu tô com a mão quente.
+Bora pra cancha? | Vamos jogar, como nos tempos de guri.
+Vamos jogar uma bocha? | Partida aceita, de gaúcho pra gaúcho.
+Topa uma partida? | Bora, que bocha é festa de campanha.
+Vamos de bocha? | Vamos! Afina o bolim que eu afino a voz.
+Bora ver quem é bom de bocha? | Bora, vivente!
+
+[baitaca.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira reto, como cerca de campanha.
+Tá boa essa mira? | Mira no bolim, não na minha gaita.
+E essa direção? | Direção boa, igual estrada do Rincão.
+Mirando no bolim… | Mais pra esquerda… isso, guri!
+Pra onde eu miro? | Mira com calma, que pressa é coisa de cidade.
+Tá boa essa mira? | Tá mirando bonito.
+E essa direção? | Mira como quem afina gaita: de ouvido.
+Mirando no bolim… | Direção de campanha!
+Pra onde eu miro? | Assim tá bom.
+Tá boa essa mira? | Se errar, vira música.
+
+[baitaca.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de quem lida no campo.
+Vou com tudo? | Devagar, que bocha não é baile de vaneira.
+Devagar ou forte? | Força média, igual mate bem cevado.
+E agora, a força? | Com tudo não, que a bocha sai da cancha.
+Quanta força? | Dosa bem, vivente.
+Vou com tudo? | Força de quem carrega gaita o baile inteiro.
+Devagar ou forte? | Solta firme!
+E agora, a força? | Meio termo, que é o certo.
+Quanta força? | Vai com calma.
+Vou com tudo? | Força certa, igual nota boa.
+
+[baitaca.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Que lançamento! Merece uma vaneira.
+Que tal essa? | Bonito, guri!
+Foi bem? | Lançou com alma de campanha.
+E aí? | Essa vai pra música!
+Viu o lançamento? | Que curva, igual estrada de chão.
+Que tal essa? | Essa foi de gaúcho velho.
+Foi bem? | Bonito! O fundo da grota aplaudiu.
+E aí? | Lançou como quem canta: sem medo.
+Viu o lançamento? | Essa merece um verso.
+Que tal essa? | Bah, que jogada!
+
+[baitaca.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Bonito!
+Ficou perto? | Pertinho, guri!
+Tá colada no bolim? | Coladinha, igual par no baile.
+E essa? | Encostou bonito.
+Encostou? | Essa ficou perto, como vizinho de rancho.
+Ficou perto? | Encostou de mansinho.
+Tá colada no bolim? | Tá colada!
+E essa? | Pertinho, digno de causo.
+Encostou? | Encostou, vivente!
+Ficou perto? | Essa foi música.
+
+[baitaca.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! Bora a próxima.
+Quem levou essa? | Próxima, que o baile segue.
+Próxima rodada? | Rodada bonita.
+E a rodada? | Fechou! Um traguinho.
+Fechou a rodada! | Rodada de campanha.
+Quem levou essa? | Bora a próxima, sem pressa.
+Próxima rodada? | Rodada encerrada, prosa aberta.
+E a rodada? | Essa rodada teve ritmo.
+Fechou a rodada! | Próxima rodada!
+Quem levou essa? | Rodada de gaúcho.
+
+[baitaca.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Vou fazer uma música triste.
+Venci! | Tu ganhou! Bonito, guri.
+Foi minha! | Vitória tua.
+Ganhei a partida! | Ganhou bonito.
+Ganhei! | Perdi pro neto do Sadi! Vira causo.
+Venci! | Derrota aceita, com sorriso.
+Foi minha! | Ganhou com alma.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns! Revanche no próximo baile.
+Venci! | Venceu, guri. Fica a música.
+
+[baitaca.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Vou cantar essa vitória.
+Tu ganhou… | Vitória do Baitaca!
+Foi tua… | Ganhei, e já tenho o refrão.
+Perdi a partida… | Venci! Lá no Rincão vão saber.
+Perdi… | Vitória do fundo da grota!
+Tu ganhou… | Ganhei, mas tu jogou bonito.
+Foi tua… | Venci com calma.
+Perdi a partida… | Vitória! Um traguinho pra celebrar.
+Perdi… | Ganhei, guri!
+Tu ganhou… | Vitória, e o galpão cantou.
+
+[baitaca.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? Bora, que eu sou bom de blefe e de verso.
+Vamos de truco? | Embaralha aí, guri.
+Topa uma mão? | Topo uma mão!
+Embaralha aí? | Vamos ao truco, que a noite é longa.
+Bora um truco? | Bora, truco de campanha.
+Vamos de truco? | Distribui, que eu canto enquanto isso.
+Topa uma mão? | Uma mão? Com gosto.
+Embaralha aí? | Truco! Tradição de galpão.
+Bora um truco? | Vamos, que carta boa é igual música boa.
+Vamos de truco? | Bora, vivente!
+
+[baitaca.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei!
+Tua vez! | Essa carta tem história.
+E essa carta? | Lá vai, guri.
+Vai, joga! | Carta de campanha.
+Joga aí! | Joguei a do meio.
+Tua vez! | Ó essa!
+E essa carta? | Essa é do fundo da grota.
+Vai, joga! | Carta na mesa, música na cabeça.
+Joga aí! | Vai essa!
+Tua vez! | Joguei, agora é sorte.
+
+[baitaca.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? Que venha!
+Truco nele! | Truco no Baitaca? Coragem!
+Vai um truco? | Truco! Agora esquentou.
+Truco, tchê! | Tá blefando, guri?
+TRUCO! | Truco, como trova em CTG.
+Truco nele! | Ui, truco!
+Vai um truco? | Truco pra mim? Hm…
+Truco, tchê! | Essa eu penso.
+TRUCO! | Truco! O galpão escuta.
+Truco nele! | Truco, tchê!
+
+[baitaca.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou!
+Quero! | Topou, com coragem.
+Topo o truco! | Aceitou, agora vale mais.
+Aceito, bora! | Bora, que gaúcho não foge.
+Aceito! | Aceitou bonito.
+Quero! | Topou!
+Topo o truco! | Aceitou, e a música continua.
+Aceito, bora! | Então vale!
+Aceito! | Aceitou, guri.
+Quero! | Bora!
+
+[baitaca.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu, guri!
+Essa eu corro. | Fugiu do Baitaca!
+Não quero… | Correu com prudência.
+Tô fora dessa. | Ui, correu.
+Corro… | Correu como bicho do mato.
+Essa eu corro. | Tudo bem, faz parte.
+Não quero… | Correu! Ponto pra mim.
+Tô fora dessa. | Fugiu!
+Corro… | Correu, e o galpão viu.
+Essa eu corro. | Correu bonito.
+
+[baitaca.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada!
+Quem levou? | Próxima, que o baile segue.
+Próxima mão? | Essa mão teve ritmo.
+E essa mão? | Fechou! Um traguinho.
+Fechou a mão! | Mão de campanha.
+Quem levou? | Bora a próxima.
+Próxima mão? | Mão encerrada.
+E essa mão? | Que mão!
+Fechou a mão! | Essa foi música.
+Quem levou? | Próxima mão!
+
+[baitaca.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi! Vou fazer música triste.
+Venci o truco! | Tu ganhou, guri!
+Foi minha! | Vitória tua.
+Ganhei a partida! | Ganhou bonito.
+Ganhei! | Perdi pro neto do Sadi.
+Venci o truco! | Derrota aceita.
+Foi minha! | Ganhou com alma.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns!
+Venci o truco! | Venceu. Fica a música.
+
+[baitaca.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Vou cantar essa.
+Tu ganhou… | Vitória do Baitaca!
+Foi tua… | Ganhei, já tenho o refrão.
+Perdi o truco… | Venci!
+Perdi… | Vitória do fundo da grota!
+Tu ganhou… | Ganhei, mas tu jogou bem.
+Foi tua… | Venci com calma.
+Perdi o truco… | Vitória! Um traguinho.
+Perdi… | Ganhei, guri!
+Tu ganhou… | Vitória, e o galpão cantou.
+
+
+[gaudencio]
+Quem é o senhor? | Gaudêncio, gaúcho bagual da campanha! Bombacha, bigode e paciência curta, tchê.
+De onde o senhor vem? | Do interior, onde o galo acorda tarde porque o peão já levantou antes dele.
+Vai um trago? | Vai uma canha, mas da boa! Canha fraca é igual cavalo manso: não serve pra nada.
+O senhor é tradicionalista? | Mas é claro! Gaúcho que não toma mate de manhã cedo nem gaúcho é, é só alguém de bombacha.
+O que acha dos guri de hoje? | Piá de hoje não sabe encilhar um cavalo, mas sabe trocar a senha do wi-fi. Mundo virado, tchê!
+Me conta um causo? | Uma vez laçaram um boi tão grande lá na invernada que o laço ficou com medo e voltou sozinho.
+Gostou da bodega? | Bodega com galpão, chão batido e chimarrão? Isso sim é bodega de verdade, não essas modernagem.
+O senhor tá apressado? | Apressado não, tô impaciente! É diferente. O apressado corre, o impaciente reclama.
+Vai um xis? | Vai, mas não me inventa moda! Xis é xis: pão, carne, ovo e capricho.
+Como tá a lida? | A lida tá braba! Mas gaúcho bagual não se queixa… só um pouquinho, enquanto toma o mate.
+
+[gaudencio.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bocha? Bora, mas sem frescura, tchê!
+Vamos jogar uma bocha? | Partida? Gaúcho bagual não recusa.
+Topa uma partida? | Vamos, que na campanha a bocha é coisa séria.
+Vamos de bocha? | Bora pra cancha, mas não me demora.
+Bora ver quem é bom de bocha? | Topo! E quem perder paga a canha.
+Bora pra cancha? | Vamos, que eu jogava bocha antes de tu nascer, piá.
+Vamos jogar uma bocha? | Bora, mas joga direito, hein!
+Topa uma partida? | Vamos! Arreda que o bagual chegou.
+Vamos de bocha? | Partida aceita, de gaúcho pra gaúcho.
+Bora ver quem é bom de bocha? | Bora, tchê!
+
+[gaudencio.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira reto, piá, que o bolim não vai te esperar!
+Tá boa essa mira? | Mira no bolim, não no meu bigode.
+E essa direção? | Direção boa, mas dava pra ser melhor.
+Mirando no bolim… | Mais pra esquerda… não, isso aí não! Bah.
+Pra onde eu miro? | Mira com firmeza, igual peão no laço.
+Tá boa essa mira? | Tá mirando que nem guri de apartamento.
+E essa direção? | Mira certo que eu tô sem paciência.
+Mirando no bolim… | Direção de campanha, essa sim!
+Pra onde eu miro? | Assim tá bom, tchê.
+Tá boa essa mira? | Se errar, a culpa é tua, não do vento.
+
+[gaudencio.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de quem lida no campo!
+Vou com tudo? | Devagar, que bocha não é coice de mula.
+Devagar ou forte? | Força média, igual mate bem cevado.
+E agora, a força? | Com tudo não, que a bocha vai parar na invernada!
+Quanta força? | Dosa bem, piá.
+Vou com tudo? | Força de bagual!
+Devagar ou forte? | Solta firme, sem frescura.
+E agora, a força? | Meio termo, que é o certo, tchê.
+Quanta força? | Vai com calma… mas nem tanto.
+Vou com tudo? | Força certa, igual laço bem jogado.
+
+[gaudencio.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Bah, essa foi bonita, admito!
+Que tal essa? | Lançamento de gaúcho velho!
+Foi bem? | Que curva, tchê!
+E aí? | Essa até o bagual aplaudiu.
+Viu o lançamento? | Lançou com raça!
+Que tal essa? | Essa foi digna de campanha.
+Foi bem? | Bonito! Mas não te acostuma.
+E aí? | Bah, que jogada!
+Viu o lançamento? | Essa merece uma canha.
+Que tal essa? | Lançou igual peão laçando: com vontade.
+
+[gaudencio.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Bah!
+Ficou perto? | Pertinho, tchê!
+Tá colada no bolim? | Coladinha, igual carrapato em cusco.
+E essa? | Encostou bonito, piá.
+Encostou? | Essa ficou perto, admito.
+Ficou perto? | Encostou de mansinho.
+Tá colada no bolim? | Tá colada! Nem eu fazia melhor… quase.
+E essa? | Pertinho, digno de causo.
+Encostou? | Encostou, tchê!
+Ficou perto? | Essa foi bagual.
+
+[gaudencio.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! Bora a próxima.
+Quem levou essa? | Próxima, que eu não tenho o dia todo.
+Próxima rodada? | Rodada boa, tchê.
+E a rodada? | Fechou! Um trago.
+Fechou a rodada! | Rodada de campanha.
+Quem levou essa? | Bora a próxima, sem enrolação.
+Próxima rodada? | Rodada encerrada.
+E a rodada? | Essa rodada teve raça.
+Fechou a rodada! | Próxima rodada, piá!
+Quem levou essa? | Rodada de gaúcho.
+
+[gaudencio.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi? Bah, isso não fica assim!
+Venci! | Tu ganhou, piá. Mas foi sorte.
+Foi minha! | Vitória tua… por hoje.
+Ganhei a partida! | Ganhou bonito, admito.
+Ganhei! | Perdi pro neto do Sadi! Vou contar que deixei.
+Venci! | Derrota aceita… resmungando.
+Foi minha! | Ganhou com raça, tchê.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns! Revanche já.
+Venci! | Venceu, piá. Respeito.
+
+[gaudencio.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Gaúcho bagual!
+Tu ganhou… | Vitória da campanha!
+Foi tua… | Ganhei, piá! Aprende.
+Perdi a partida… | Venci! Assim que se joga.
+Perdi… | Vitória, tchê!
+Tu ganhou… | Ganhei, mas tu jogou direitinho.
+Foi tua… | Venci sem frescura.
+Perdi a partida… | Vitória! Paga a canha.
+Perdi… | Ganhei! Bagual é bagual.
+Tu ganhou… | Vitória, e o galpão viu.
+
+[gaudencio.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? Bora, que eu sou bagual na carta!
+Vamos de truco? | Embaralha aí, piá, sem roubar.
+Topa uma mão? | Topo uma mão!
+Embaralha aí? | Vamos ao truco, que a noite é curta.
+Bora um truco? | Bora, truco de galpão.
+Vamos de truco? | Distribui logo, tchê!
+Topa uma mão? | Uma mão? Bora.
+Embaralha aí? | Truco! Tradição gaúcha.
+Bora um truco? | Vamos, que carta boa é igual cavalo bom.
+Vamos de truco? | Bora, sem frescura!
+
+[gaudencio.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei!
+Tua vez! | Essa carta é das boas.
+E essa carta? | Lá vai, piá.
+Vai, joga! | Carta de bagual.
+Joga aí! | Joguei a do meio.
+Tua vez! | Ó essa!
+E essa carta? | Essa é da campanha.
+Vai, joga! | Carta na mesa, bigode em pé.
+Joga aí! | Vai essa!
+Tua vez! | Joguei, agora é contigo.
+
+[gaudencio.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? Que venha!
+Truco nele! | Truco no Gaudêncio? Coragem, piá!
+Vai um truco? | Truco! Agora esquentou.
+Truco, tchê! | Tá blefando, tchê?
+TRUCO! | Truco, como gaúcho manda.
+Truco nele! | Ui, truco!
+Vai um truco? | Truco pra mim? Hm…
+Truco, tchê! | Essa eu penso… pensei. Quero!
+TRUCO! | Truco! O galpão escuta.
+Truco nele! | Truco, tchê!
+
+[gaudencio.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou!
+Quero! | Topou, com coragem.
+Topo o truco! | Aceitou, agora vale mais.
+Aceito, bora! | Bora, gaúcho não foge.
+Aceito! | Aceitou bonito.
+Quero! | Topou!
+Topo o truco! | Aceitou, e agora segura.
+Aceito, bora! | Então vale!
+Aceito! | Aceitou, piá.
+Quero! | Bora!
+
+[gaudencio.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu, piá!
+Essa eu corro. | Fugiu do Gaudêncio!
+Não quero… | Correu igual guri de apartamento.
+Tô fora dessa. | Ui, correu.
+Corro… | Correu como bicho do mato.
+Essa eu corro. | Tudo bem, faz parte.
+Não quero… | Correu! Ponto pra mim.
+Tô fora dessa. | Fugiu, tchê!
+Corro… | Correu, e o galpão viu.
+Essa eu corro. | Correu bonito… pra trás.
+
+[gaudencio.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada!
+Quem levou? | Próxima, que eu tenho pressa.
+Próxima mão? | Essa mão teve raça.
+E essa mão? | Fechou! Um trago.
+Fechou a mão! | Mão de campanha.
+Quem levou? | Bora a próxima.
+Próxima mão? | Mão encerrada.
+E essa mão? | Que mão, tchê!
+Fechou a mão! | Essa foi bagual.
+Quem levou? | Próxima mão!
+
+[gaudencio.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi? Bah, revanche!
+Venci o truco! | Tu ganhou, piá.
+Foi minha! | Vitória tua, por hoje.
+Ganhei a partida! | Ganhou bonito, admito.
+Ganhei! | Perdi pro neto do Sadi.
+Venci o truco! | Derrota aceita, resmungando.
+Foi minha! | Ganhou com raça.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns, tchê!
+Venci o truco! | Venceu. Respeito.
+
+[gaudencio.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! Bagual!
+Tu ganhou… | Vitória da campanha!
+Foi tua… | Ganhei, piá! Aprende.
+Perdi o truco… | Venci!
+Perdi… | Vitória, tchê!
+Tu ganhou… | Ganhei, mas tu jogou direito.
+Foi tua… | Venci sem frescura.
+Perdi o truco… | Vitória! Paga a canha.
+Perdi… | Ganhei!
+Tu ganhou… | Vitória, e o galpão viu.
+
 */ };

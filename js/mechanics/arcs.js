@@ -61,6 +61,60 @@ const ARCS = {
       { title: 'Convite pra casona', lines: [['marcio', 'É o quê? A carnage foi um sucesso por causa das tuas raineken!'], ['marcelo', 'Trouxemos um presente da bauzona. Podre de chique, é oq?'], ['sadi', 'Bah, obrigado, gurizada!'], ['marcio', 'É o quê? Show de bola!']], reward: { rep: 3, xp: 90, stock: { cerveja: 12 }, text: 'Presente da bauzona: +3 de reputação e 12 cervejas.' } }
     ]
   },
+  dianho: {
+    title: 'Gângster de galpão',
+    meet: [['x', 'É os guri! Dianho, gângster de galpão, direto de Santa Cruz. Tá todo Nicolas Cagezinho esse lugar!'], ['sadi', 'Seja bem-vindo! Vai uma cerveja?'], ['x', 'Álcool não, rapaz! Me vê um refri, que o gângster tá na dieta da cabeça boa. Hehehe.']],
+    chapters: [
+      { title: 'A tábua torta', lines: [['x', 'Vi uma tábua torta ali no teu galpão e não consegui dormir, rapaz.'], ['sadi', 'Torta? Eu nem tinha reparado.'], ['x', 'Reforma é comigo! Trouxe martelo, prego e o celular pra filmar. Gângster de galpão não deixa tábua sofrendo, hehehe.']] },
+      { title: 'Revoada dos cupinxa', lines: [['x', 'Quero fazer uma revoada dos cupinxa aqui na bodega! Só os guri, refri e xis.'], ['sadi', 'Revoada sem cerveja?'], ['x', 'Sem cerveja e com muita risada! É os guri! A bodega vai ficar lotada, prepara a chapa.']] },
+      { title: 'Ídolo na Irlanda do Norte', lines: [['x', 'O vídeo da reforma da tua bodega bombou, rapaz! Comentaram até da Irlanda do Norte.'], ['sadi', 'Da Irlanda do Norte? Sério?'], ['x', 'Sério! Agora a bodega também é ídola lá. Tá todo Nicolas Cagezinho esse galpão, hehehe!']], reward: { rep: 4, xp: 100, stock: { refri: 12 }, text: 'O vídeo do Dianho bombou: +4 de reputação e 12 refris.' } }
+    ]
+  },
+  mitodosul: {
+    title: 'Live na bodega',
+    meet: [['x', 'Salve, salve! Mito do Sul aqui, streamer. Manda um salve pro chat, bodegueiro!'], ['sadi', 'Salve, chat! Vai uma bebida?'], ['x', 'Bebida não, valeu! Hoje é só comida. Bebida eu deixo pros personagens do jogo.']],
+    chapters: [
+      { title: 'A bodega no Farming', lines: [['x', 'Recriei tua bodega no Farming Simulator! Galpão, curral, campo… o chat pirou.'], ['sadi', 'E ficou parecida?'], ['x', 'Ficou! Só que lá o trator entra pela porta da frente. O chat pediu pra eu vir comer o xis de verdade.']] },
+      { title: 'Live do Grêmio', lines: [['x', 'Quarta tem jogo do Grêmio. Posso fazer a live daqui, com a TV da bodega?'], ['sadi', 'Pode, mas e se for Gre-Nal?'], ['x', 'Aí é live histórica! Se o Grêmio ganhar, eu pago um xis pro chat inteiro… simbolicamente, né.']] },
+      { title: 'Raid do chat', lines: [['x', 'Mandei o chat inteiro conhecer a bodega! Vem gente dizendo “vim pela live do Mito”.'], ['sadi', 'Por isso a bodega encheu!'], ['x', 'GG, bodegueiro! Agora tu é o mito do sul… da bodega. Salve!']], reward: { rep: 5, xp: 100, text: 'O chat do Mito lotou a bodega: +5 de reputação.' } }
+    ]
+  },
+  loligebien: {
+    title: 'Oktoberfest na bodega',
+    meet: [['x', 'Prosit! Loli Gebien, o jovem alemão de Pomerode. Me vê um chopp bem gelado, ja?'], ['sadi', 'Que tamancos são esses?'], ['x', 'Tamancos de madeira, ja! Fiquei famoso na Festa do Imigrante por causa deles. Toc-toc!']],
+    chapters: [
+      { title: 'Chopp tem que ser gelado', lines: [['x', 'Teu chopp é bom, ja, mas alemão é exigente: copo gelado e espuma de dois dedos.'], ['sadi', 'Dois dedos? Vou caprichar.'], ['x', 'Ja! Chopp bem tirado é Gemütlichkeit. Prosit!']] },
+      { title: 'Tamancos na pista', lines: [['x', 'Tocou uma bandinha no rádio e meus tamancos não aguentaram, ja! Bora dançar?'], ['sadi', 'Dançar de tamanco no galpão?'], ['x', 'Toc-toc-toc! Em Pomerode a gente dança assim desde guri. O Lauro tentou e quebrou o tamanco, ja.']] },
+      { title: 'Festa alemã', lines: [['x', 'Trouxe o Gustavo e o Lauro! Hoje é festa alemã na bodega, ja!'], ['sadi', 'Vai ter chopp que chegue?'], ['x', 'Ja! E se acabar, a gente canta até chegar mais. Prosit pra bodega!']], reward: { rep: 4, xp: 100, stock: { cerveja: 12 }, text: 'Festa alemã na bodega: +4 de reputação e 12 chopps.' } }
+    ]
+  },
+  jayme: {
+    title: 'A payada da bodega',
+    meet: [['x', 'Buenas, vivente. Jayme Caetano Braun, pajador de Bossoroca.'], ['sadi', 'O senhor é o poeta?'], ['x', '“Neste galpão de madeira, onde o tempo fez morada, a bodega acordada tem prosa a noite inteira.” Prazer, neto do velho Sadi.']],
+    chapters: [
+      { title: 'Desafio de pajada', lines: [['x', 'Te desafio pra uma pajada, vivente. Eu digo um verso, tu responde com outro.'], ['sadi', 'Eu? Mal sei rimar xis com…'], ['x', 'Com “feliz”, vivente! Pronto, já é pajador. O verso mora em quem tem coragem.']] },
+      { title: 'Versos do galpão', lines: [['x', 'Escrevi uma décima sobre o galpão do teu vô. Fala dos tropeiros, do CTG e da tua bodega.'], ['sadi', 'Bah, seu Jayme, me arrepiou.'], ['x', 'É que galpão que volta a ter gente é poema que a vida reescreve. Teu vô ia gostar.']] },
+      { title: 'Payada no rádio', lines: [['x', 'Declamei a décima no rádio hoje cedo. O Rio Grande inteiro ouviu o nome da tua bodega.'], ['sadi', 'Não acredito, seu Jayme!'], ['x', 'Acredita, vivente. Verso bom anda mais longe que cavalo. Agora tua bodega é tradição.']], reward: { rep: 5, xp: 120, text: 'A payada tocou no rádio: +5 de reputação.' } }
+    ]
+  },
+  gaudencio: {
+    title: 'O bagual da campanha',
+    meet: [['x', 'Buenas! Gaudêncio, gaúcho bagual. Bodega nova, é? Vamos ver se é bodega de verdade ou só de enfeite.'], ['sadi', 'Pode conferir à vontade!'], ['x', 'Chão batido, galpão e chimarrão… Bah, até que tem jeito. Mas não te acostuma com elogio, piá.']],
+    chapters: [
+      { title: 'Piá de apartamento', lines: [['x', 'Passou um piá aí fora que não sabia nem o que é uma encilha, tchê!'], ['sadi', 'Os guri da cidade são assim, Gaudêncio.'], ['x', 'Pois traz eles aqui na bodega, que eu ensino! Mate, laço e respeito pelos mais velhos. Nessa ordem.']] },
+      { title: 'Causo da invernada', lines: [['x', 'Senta que lá vem causo: uma vez laçaram um boi tão grande na invernada que o laço ficou com medo.'], ['sadi', 'E aí, Gaudêncio?'], ['x', 'E aí o laço voltou sozinho e foi dormir no galpão! Isso foi verdade… mais ou menos, tchê.']] },
+      { title: 'Bodega aprovada', lines: [['x', 'Contei pra gauchada do CTG que tem uma bodega de respeito aqui. Vem todo mundo de bombacha!'], ['sadi', 'Bah, que honra!'], ['x', 'Honra nada, é obrigação! Bodega boa a gente defende. Pode dizer que o Gaudêncio aprovou.']], reward: { rep: 4, xp: 100, text: 'A gauchada do CTG veio conhecer a bodega: +4 de reputação.' } }
+    ]
+  },
+  baitaca: {
+    title: 'Do fundo da grota',
+    meet: [['x', 'Buenas! Baitaca, criado no Rincão dos Pintos, lá em São Luiz Gonzaga.'], ['sadi', 'O cantor do fundo da grota?'], ['x', 'Ele mesmo! Gente simples, de bodega simples. Me sinto em casa.']],
+    chapters: [
+      { title: 'Gaita desafinada', lines: [['x', 'Minha gaita velha tá desafinando. Tu conhece alguém que conserte?'], ['sadi', 'Posso perguntar pros fregueses.'], ['x', 'Pergunta sim! Gaita é igual amigo: tem que cuidar pra não perder a voz.']] },
+      { title: 'Causo da campanha', lines: [['x', 'Vou te contar um causo: lá no fundo da grota o galo canta antes do sol nascer…'], ['sadi', 'E aí?'], ['x', 'E aí o sol, de vergonha, levanta correndo! Esse causo vai virar música, guri.']] },
+      { title: 'Baile na bodega', lines: [['x', 'Gaita afinada, causo pronto: hoje tem baile na bodega!'], ['sadi', 'Baile aqui no galpão?'], ['x', 'No galpão do velho Sadi, como nos tempos do CTG. Arreda as mesas que o povo vem dançar!']], reward: { rep: 5, xp: 100, text: 'Baile do Baitaca na bodega: +5 de reputação.' } }
+    ]
+  },
   peixinhonabrasa: {
     title: 'Duelo de brasa',
     meet: [['x', 'Peixinho na brasa, Kaiser na mão, morra de inveja, vagabundo!'], ['sadi', 'Seja bem-vindo à bodega!'], ['x', 'Bem-vindo eu, que o lugar tá bom. Mas o fogo de chão de vocês… vamos ver, ja.']],

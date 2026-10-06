@@ -23,7 +23,7 @@ function orderNext(d){d.orders=[d.later.shift()];d.status='waiting';d.patience=d
 function seatDiners(g){
  const fixed=g.fixedOrders;delete g.fixedOrders;
  g.diners=Array.from({length:g.size},(_,i)=>{
-  const all=fixed?fixed.filter((_,j)=>j%g.size===i):tableOrders({...g,person:groupPerson(g,i),size:1});
+  const all=fixed?fixed.filter((_,j)=>j%g.size===i):tableOrders({...g,person:groupPerson(g,i),size:1}).map(k=>fitOrder(groupPerson(g,i),k));
   // Encomendas fixas e lições chegam completas; a freguesia comum pede aos poucos.
   if(fixed||g.training)return {person:groupPerson(g,i),orders:all,later:[],delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:all.length?'waiting':'served'};
   const d={person:groupPerson(g,i),orders:[],later:all,delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,status:'thinking',think:i===0?0:thinkTime(THINK_FIRST)};
@@ -35,8 +35,8 @@ function addDinerRound(g){
  for(const d of g.diners){
   if(d.status==='lost')continue;
   // Quem ainda tem pedido em aberto deixa a rodada para depois.
-  if(['waiting','thinking'].includes(d.status)){d.later??=[];if(d.later.length<difficulty().maxItems)d.later.push(pick(drinksForGroup(g)));continue;}
-  d.status='waiting';d.patience=d.maxPatience=ORDER_WAIT;d.orders=[pick(drinksForGroup(g))];
+  if(['waiting','thinking'].includes(d.status)){d.later??=[];if(d.later.length<difficulty().maxItems)d.later.push(fitOrder(d.person,pick(drinksForGroup(g))));continue;}
+  d.status='waiting';d.patience=d.maxPatience=ORDER_WAIT;d.orders=[fitOrder(d.person,pick(drinksForGroup(g)))];
  }
  g.state='seated';g.round=1;syncGroupOrders(g);
 }
