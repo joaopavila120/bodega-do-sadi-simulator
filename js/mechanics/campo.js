@@ -50,7 +50,7 @@ function campoTick(dt){
  const heat=fireHeat();
  c.espetos.forEach((e,i)=>{
   if(!e||e.burned)return;
-  const s=e.fire;e.heat[s]+=dt*heat/COOK_SIDE;
+  const s=e.fire;e.heat[s]+=dt*heat/COOK_SIDE*(costelaoTutorialActive()?2.5:1);if(costelaoTutorialActive())e.heat[s]=Math.min(e.heat[s],1.3);
   if(e.heat[s]>=1&&!e.doneSide?.[s]){e.doneSide??=[false,false];e.doneSide[s]=true;AudioEngine.ready();effect(espetoReady(e)?'No ponto! Retire com E':'Lado pronto · vire com E',354+i*110,520,'#d9ffa3');}
   if(e.heat[s]>=1.45&&!e.warned?.[s]){e.warned??=[false,false];e.warned[s]=true;AudioEngine.warning();effect('Vai queimar!',354+i*110,520,'#ffc875');}
   if(e.heat[s]>=BURN_AT){e.burned=true;AudioEngine.bad();effect('Queimou!',354+i*110,520,'#ff9872');}
@@ -102,7 +102,7 @@ function startMix(){G.task={type:'mix',target:'maionese',progress:0,last:null,ti
 const MIX_STEP=.045;
 function mixKey(k){
  const t=G.task;if(t?.type!=='mix')return;if(!['a','d'].includes(k)||k===t.last)return;
- t.progress+=MIX_STEP;t.last=k;AudioEngine.noise(.05,.12,1600);
+ t.progress+=MIX_STEP*(costelaoTutorialActive()?2:1);t.last=k;AudioEngine.noise(.05,.12,1600);
  if(t.progress>=1)finishMix();else updateMixUI();
 }
 function mixTick(dt){const t=G.task;if(t?.type!=='mix')return;t.time+=dt;t.progress=Math.max(0,t.progress-.1*dt);updateMixUI();}
@@ -207,7 +207,7 @@ function drawCampoStation(f){
   else{drawEspetoCell(1+kind,px,py);drawEspetoCell(3+kind,px,py,clamp(e.heat[front],0,1));if(e.heat[front]>1.25)drawEspetoCell(5+kind,px,py,clamp((e.heat[front]-1.25)/.55,0,1));}
   // Barras dos dois lados: verde = no ponto; vermelho = passando
   for(let s=0;s<2;s++){const v=e.heat[s],bx=x+4,by=y+h+8+s*10;rect(bx,by,w-8,7,'#2a1d12',3,'#d2b982');rect(bx+2,by+2,(w-12)*clamp(v/BURN_AT,0,1),3,v>=1.45?'#e0603a':v>=1?'#9ccc5a':'#e8b65d',1);rect(bx+2+(w-12)/BURN_AT,by,1,7,'#fff2c0');}
-  txt(e.burned?'Queimou':espetoReady(e)?'Pronto ✓':e.heat[e.fire]>=1?'Vire!':'Assando',x+w/2,y-8,12,e.burned?'#ff9a70':espetoReady(e)?'#e2ffa8':e.heat[e.fire]>=1?'#ffd56a':'#fff0c3');
+  const label=e.burned?'Queimou':espetoReady(e)?'Pronto ✓':e.heat[e.fire]>=1?'Vire!':'';if(label)txt(label,x+w/2,y-8,12,e.burned?'#ff9a70':espetoReady(e)?'#e2ffa8':e.heat[e.fire]>=1?'#ffd56a':'#fff0c3');
   if(!e.burned&&!espetoReady(e))for(let k=0;k<3;k++){const p=(frameClock*.5+k*.33)%1;ellipse(x+w/2+Math.sin(p*7+k)*8,y+20-p*50,4+p*5,5+p*6,`rgba(230,220,200,${.3*(1-p)})`);}
   return true;
  }
@@ -229,17 +229,19 @@ function drawCampoStation(f){
 }
 
 // ---------- Tutorial do primeiro costelão ----------
+// Tutorial do primeiro costelão: só a primeira etapa pausa o jogo; as outras aparecem num aviso
+// rápido, com uma seta sobre a estação certa. A costela assa mais rápido e não queima no treino.
 const COSTELAO_STEPS=[
- {id:'rachar',title:'Rache a lenha',text:'Domingo começa com o fogo apagado. Vá ao cepo ao lado da pilha de lenha, segure E e solte na faixa verde três vezes para rachar a lenha.'},
- {id:'fogo',title:'Lenha no fogo',text:'Leve a lenha rachada até o fogo de chão e aperte E para colocá-la.'},
- {id:'acender',title:'Acenda o fogo',text:'Segure E no fogo de chão até acender. A barra mostra a lenha: quando ela acaba, o fogo apaga e é preciso acender de novo.'},
- {id:'espeto',title:'Costela no espeto',text:'Pegue uma manta de costela crua na mesa à esquerda do fogo e coloque num espeto com E.'},
- {id:'virar',title:'Vire a manta',text:'Só o lado virado para o fogo assa. A barra de cima é a carne; a de baixo, o osso. Quando o lado no fogo ficar verde, aperte E no espeto para virar.'},
- {id:'retirar',title:'No ponto: retire',text:'Com os dois lados no ponto, aperte E para retirar. Não demore: passando da marca, queima.'},
- {id:'tabua',title:'Para a tábua',text:'Leve a costela assada à tábua de corte e aperte E. Cada manta rende 2 kg.'},
- {id:'cortar',title:'Corte no peso',text:'Chegou o primeiro freguês. Segure E na tábua, solte no peso pedido e entregue no balcão.'},
- {id:'maionese',title:'Maionese da casa',text:'Leve um ovo e o óleo até a tigela. Depois aperte E uma vez e bata alternando A e D até dar o ponto.'},
- {id:'servir',title:'Maionese no balcão',text:'Pegue uma porção na tigela com E e entregue ao freguês no balcão.'}
+ {id:'rachar',title:'Rache a lenha',text:'O fogo tá apagado. No cepo, segure E e solte na faixa verde: 3 golpes.'},
+ {id:'fogo',title:'Lenha no fogo',text:'Leve a lenha até o fogo de chão e aperte E.'},
+ {id:'acender',title:'Acenda o fogo',text:'Segure E no fogo até pegar.'},
+ {id:'espeto',title:'Costela no espeto',text:'Pegue uma manta crua na mesa e ponha num espeto com E.'},
+ {id:'virar',title:'Vire a manta',text:'Quando a barra ficar verde, aperte E no espeto para virar.'},
+ {id:'retirar',title:'Retire no ponto',text:'Os dois lados verdes: aperte E para tirar do espeto.'},
+ {id:'tabua',title:'Para a tábua',text:'Leve a costela à tábua de corte e aperte E.'},
+ {id:'cortar',title:'Corte no peso',text:'Segure E na tábua, solte no peso pedido e entregue no balcão.'},
+ {id:'maionese',title:'Maionese',text:'Ovo e óleo na tigela, E para começar e alterne A e D.'},
+ {id:'servir',title:'Sirva a maionese',text:'Pegue uma porção na tigela e entregue no balcão.'}
 ];
 function costelaoTutorial(){return campoState().tutorial;}
 function costelaoTutorialActive(){const t=costelaoTutorial();return isCampo()&&!G.lasso&&!!t&&!t.done&&G.phase==='open';}
@@ -251,8 +253,28 @@ function costelaoTutorialTick(){
  if(['cortar','servir'].includes(s.id)&&!t.actor&&!G.shop.some(c=>c.state==='queue')){
   const c=spawnShop(s.id==='cortar'?{pid:'costela',grams:500,training:true}:{pid:'maionese',training:true});if(c)t.actor=c.id;
  }
- // Como no primeiro dia: cada etapa para o jogo e explica o que fazer.
- if(!t.introduced&&!phoneOpen){t.introduced=true;openDialog('Costelão · passo '+(t.step+1)+' de '+COSTELAO_STEPS.length+' · '+s.title,`<p>${s.text}</p><button class="primary" data-act="close">Vamos lá</button>`,'costelaoStep');save();}
+ // Só a primeira etapa para o jogo; as seguintes entram num aviso rápido, sem interromper.
+ if(!t.introduced&&!phoneOpen){t.introduced=true;if(t.step===0)openDialog('Costelão · '+s.title,`<p>${s.text}</p><p>Siga a seta: ela mostra onde ir em cada etapa.</p><button class="primary" data-act="close">Vamos lá</button>`,'costelaoStep');else{showBanner((t.step+1)+'/'+COSTELAO_STEPS.length+' · '+s.title,s.text,'info');AudioEngine.tick();}save();}
+}
+function costelaoTarget(){
+ const s=costelaoStep(),h=held(),c=campoState(),e=c.espetos.findIndex(Boolean);if(!s)return null;
+ switch(s.id){
+  case 'rachar':return 'lenha';
+  case 'fogo':return h?.key==='lenha'?'fogo':'lenha';
+  case 'acender':return 'fogo';
+  case 'espeto':return h?.key==='costela_crua'?'espeto:'+Math.max(0,c.espetos.findIndex(x=>!x)):'costela_crua';
+  case 'virar':case 'retirar':return e>=0?'espeto:'+e:null;
+  case 'tabua':return 'tabua';
+  case 'cortar':return h?.pid==='costela'?'service':'tabua';
+  case 'maionese':return !c.bowl.ovo&&h?.key!=='ovo'?'bin:ovo':!c.bowl.azeite&&h?.key!=='azeite'?'bin:azeite':'maionese';
+  case 'servir':return h?.pid==='maionese'?'service':'maionese';
+ }
+ return null;
+}
+function drawCostelaoArrow(){
+ if(!costelaoTutorialActive()||modal)return;const f=furniture().find(f=>f.id===costelaoTarget());if(!f)return;
+ const x=f.x+f.w/2,y=f.y-(f.id==='fogo'?150:f.id.startsWith('espeto')?95:40)-Math.abs(Math.sin(frameClock*5))*12;
+ ctx.fillStyle='#ffd34a';ctx.strokeStyle='#5a3a10';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-16,y-22);ctx.lineTo(x+16,y-22);ctx.lineTo(x+16,y-6);ctx.lineTo(x+26,y-6);ctx.lineTo(x,y+16);ctx.lineTo(x-26,y-6);ctx.lineTo(x-16,y-6);ctx.closePath();ctx.fill();ctx.stroke();
 }
 function costelaoTutorialDelivered(c){const t=costelaoTutorial();if(costelaoTutorialActive()&&c.id===t.actor){t.actor=null;costelaoAdvance();}}
 function costelaoTutorialHint(){const t=costelaoTutorial(),s=costelaoStep();return s?'<b>Costelão '+(t.step+1)+' / '+COSTELAO_STEPS.length+' · '+s.title+'</b><p>'+s.text+'</p>':'';}

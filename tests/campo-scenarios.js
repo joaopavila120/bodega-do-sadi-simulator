@@ -4,7 +4,7 @@
  const random=Math.random;
  const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=2000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();bannerQueue=[];['start','overlay','phone','weighUI','mixUI','lassoUI'].forEach(id=>$(id).classList.add('hidden'));};
  const sunday=()=>{reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.costelaoTaught=true;G.stock.costela_crua=9;G.avg.costela_crua=40;campoState().fuel=100;campoState().lit=true;};
- const roast=()=>{for(let t=0;t<COOK_SIDE+.2;t+=.05){campoState().fuel=100;campoTick(.05);}};
+ const roast=()=>{for(let t=0;t<COOK_SIDE+.2;t+=.05){campoState().fuel=100;campoTick(.05);if(campoState().espetos.some(e=>e&&e.heat[e.fire]>=1))break;}};
  const chop=()=>{use('lenha');for(let k=0;k<CHOP_HITS;k++){keys.add('e');holdTick(.05);for(let t=0;t<CHOP_TIME*.7;t+=.05)holdTick(.05);keys.delete('e');holdTick(.05);}};
  const approach=id=>{if(modal==='costelaoStep')closeDialog(true);const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);for(let x=f.x-60;x<=f.x+f.w+60;x+=6)for(let y=f.y-60;y<=f.y+f.h+60;y+=6){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);};
  const use=id=>{approach(id);interact();};
@@ -65,12 +65,12 @@
   // tutorial do primeiro costelão
   reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.stock.costela_crua=0;openDay();
   check(modal==='costelao'&&costelaoTutorialActive()&&G.stock.costela_crua>=2,'primeiro costelão abre com tutorial e mantas de treino');closeDialog(true);
-  simulate(1);check(!G.shop.length,'no tutorial ninguém chega antes da hora');check(modal==='costelaoStep'&&$('dialogTitle').textContent.includes('passo 1'),'cada etapa do costelão para o jogo e mostra a orientação');closeDialog(true);
+  simulate(1);check(!G.shop.length,'no tutorial ninguém chega antes da hora');check(modal==='costelaoStep'&&$('dialogTitle').textContent.includes('Rache a lenha'),'a primeira etapa do costelão para o jogo e mostra a orientação');closeDialog(true);
   check(costelaoStep().id==='rachar'&&!fireLit()&&campoState().fuel===0,'o costelão começa com o fogo apagado: rachar lenha');
   chop();check(costelaoStep().id==='fogo','etapa: lenha no fogo');use('fogo');check(costelaoStep().id==='acender','etapa: acender o fogo');
   approach('fogo');keys.add('e');interact();tick(LIGHT_TIME+.1,holdTick);keys.clear();check(fireLit()&&costelaoStep().id==='espeto','etapa: costela no espeto');
   use('costela_crua');use('espeto:0');check(costelaoStep().id==='virar','etapa: virar');
-  approach('espeto:0');roast();interact();check(costelaoStep().id==='retirar','etapa: retirar');
+  check(costelaoTarget()==='espeto:0'&&modal!=='costelaoStep','depois da primeira etapa, avisos rápidos e seta, sem pausar');approach('espeto:0');roast();interact();check(costelaoStep().id==='retirar','etapa: retirar');
   roast();interact();check(costelaoStep().id==='tabua','etapa: tábua');use('tabua');check(costelaoStep().id==='cortar','etapa: cortar');
   simulate(.05);const first=G.shop[0];check(first?.pid==='costela'&&first.grams===500&&first.training,'primeiro freguês pede 500 g sem prazo');
   for(let n=0;n<300;n++)customersTick(.05);weigh();use('service');
