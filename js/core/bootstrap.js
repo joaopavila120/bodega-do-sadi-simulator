@@ -48,7 +48,9 @@ async function initializeGame() {
     document.querySelector('#start [data-act="test"]').disabled = false;
     document.querySelector('#start [data-act="test2"]').disabled = false;
     document.querySelectorAll('#start [data-act="testNew"]').forEach(b => b.disabled = false);
-    status.classList.add('hidden');
+    // Navegador sem aceleração de vídeo: o jogo roda em gráficos leves e avisa como ligar a aceleração.
+    if (lightGraphics) { status.innerHTML = '<b>O navegador está sem aceleração de vídeo</b>, por isso o jogo pode ficar lento. Ative em Configurações → Sistema → “Usar aceleração de gráficos quando disponível” e reinicie o navegador.'; status.classList.add('gpu-warning'); }
+    else status.classList.add('hidden');
     document.documentElement.dataset.gameReady = 'true';
     lastFrame = performance.now();
     requestAnimationFrame(frame);

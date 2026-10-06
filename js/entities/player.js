@@ -3,6 +3,9 @@
 
 function canWalk(x,y){return x>=30&&x<=1572&&y>=424&&y<=875&&!furniture().some(f=>x+11>f.x&&x-11<f.x+f.w&&y+3>f.y&&y-9<f.y+f.h);}
 
+// Se um móvel novo (melhoria, decoração) ficou em cima do jogador, ou um save antigo o deixou num lugar bloqueado, ele vai para o ponto livre mais próximo.
+function unstickPlayer(){const p=G.player;if(!p||canWalk(p.x,p.y))return;for(let r=8;r<=320;r+=8)for(let k=0;k<16;k++){const a=k*Math.PI/8,x=p.x+Math.cos(a)*r,y=p.y+Math.sin(a)*r;if(canWalk(x,y)){p.x=x;p.y=y;return;}}const g=physicalGoal(p.x,p.y);p.x=g.x;p.y=g.y;}
+
 function physicalGoal(x,y){if(canWalk(x,y))return{x,y};for(let r=20;r<110;r+=20)for(const[dx,dy]of[[0,r],[r,0],[-r,0],[0,-r],[r,r],[-r,r]])if(canWalk(x+dx,y+dy))return{x:x+dx,y:y+dy};return{x:875,y:820};}
 
 function pathTo(from,to){const step=20,snap=p=>({x:Math.round(p.x/step)*step,y:Math.round(p.y/step)*step});let a=snap(physicalGoal(from.x,from.y)),b=snap(physicalGoal(to.x,to.y));if(!canWalk(a.x,a.y))a=physicalGoal(a.x,a.y);if(!canWalk(b.x,b.y))b=physicalGoal(b.x,b.y);const key=p=>p.x+','+p.y,queue=[a],prev=new Map([[key(a),null]]);let head=0,end=null;while(head<queue.length){const p=queue[head++];if(Math.hypot(p.x-b.x,p.y-b.y)<=20){end=p;break;}for(const[dx,dy]of[[20,0],[-20,0],[0,20],[0,-20]]){const n={x:p.x+dx,y:p.y+dy},k=key(n);if(!prev.has(k)&&canWalk(n.x,n.y)){prev.set(k,p);queue.push(n);}}}if(!end)return[];const path=[];for(let p=end;p;p=prev.get(key(p)))path.push(p);path.reverse();path.shift();path.push(physicalGoal(to.x,to.y));return path;}

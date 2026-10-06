@@ -100,7 +100,7 @@ async function main() {
       await load(protocol === 'file' ? pathToFileURL(path.join(root, entry)).href : base + '/' + entry);
       assert(await evaluate(`G.day===1&&W===1600&&H===900&&canWalk(G.player.x,G.player.y)&&$('startLogo').naturalWidth>0`));
       assert(await evaluate(`[roomArt,peopleArt,furnitureArt].every(i=>i.complete&&i.naturalWidth>0)`));
-      assert(await evaluate(`canvas.width>=canvas.clientWidth*1.49&&camera.zoom===1`), 'Desktop inicia sem zoom com resolução interna maior');
+      assert(await evaluate(`(lightGraphics?canvas.width===canvas.clientWidth:canvas.width>=canvas.clientWidth*1.49)&&camera.zoom===1`), 'Desktop inicia sem zoom com resolução interna maior');
       await evaluate(`action('zoomIn');draw()`);
       assert(await evaluate(`Math.abs(camera.zoom-1.2)<.01&&$('viewZoom').textContent==='120%'`), 'Controle de zoom amplia e atualiza a indicação');
       await evaluate(`action('zoomOut');draw()`);

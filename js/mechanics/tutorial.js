@@ -8,16 +8,16 @@ const TUTORIAL_STEPS=[
  {id:'xis',title:'Um xis no capricho',pid:'xis_salada',text:'Este freguês espera na mesa 1. Prepare o xis seguindo a dica ao lado: monte, prense e entregue com E perto da mesa.'},
  {id:'upgrade',title:'Sua primeira melhoria é grátis',text:'Vamos fazer uma pausa nas chegadas. Aperte C, abra Melhorias e instale a Mesa de tragos por R$ 0. Ela inclui dez doses. Depois feche o celular com C.'},
  {id:'trago',title:'Inaugure a mesa de tragos',pid:'cachaca',text:'A mesa nova fica abaixo da torneira de cerveja. Segure E para servir a cachaça, solte na faixa verde e entregue ao freguês no balcão.'},
- {id:'erva',title:'Erva no peso certo',pid:'erva',grams:500,text:'O freguês quer 500 g de erva-mate. Vá ao saco de erva nas mercadorias, segure E e solte na faixa verde. Se errar, use Recomeçar. Entregue o pacote no balcão.'},
+ {id:'erva',title:'Erva no peso certo',pid:'erva',grams:500,text:'O freguês quer 500 g de erva-mate. Vá ao saco de erva nas mercadorias, segure E e solte na faixa verde. Se errar, aperte E para recomeçar. Entregue o pacote no balcão.'},
  {id:'fiado',title:'Pendura no caderninho',pid:'codorna',fiado:true,text:'Este freguês pediu ovos de codorna <b>fiado</b> (📒 no balão). Pegue os ovos na prateleira e entregue no balcão com E: o valor vai para o caderninho, sem entrar no caixa agora. Quem paga em dia traz 10% de juros de amizade; alguns demoram e outros somem. No Celular → Fiado você acompanha, cobra ou perdoa as contas. Para recusar um fiado, aperte X no balcão.'},
  {id:'mate',title:'Uma pausa para o chimarrão',text:'Agora, com as mãos livres, vá à cuia e segure E para tomar mate. Ele dá velocidade por alguns segundos e pode ser tomado sempre que quiser.'},
  {id:'clean',title:'Casa pronta para amanhã',text:'Com as mãos livres, aproxime-se da mesa 1 e segure E para limpar. Depois o primeiro dia termina. Amanhã o movimento e a dificuldade começam a crescer.'}
 ];
 // Primeira lição: o jogo começa sem estoque e com dinheiro para comprar no fornecedor.
 const TUTORIAL_GOODS=['pao_xis','burger','ovo','queijo','salada','cerveja','refri','cigarro','codorna','erva'];
-function tutorialStockMissing(){if(!G.tutorial?.stockLesson)return [];return TUTORIAL_GOODS.filter(k=>(G.stock[k]||0)+G.deliveries.filter(d=>d.key===k).reduce((n,d)=>n+d.qty,0)<=0);}
+function tutorialStockMissing(){if(!G.tutorial?.stockLesson||!tutorialActive()||G.day!==1)return [];return TUTORIAL_GOODS.filter(k=>(G.stock[k]||0)+G.deliveries.filter(d=>d.key===k).reduce((n,d)=>n+d.qty,0)<=0);}
 function startWithoutStock(g){let cash=0;for(const[k,v]of Object.entries(GOODS))if(v.initial>0&&k!=='azeite'){cash+=v.initial*v.cost;g.stock[k]=0;}g.cash=round(g.cash+cash);g.stats=stats(g.cash);g.tutorial.stockLesson=true;g.tutorial.cleanLesson=true;for(const t of g.tables)if(!t.unlock){t.dirty=true;t.plates=2;}}
-function tutorialDirtyTables(){return G.tutorial?.cleanLesson?G.tables.filter(t=>t.dirty&&!t.unlock&&!t.group):[];}
+function tutorialDirtyTables(){return G.tutorial?.cleanLesson&&tutorialActive()&&G.day===1&&!isCampo()?G.tables.filter(t=>t.dirty&&!t.unlock&&!t.group):[];}
 // Antes de abrir no primeiro dia: comprar, limpar as mesas e abrir pela porta.
 function tutorialPrepHint(){
  const miss=tutorialStockMissing();

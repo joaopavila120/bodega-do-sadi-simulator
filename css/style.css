@@ -322,7 +322,7 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 @keyframes coachPop{0%{transform:scale(.9);opacity:.2}35%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
 @media(max-width:750px){#hudLayer .coach-stack{top:6px;gap:4px}#hudLayer #tutorialHint{font-size:12px;padding:7px 10px;line-height:1.35}#hudLayer #tutorialHint b{font-size:13px}#hudLayer #tutorialHint .need span{font-size:10px;padding:1px 6px}#hudLayer #hint{font-size:12px;padding:4px 10px}#hudLayer .pour-ui,#hudLayer .weigh-ui,#hudLayer .mix-ui,#hudLayer .fight-ui{bottom:6px!important}}
 /* A dica de ação fica embaixo, perto do jogador; o topo é do tutorial e dos avisos */
-#hudLayer #hint{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;pointer-events:none;box-shadow:0 4px 14px #0007}
+#hudLayer #hint{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;pointer-events:none;box-shadow:0 4px 14px #0007}
 @media(max-width:750px){#hudLayer #hint{bottom:8px;white-space:normal;text-align:center}}
 
 /* Tela inicial: menu de um lado e a vitrine com capturas do jogo do outro */
@@ -340,3 +340,7 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 .showcase-card figcaption b{display:block;font:bold 14px/1.25 Georgia,serif;color:#ffe2a6}
 .showcase-card figcaption span{display:block;margin-top:3px;font-size:12px;line-height:1.35;color:#d9c79f}
 @media(max-width:960px){#start.title-screen{place-items:start center;padding:14px}.title-wrap{grid-template-columns:1fr;gap:18px;width:min(560px,100%)}.title-wrap .start-menu{max-height:none}.showcase-intro{font-size:15px}.showcase-intro b{font-size:20px}.showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.showcase-card figcaption b{font-size:12px}.showcase-card figcaption span{font-size:11px}}
+.background-row{display:flex;align-items:center;gap:9px;margin-top:12px;font-weight:bold;cursor:pointer}.background-row input{width:18px;height:18px;accent-color:#7a5a2a}
+.game-menu .restart-day{grid-column:1/-1;background:#f3e2c0;border-color:#a8472c;color:#7a2f1c}
+.start-menu #startupStatus.gpu-warning{background:#f6dcc4;border:1px solid #a8472c;color:#6d2a17;border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.4;text-align:left}
+#weightHold.retry{background:#a8472c;border-color:#7a2f1c;color:#fff3d0;animation:coachPop .6s ease-out}

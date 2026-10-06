@@ -47,11 +47,12 @@ function updateContextActions(){
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
  $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);
- $('hint').classList.toggle('hidden',!!(G.lasso||G.bocce||scene)||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
+ $('hint').classList.toggle('hidden',!!(G.lasso||G.bocce||scene)||nearShopDoor()&&!G.task||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||!!scene||(phoneOpen&&!tutorialStockMissing().length)||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';
  if(G.day===1)setHTML($('tutorialHint'),tutorialHint());
- if(costelaoTutorialActive()&&!scene){$('tutorialHint').classList.remove('hidden');$('tutorialHint').innerHTML=costelaoTutorialHint();}
+ if((costelaoTutorialActive()||costelaoPrepFirst())&&!scene){$('tutorialHint').classList.remove('hidden');$('tutorialHint').innerHTML=costelaoTutorialHint();}
+ else if(!toast&&doorReminder()){$('tutorialHint').classList.remove('hidden');setHTML($('tutorialHint'),doorReminder());}
  $('gameSidebar').classList.toggle('lasso-mode',!!G.lasso);
  $('gameSidebar').classList.toggle('focused-task',['weigh','pour'].includes(G.task?.type)||G.fightTarget!==null);
 }
@@ -66,4 +67,11 @@ function awardTelevision(){
 function showTelevisionAward(){
  if(scenesEnabled()){playScene('tv',()=>{G.tvAwardPending=false;save();showReport();});return;}
  openDialog('Presente do vizinho: uma TV!',`<div class="rpg-speaker">${portraitHTML(PEOPLE.findIndex(p=>p.id==='valter'),88)}<div><p><b>Valter</b>: “Bodega que se preze precisa passar os Gre-Nal! Me criei junto com o teu pai, guri. Toma essa TV pra começar.”</p><p>Ela fica guardada e vai para a parede nos dias de jogo do Grêmio, do Inter e Gre-Nal.</p></div></div><div class="callout"><b>Amizade rende presente</b><br>Atendendo bem, jogando truco ou bocha com os fregueses conhecidos, a amizade cresce e eles trazem presentes no fim do dia.</div><button class="primary" data-act="tvAwardClose">Ver o resultado do primeiro dia</button>`,'tvAward');
+}
+
+// Bodega ou costelão ainda fechados (ou o dia já encerrado): um aviso no alto da tela lembra de ir até a porta.
+function doorReminder(){
+ if(!started||scene||G.lasso||G.bocce||G.atCancha||G.game||G.task||G.dialogue||tutorialActive()||costelaoPrepFirst()||!['prep','closed'].includes(G.phase))return '';
+ if(G.phase==='closed')return '<b>Expediente encerrado</b><p>Vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span> para seguir para o próximo dia.</p>';
+ const campo=isCampo();return '<b>'+(campo?'O costelão está fechado':'A bodega está fechada')+'</b><p>Quando estiver pronto, vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span> para abrir'+(campo?' o domingo':'')+'.</p>';
 }
