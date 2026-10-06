@@ -20,8 +20,12 @@ const PORTRAIT_FILES={badin:'badin',guri:'guri',indavirus:'indavirus',lauro:'lau
 function portraitHTML(person,size=96){
  const p=PEOPLE[person];if(!p)return '';const file=PORTRAIT_FILES[p.id],style=`width:${size}px;height:${size}px`;
  if(file)return `<img class="portrait" src="assets/images/portraits/256/${file}.jpg" alt="" draggable="false" style="${style}">`;
- const sp=p.sprite,art=typeof sp==='object'?CHARACTER_ART[sp.file]:peopleArt,s=characterCrop(sp),W=art?.naturalWidth,H=art?.naturalHeight;if(!W)return '';
- return `<span class="portrait" style="${style};background-image:url('${art.src}');background-size:${W/s.w*100}% auto;background-position:${s.x/(W-s.w)*100}% ${s.y/(H-s.w)*100}%"></span>`;
+ return portraitFromSprite(p.sprite,size);
+}
+// Busto recortado do sprite, só com CSS (funciona até abrindo o jogo direto do arquivo).
+function portraitFromSprite(sp,size=96){
+ const art=typeof sp==='object'?CHARACTER_ART[sp.file]:peopleArt,s=characterCrop(sp),W=art?.naturalWidth,H=art?.naturalHeight;if(!W)return '';
+ return `<span class="portrait" style="width:${size}px;height:${size}px;background-image:url('${art.src}');background-size:${W/s.w*100}% auto;background-position:${s.x/(W-s.w)*100}% ${s.y/(H-s.w)*100}%"></span>`;
 }
 // Cada caixa (bodega: 'dialogue', cancha: 'bocceTalk') tem retrato, nome, pergunta e resposta.
 const rpgBoxes={};
@@ -29,7 +33,7 @@ function showRpgBox(prefix,line){
  const box=$(prefix+'UI'),state=rpgBoxes[prefix]??={key:'',timer:null,text:''};box.classList.toggle('hidden',!line);
  if(!line){state.key='';stopRpgTyping(prefix);return;}
  const key=line.name+'|'+line.reply;if(key===state.key)return;state.key=key;state.text=line.reply||'';
- $(prefix+'Portrait').innerHTML=portraitHTML(line.person,104);$(prefix+'Name').textContent=line.name;$(prefix+'Player').textContent=line.player?'Você: '+line.player:'';
+ $(prefix+'Portrait').innerHTML=line.portrait||portraitHTML(line.person,104);$(prefix+'Name').textContent=line.name;$(prefix+'Player').textContent=line.player?'Você: '+line.player:'';
  // A fala aparece letra por letra, com um bipe baixinho.
  const el=$(prefix+'Reply');let i=0;stopRpgTyping(prefix);el.textContent='';box.classList.remove('done');
  state.timer=setInterval(()=>{i=Math.min(state.text.length,i+2);el.textContent=state.text.slice(0,i);if(i%8===0)AudioEngine.blip();if(i>=state.text.length)finishRpgTyping(prefix);},28);

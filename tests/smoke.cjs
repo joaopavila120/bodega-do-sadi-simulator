@@ -106,7 +106,7 @@ async function main() {
       const itemArtResults = await evaluate(fs.readFileSync(path.join(__dirname, 'item-art-scenarios.js'), 'utf8'));
       assert(itemArtResults.length >= 50, 'Todos os itens têm sprites no cenário e na interface');
       await evaluate('localStorage.clear()');
-      await click('#start [data-act="new"]'); await click('#overlay [data-act="close"]');
+      await click('#start [data-act="new"]'); assert(await evaluate('!!introScene&&document.body.classList.contains("intro-playing")'), 'Jogo novo começa com a introdução da história'); await click('#introSkip'); await click('#overlay [data-act="close"]');
       await waitUntil(() => evaluate('AudioEngine.tracks.every(t=>!t.audio.error&&t.audio.duration>0)'), 'As músicas externas não carregaram');
       const x = await evaluate('G.player.x'); await key('d', 160);
       assert(await evaluate('G.player.x') > x, 'Movimento real do teclado');
@@ -121,7 +121,7 @@ async function main() {
     // O TXT é carregado automaticamente, também ao abrir o HTML sem servidor.
     await load(pathToFileURL(path.join(root, 'index.html')).href);
     await evaluate('localStorage.clear()');
-    await click('#start [data-act="new"]');await click('#overlay [data-act="close"]');
+    await click('#start [data-act="new"]');await click('#introSkip');await click('#overlay [data-act="close"]');
     assert(await evaluate('G.room===1&&!$("startingRooms")'));
     assert(await evaluate(`(()=>{const c=canvas.getBoundingClientRect(),s=$('gameSidebar').getBoundingClientRect();return c.right<=s.left+1;})()`));
     assert(await evaluate(`customDialogues.badin?.length>0&&!document.querySelector('[data-act="importDialogues"]')&&!$('dialogueFile')`));

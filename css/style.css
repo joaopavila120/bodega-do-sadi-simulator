@@ -261,3 +261,9 @@
 .bocce-court{position:relative}
 #bocceTalkUI{left:auto;right:16px;bottom:16px;transform:none;width:min(560px,52%)}
 @media(max-width:750px){#bocceTalkUI{width:calc(100% - 20px);right:10px}}
+
+/* Introdução da história */
+body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .banner,body.intro-playing .toasts{visibility:hidden}
+.intro-skip{position:absolute;top:calc(7% + 10px);right:16px;z-index:10;background:#0a0e26cc;color:#f1ead2;border:2px solid #f1ead2;border-radius:4px;padding:6px 12px;font-weight:bold;cursor:pointer}
+.intro-skip.hidden{display:none}
+#introTalkUI{bottom:calc(7% + 14px)}

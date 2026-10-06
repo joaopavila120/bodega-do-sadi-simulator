@@ -7,6 +7,11 @@
  check(!$('startingCharacter'),'tela inicial não oferece escolha de personagem');
  $('startingName').value='Bodega do teste';
  const confirmBefore=window.confirm;try{window.confirm=()=>true;startGame(true);}finally{window.confirm=confirmBefore;}
+ check(introScene?.phase==='walk'&&!modal,'jogo novo abre com a introdução: o galpão vazio');
+ for(let i=0;i<120&&introScene.phase==='walk';i++)introTick(1/20);check(introScene.phase==='talk'&&$('introTalkName').textContent==='Sadi','o Sadi conta a história em caixa de diálogo');
+ for(let i=0;i<12&&introScene.phase==='talk';i++)introNext();check(introScene.phase==='cut','depois das três falas a cena corta');
+ for(let i=0;i<200&&introScene.phase!=='talk2';i++)introTick(1/20);check(introScene.phase==='talk2'&&rpgBoxes.introTalk.text.includes('gente conhecida'),'a bodega aparece montada e ele fala das figuras conhecidas');
+ introNext();introNext();check(!introScene&&!document.body.classList.contains('intro-playing'),'a introdução termina e devolve o jogo');
  check(G.avatarId==='sadi'&&G.bodegaName==='Bodega do teste'&&modal==='welcome','novo jogo começa com Sadi, aplica nome e apresenta o guia');
  check($('dialogTitle').textContent.includes('Um passo de cada vez')&&$('dialogContent').textContent.includes('um freguês por vez'),'boas-vindas apresentam tutorial sequencial');gameGuide();check(['Bocha','Truco','Contatos','Estética'].every(text=>$('dialogContent').textContent.includes(text)),'guia apresenta lazer, contatos e caminho de progressão');
  closeDialog(true);G.xp=99999;G.levelSeen=7;
