@@ -43,6 +43,8 @@ function espetoReady(e){return e&&!e.burned&&e.heat[0]>=1&&e.heat[1]>=1;}
 function campoTick(dt){
  if(!isCampo()||G.lasso)return;
  campoBirdsTick(dt);
+ // No primeiro costelão vêm só três fregueses (costela + maionese); atendidos, o dia fecha.
+ if(firstCostelao()&&campoState().firstOrders>=FIRST_COSTELAO_ORDERS&&G.phase==='open'&&!G.shop.some(c=>c.state==='queue')&&G.elapsed<DAY){G.elapsed=DAY;say('Primeiro costelão vendido! Hora de fechar.');}
  const c=campoState(),before=c.fuel;
  if(c.lit)c.fuel=Math.max(0,c.fuel-FUEL_BURN*dt);
  if(c.lit&&before>=25&&c.fuel<25){AudioEngine.warning();effect('O fogo está baixando: traga lenha!',525,430,'#ffc875');}
@@ -158,6 +160,8 @@ function campoHint(n){
  if(id==='lenha')return '<strong>E</strong> rachar lenha · segure e solte na faixa verde · '+CHOP_HITS+' golpes';
  return null;
 }
+const FIRST_COSTELAO_ORDERS=3;
+function firstCostelao(){return G.event.id==='costelao'&&campoState().firstDay===G.day&&!costelaoTutorialActive();}
 function maioneseAvailable(){return G.stock.maionese>0||G.stock.ovo>0&&G.stock.azeite>0;}
 function campoOrder(){
  const options=[];
@@ -266,7 +270,7 @@ function costelaoTarget(){
   case 'virar':case 'retirar':return e>=0?'espeto:'+e:null;
   case 'tabua':return 'tabua';
   case 'cortar':return h?.pid==='costela'?'service':'tabua';
-  case 'maionese':return !c.bowl.ovo&&h?.key!=='ovo'?'bin:ovo':!c.bowl.azeite&&h?.key!=='azeite'?'bin:azeite':'maionese';
+  case 'maionese':return ['ovo','azeite'].includes(h?.key)?'maionese':!c.bowl.ovo?'bin:ovo':!c.bowl.azeite?'bin:azeite':'maionese';
   case 'servir':return h?.pid==='maionese'?'service':'maionese';
  }
  return null;
@@ -281,7 +285,7 @@ function costelaoTutorialHint(){const t=costelaoTutorial(),s=costelaoStep();retu
 function costelaoWelcome(){
  const first=!G.costelaoTaught;
  // Cada domingo começa do zero: fogo apagado, espetos vazios e tigela limpa.
- {const c=campoState();c.fuel=0;c.lit=false;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
+ {const c=campoState();c.fuel=0;c.lit=false;c.firstOrders=0;c.firstDay=first?G.day:0;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
  if(first){campoState().tutorial={step:0,done:false,actor:null};if(G.stock.costela_crua<2){G.stock.costela_crua=2;G.avg.costela_crua=BOI_COST/MANTAS_PER_BOI;}}
  openDialog(first?'Primeiro costelão de domingo!':'Domingo de costelão',`<p>A bodega vai para o campo: costela no fogo de chão, maionese caseira e chimarrão.</p><div class="callout">Rache lenha · ponha no fogo e segure E para acender · manta no espeto · vire quando ficar verde · retire, leve à tábua e corte no peso. Maionese: ovo + óleo, A e D alternados.</div><p>${first?'Hoje é passo a passo: os fregueses esperam você ficar pronto.':'Mantas no estoque: <b>'+G.stock.costela_crua+'</b> · costela na tábua: <b>'+formatWeight(G.stock.costela)+'</b>. Faltou carne? Celular → Fornecedor → Campo.'}</p><button class="primary" data-act="close">Acender o fogo</button>`,'costelao');
 }

@@ -77,6 +77,8 @@
   check(costelaoStep().id==='maionese','etapa: maionese');mayo();
   check(costelaoStep().id==='servir','etapa: servir maionese');simulate(.05);for(let n=0;n<300;n++)customersTick(.05);use('maionese');use('service');
   check(!costelaoTutorialActive()&&G.costelaoTaught,'tutorial do costelão concluído');
+  G.stock.costela_crua=6;G.stock.maionese=3;G.shop=[];for(let i=0;i<6;i++)spawnShop();check(campoState().firstOrders===3&&G.shop.length===3&&G.shop.every(c=>c.pid==='costela'&&c.extra?.[0]==='maionese'),'primeiro costelão: só três pedidos de costela com maionese');
+  G.shop=[];campoTick(.05);check(G.elapsed===DAY,'atendidos os três, o primeiro costelão fecha');
   // laçada de sábado
   // primeiro sábado: cena no campo, o boi do pai, um quero-quero só e a montagem do costelão
   reset();window.NO_SCENES=false;G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};nextDay();check(scene?.id==='sabado'&&G.herd===1,'primeiro sábado abre a cena do boi que o pai deu');
