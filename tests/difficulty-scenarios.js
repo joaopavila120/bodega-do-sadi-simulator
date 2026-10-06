@@ -20,7 +20,7 @@
  check(Object.keys(EVENTS).every(id=>draws.includes(id)),'calendário gaúcho: domingo de costelão, quarta de futebol, sábado de baile ou campeonato e sorteio sem repetição');
  check(eventForDay(3).id==='costelao'&&eventForDay(6).id==='grenal'&&calendar(1).name==='Sexta'&&calendar(3).name==='Domingo','o jogo começa na sexta e o primeiro domingo é de costelão');
  G.phase='closed';const next=plannedEvent();planDay();closeDialog(true);check(plannedEvent().id===next.id&&readSave().nextEvent.id===next.id,'consultar ou recarregar a previsão não sorteia outro evento');
- reset();finishDay();check(G.tv&&G.tvAwardPending&&modal==='tvAward'&&$('dialogContent').textContent.includes('sorteio do comércio local'),'TV anunciada ao concluir o primeiro dia');
+ reset();finishDay();check(G.tv&&G.tvAwardPending&&modal==='tvAward'&&$('dialogContent').textContent.includes('Valter')&&$('dialogContent').textContent.includes('presentes'),'TV anunciada ao concluir o primeiro dia');
  save();check(readSave().tvAwardPending,'anúncio pendente da TV sobrevive ao salvamento');action('tvAwardClose');check(modal==='report'&&!G.tvAwardPending,'anúncio da TV conduz ao relatório sem prêmio duplicado');nextDay('automatic');closeDialog(true);check(G.day===2&&G.tv,'segundo dia mantém a TV e começa a nova progressão');
 
  G.day=2;G.player={x:510,y:585,dx:1,dy:0};refreshHUD();check($('tutorialHint').classList.contains('hidden')&&!$('hint').textContent.includes('WASD'),'dicas gerais e tutorial desaparecem depois do primeiro dia');

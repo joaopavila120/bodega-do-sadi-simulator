@@ -267,7 +267,8 @@ function costelaoTarget(){
   case 'fogo':return h?.key==='lenha'?'fogo':'lenha';
   case 'acender':return 'fogo';
   case 'espeto':return h?.key==='costela_crua'?'espeto:'+Math.max(0,c.espetos.findIndex(x=>!x)):'costela_crua';
-  case 'virar':case 'retirar':return e>=0?'espeto:'+e:null;
+  case 'virar':{const x=c.espetos[e];return x&&x.heat[x.fire]>=1?'espeto:'+e:null;}
+  case 'retirar':return e>=0&&espetoReady(c.espetos[e])?'espeto:'+e:null;
   case 'tabua':return 'tabua';
   case 'cortar':return h?.pid==='costela'?'service':'tabua';
   case 'maionese':return ['ovo','azeite'].includes(h?.key)?'maionese':!c.bowl.ovo?'bin:ovo':!c.bowl.azeite?'bin:azeite':'maionese';
@@ -275,9 +276,11 @@ function costelaoTarget(){
  }
  return null;
 }
-function drawCostelaoArrow(){
- if(!costelaoTutorialActive()||modal)return;const f=furniture().find(f=>f.id===costelaoTarget());if(!f)return;
- const x=f.x+f.w/2,y=f.y-(f.id==='fogo'?150:f.id.startsWith('espeto')?95:40)-Math.abs(Math.sin(frameClock*5))*12;
+// Seta amarela pulando sobre a estação que o tutorial pede (costelão e primeiro dia).
+function drawTutorialArrow(){
+ if(modal)return;const id=costelaoTutorialActive()?costelaoTarget():tutorialActive()&&G.phase==='open'?tutorialTarget():null;
+ const f=id&&furniture().find(f=>f.id===id);if(!f)return;
+ const x=f.x+f.w/2,y=f.y-(f.id==='fogo'?150:f.id.startsWith('espeto')?95:f.id.startsWith('table')?60:40)-Math.abs(Math.sin(frameClock*5))*12;
  ctx.fillStyle='#ffd34a';ctx.strokeStyle='#5a3a10';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-16,y-22);ctx.lineTo(x+16,y-22);ctx.lineTo(x+16,y-6);ctx.lineTo(x+26,y-6);ctx.lineTo(x,y+16);ctx.lineTo(x-26,y-6);ctx.lineTo(x-16,y-6);ctx.closePath();ctx.fill();ctx.stroke();
 }
 function costelaoTutorialDelivered(c){const t=costelaoTutorial();if(costelaoTutorialActive()&&c.id===t.actor){t.actor=null;costelaoAdvance();}}

@@ -11,12 +11,12 @@
   const cash=G.cash;buyUpgrade('coffee');check(!G.up.coffee&&G.cash===cash,'melhoria de nível 2 bloqueada no nível 1');
   gainXP(300);progressCheck();check(bodegaLevel()===2&&G.levelSeen===2&&shown('Bodega do bairro'),'subir de nível anuncia na tela');
   buyUpgrade('coffee');check(G.up.coffee,'nível 2 libera a cafeteira');
-  check(rentForLevel(1)<rentForLevel(7)&&creditLimit(1)<creditLimit(7),'aluguel e limite do fiado crescem com o nível');
+  check(creditLimit(1)<creditLimit(7),'limite do fiado cresce com o nível');
 
   // Despesas e validade
   reset();G.phase='open';G.elapsed=DAY;G.stock.salada=12;const before=G.cash;finishDay();closeDialog(true);
-  check(G.report.rent===rentForLevel()&&G.report.power>=6&&G.stock.salada===12,'fim do dia cobra aluguel e luz; o estoque não vence');
-  check(G.cash<=before-G.report.rent-G.report.power+.01,'despesas saem do caixa');
+  check(G.report.rent===0&&G.report.power>=6&&G.stock.salada===12,'fim do dia cobra só a luz (sem aluguel: o galpão é herança); o estoque não vence');
+  check(G.cash<=before-G.report.power+.01,'despesas saem do caixa');
   reset();G.day=1;G.phase='open';G.elapsed=DAY;finishDay();closeDialog(true);check(G.report.rent===0,'primeiro dia sem aluguel');
 
   // Conquistas

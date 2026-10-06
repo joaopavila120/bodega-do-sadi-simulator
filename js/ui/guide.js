@@ -33,7 +33,7 @@ function guideContent(){
  return `<div class="callout"><b>${escapeHTML(G.bodegaName)} · ${PEOPLE.find(p=>p.id===G.avatarId)?.name||'Sadi'}</b> · ${improvementCount()} melhorias · ${decorCount()} de ${DECOR.length} peças de decoração</div>${achievementsHTML()}
  <div class="guide-grid">
  <article class="panel"><h3>Atendimento</h3><p>Balcão: ${COUNTER_WAIT} s de paciência. Mesas: ${ORDER_WAIT} s por pessoa, e cada um paga o que recebeu. Com os dias chegam grupos maiores e pedidos com mais itens.</p><button data-act="help">Receitas e controles</button></article>
- <article class="panel"><h3>Dinheiro</h3><p>No fim do dia saem o aluguel (sobe com o nível) e a luz. O fiado fica no caderninho do celular. O estoque não estraga.</p></article>
+ <article class="panel"><h3>Dinheiro</h3><p>Sem aluguel: o galpão é herança do vô. No fim do dia sai a luz; no costelão, lenha e sal. O fiado fica no caderninho do celular. O estoque não estraga.</p></article>
  <article class="panel"><h3>Semana gaúcha</h3><p>Quarta tem futebol na TV; sábado, baile ou campeonato de truco e, depois de fechar, a laçada; domingo, costelão no campo. Os outros dias são sorteados.</p><button data-act="event">Programação do dia</button></article>
  <article class="panel"><h3>Laçada e costelão</h3><p>Laçada: ${LASSO_HITS} laços certeiros laçam um boi, que rende ${MANTAS_PER_BOI} mantas; Q laça e Espaço esquiva do quero-quero. Costelão: acenda o fogo com lenha rachada, asse as mantas virando os lados e corte no peso. Sobras vão fora no fim do dia.</p></article>
  <article class="panel"><h3>Truco e bocha</h3><p>Truco na mesa fixa: Y joga com quem está sentado. Bocha pela porta da cancha, à direita: melhor de 3 rodadas. Os dois pausam o atendimento e podem valer aposta.</p></article>

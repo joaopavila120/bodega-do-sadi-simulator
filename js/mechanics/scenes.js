@@ -40,6 +40,18 @@ const SCENES = {
     { say: 'valter', text: 'Vai abrir mesmo, vivente? Já tava na hora de ter uma bodega por aqui!' },
     { say: 'sadi', text: 'Amanhã, portas abertas! E dizem que por aqui passa gente conhecida: o Mano Lima, o Lauro Boleador, o Indavirus… Se eu tratar bem, viram amigos e até trazem presente.' }
   ],
+  // Fim do primeiro dia: o vizinho Valter traz uma TV de presente.
+  tv: () => [
+    { view: 'bodega' }, { fade: 'in', time: .4 },
+    { actor: 'valter', x: ENTRY.x, y: ENTRY.y, dx: -1 }, { do: () => AudioEngine.doorChime() },
+    { walk: 'valter', to: { x: clamp(G.player.x + 90, 120, W - 120), y: clamp(G.player.y, 470, 840) } },
+    { say: 'valter', text: 'Opa, vizinho! Fechou o primeiro dia? Trouxe uma coisa pra ti.' },
+    { say: 'valter', text: 'Uma TV! Bodega que se preze precisa passar os Gre-Nal. Ela fica guardada e vai pra parede em dia de jogo.' },
+    { say: 'valter', text: 'Me criei junto com o teu pai, guri. Ver esse galpão aceso de novo me deixou faceiro.' },
+    { say: 'sadi', text: 'Bah, Valter, muito obrigado! O primeiro Gre-Nal aqui é por conta da casa.' },
+    { say: 'dica', text: 'Amizade rende presente! Atendendo bem, jogando truco ou bocha com os fregueses conhecidos, a amizade cresce e eles trazem presentes no fim do dia.' },
+    { walk: 'valter', to: { x: ENTRY.x, y: ENTRY.y } }
+  ],
   // Primeiro sábado: o costelão da inauguração e o boi que o pai deu.
   sabado: () => [
     { view: 'campo' }, { actor: 'sadi', x: 560, y: 640 }, { do: () => { scene.boi = { x: 740, y: 630, coat: 1 }; } }, { fade: 'in', time: 1 },
@@ -86,6 +98,7 @@ function sceneAdvance() {
 const SCENE_OVERLAYS = { letter: 'sceneLetter', news: 'sceneNews', photo: 'scenePhoto' };
 function hideSceneOverlays() { for (const id of Object.values(SCENE_OVERLAYS)) $(id).classList.add('hidden'); }
 function sceneSpeaker(who) {
+  if (who === 'dica') return { portrait: '<span class="portrait portrait-phone" style="width:104px;height:104px">💡</span>', name: 'Dica' };
   if (who === 'fornecedor') return { portrait: '<span class="portrait portrait-phone" style="width:104px;height:104px">📞</span>', name: 'Atacado · telefone' };
   if (who === 'sadi') return { portrait: portraitFromSprite(avatarSprite(), 104), name: PEOPLE.find(p => p.id === G.avatarId)?.name || 'Sadi' };
   const i = PEOPLE.findIndex(p => p.id === who); return { person: i, name: PEOPLE[i]?.name || who };

@@ -23,7 +23,7 @@ function draw(){beginWorld();
  drawNight();
  drawCustomerOrders();
  if(G.task?.type==='clean')txt('Limpando…',G.player.x,G.player.y-171,14,'#fff4c4');
- drawFx();drawCostelaoArrow();drawActionFeedback();drawSocialFeedback();for(const e of sparks){ctx.globalAlpha=Math.min(1,e.life);txt(e.text,e.x,e.y-(2.2-e.life)*16,15,e.color);}ctx.globalAlpha=1;
+ drawFx();drawTutorialArrow();drawActionFeedback();drawSocialFeedback();for(const e of sparks){ctx.globalAlpha=Math.min(1,e.life);txt(e.text,e.x,e.y-(2.2-e.life)*16,15,e.color);}ctx.globalAlpha=1;
  if(near?.kind==='station'){const f=near.obj;rect(f.x+f.w/2-10,f.y+f.h+15,20,21,'#ffdf91',4,'#614322');ctx.fillStyle='#38291b';ctx.font='bold 13px Arial';ctx.textAlign='center';ctx.fillText('E',f.x+f.w/2,f.y+f.h+26);}
  ctx.setTransform(1,0,0,1,0,0);
 }

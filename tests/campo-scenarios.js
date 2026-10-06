@@ -70,8 +70,8 @@
   chop();check(costelaoStep().id==='fogo','etapa: lenha no fogo');use('fogo');check(costelaoStep().id==='acender','etapa: acender o fogo');
   approach('fogo');keys.add('e');interact();tick(LIGHT_TIME+.1,holdTick);keys.clear();check(fireLit()&&costelaoStep().id==='espeto','etapa: costela no espeto');
   use('costela_crua');use('espeto:0');check(costelaoStep().id==='virar','etapa: virar');
-  check(costelaoTarget()==='espeto:0'&&modal!=='costelaoStep','depois da primeira etapa, avisos rápidos e seta, sem pausar');approach('espeto:0');roast();interact();check(costelaoStep().id==='retirar','etapa: retirar');
-  roast();interact();check(costelaoStep().id==='tabua','etapa: tábua');use('tabua');check(costelaoStep().id==='cortar','etapa: cortar');
+  check(costelaoTarget()===null&&modal!=='costelaoStep','enquanto o lado assa, a seta some');approach('espeto:0');roast();check(costelaoTarget()==='espeto:0','lado no ponto: a seta volta para virar');interact();check(costelaoStep().id==='retirar'&&costelaoTarget()===null,'virou: a seta some até ficar pronto');
+  roast();check(costelaoTarget()==='espeto:0','pronto: a seta aponta para retirar');interact();check(costelaoTarget()==='tabua','e depois para a tábua');check(costelaoStep().id==='tabua','etapa: tábua');use('tabua');check(costelaoStep().id==='cortar','etapa: cortar');
   simulate(.05);const first=G.shop[0];check(first?.pid==='costela'&&first.grams===500&&first.training,'primeiro freguês pede 500 g sem prazo');
   for(let n=0;n<300;n++)customersTick(.05);weigh();use('service');
   check(costelaoStep().id==='maionese','etapa: maionese');mayo();
@@ -80,6 +80,10 @@
   G.stock.costela_crua=6;G.stock.maionese=3;G.shop=[];for(let i=0;i<6;i++)spawnShop();check(campoState().firstOrders===3&&G.shop.length===3&&G.shop.every(c=>c.pid==='costela'&&c.extra?.[0]==='maionese'),'primeiro costelão: só três pedidos de costela com maionese');
   G.shop=[];campoTick(.05);check(G.elapsed===DAY,'atendidos os três, o primeiro costelão fecha');
   // laçada de sábado
+  // fim do primeiro dia: o vizinho traz a TV em cena
+  reset();window.NO_SCENES=false;G.day=1;G.phase='open';G.elapsed=DAY;finishDay();check(scene?.id==='tv'&&G.tv,'no fim do primeiro dia o vizinho entra com a TV');
+  {let n=0,said=[];while(scene&&n++<900){if(scene.step?.say){said.push(rpgBoxes.sceneTalk?.text||'');sceneNext();sceneNext();}else sceneTick(1/20);}check(said.join(' ').includes('teu pai')&&said.join(' ').includes('presentes')&&modal==='report'&&!G.tvAwardPending,'ele conta que se criou com o pai do Sadi, a dica dos presentes aparece e segue o relatório');}
+  closeDialog(true);window.NO_SCENES=true;
   // primeiro sábado: cena no campo, o boi do pai, um quero-quero só e a montagem do costelão
   reset();window.NO_SCENES=false;G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};nextDay();check(scene?.id==='sabado'&&G.herd===1,'primeiro sábado abre a cena do boi que o pai deu');
   sceneSkip();check(modal==='lassoIntro','depois da cena vêm as instruções da laçada');action('lassoStart');check(G.lasso.bois.length===1&&activeQueros(G.lasso).length<=1,'primeira laçada: um boi e um quero-quero só');
@@ -114,7 +118,7 @@
   campoState().espetos[0]={heat:[0,0],fire:0,burned:false,cost:1,turns:0};G.player={x:525,y:640,dx:1,dy:0};campoBirds=[];spawnCampoBird();const calm=campoBirds[0];for(let t=0;t<6;t+=.05)campoBirdsTick(.05);calm.aggr=0;calm.state='ground';calm.t=9;G.player={x:calm.x+40,y:calm.y-10,dx:1,dy:0};campoBirdsTick(.05);check(calm.state==='ground'&&calm.calm>0,'quero-quero manso só grita e se afasta');campoBirds=[];campoState().espetos[0]=null;
   // sobras do costelão
   sunday();G.phase='open';G.stock.costela=1500;G.stock.costela_crua=2;campoState().espetos[1]={heat:[1,0],fire:1,burned:false,cost:40,turns:1};finishDay(true);
-  check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&G.report.waste>0,'carne que sobra no fim do costelão é descartada');check(G.report.power===0,'no costelão não há gasto de luz e querosene');closeDialog(true);
+  check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&G.report.waste>0,'carne que sobra no fim do costelão é descartada');check(G.report.power===0&&G.report.supplies===COSTELAO_SUPPLIES&&!G.report.rent,'no costelão não há luz: vão lenha e sal');closeDialog(true);
   // mate sem reposição no campo
   sunday();approach('mate');keys.add('e');interact();tick(1.2,holdTick);keys.clear();check(G.boost>0,'campo tem estação de mate, sem reposição de erva');
   save();check(readSave().herd===G.herd&&readSave().version===15,'rebanho e campo persistem no salvamento');

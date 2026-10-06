@@ -62,6 +62,8 @@ function updateContextActions(){
 function awardTelevision(){
  if(G.day!==1||G.tv)return false;G.tv=true;G.tvAwardPending=true;return true;
 }
+// Fim do primeiro dia: o vizinho Valter entra e dá a TV de presente (em cena; sem cenas, num quadro).
 function showTelevisionAward(){
- openDialog('Parabéns! Uma TV para sua bodega',`<p>Parabéns, você ganhou um sorteio do comércio local e ganhou uma TV, agora você poderá passar os jogos do Grêmio e do Inter na bodega.</p><p>Ela fica guardada e vai para a parede só nos dias de jogo.</p><p>A partir do dia 2, jogos dos dois times e Gre-Nal entram no sorteio dos eventos.</p><button class="primary" data-act="tvAwardClose">Ver o resultado do primeiro dia</button>`,'tvAward');
+ if(scenesEnabled()){playScene('tv',()=>{G.tvAwardPending=false;save();showReport();});return;}
+ openDialog('Presente do vizinho: uma TV!',`<div class="rpg-speaker">${portraitHTML(PEOPLE.findIndex(p=>p.id==='valter'),88)}<div><p><b>Valter</b>: “Bodega que se preze precisa passar os Gre-Nal! Me criei junto com o teu pai, guri. Toma essa TV pra começar.”</p><p>Ela fica guardada e vai para a parede nos dias de jogo do Grêmio, do Inter e Gre-Nal.</p></div></div><div class="callout"><b>Amizade rende presente</b><br>Atendendo bem, jogando truco ou bocha com os fregueses conhecidos, a amizade cresce e eles trazem presentes no fim do dia.</div><button class="primary" data-act="tvAwardClose">Ver o resultado do primeiro dia</button>`,'tvAward');
 }

@@ -35,9 +35,40 @@ function tutorialTick(){
    if(!actor){t.introduced=false;return;}
    t.actor=actor.id;
   }
-  openDialog('Passo '+(t.step+1)+' de '+TUTORIAL_STEPS.length+' · '+s.title,`<p>${s.text}</p><p>Hoje você aprende no seu ritmo: um freguês por vez, sem prazo para entregar.</p><button class="primary" data-act="close">Vamos lá</button>`,'tutorial');save();return;
+  // Só a primeira etapa para o jogo; as seguintes entram num aviso rápido, com a seta mostrando onde ir.
+  if(t.step===0)openDialog(s.title,`<p>${s.text}</p><p>Siga a seta amarela: ela mostra onde ir em cada etapa. Hoje é sem pressa, um freguês por vez.</p><button class="primary" data-act="close">Vamos lá</button>`,'tutorial');
+  else{showBanner((t.step+1)+'/'+TUTORIAL_STEPS.length+' · '+s.title,s.text.replace(/<[^>]+>/g,''),'info');AudioEngine.tick();}
+  save();return;
  }
  if(s.id==='upgrade'&&G.up.trago&&!phoneOpen||s.id==='mate'&&t.mate||s.id==='clean'&&!G.tables[0].dirty&&!G.tables[0].group)tutorialAdvance();
+}
+// Para onde a seta aponta em cada etapa, conforme o que está na mão.
+function tutorialTarget(){
+ const s=tutorialStep(),t=G.tutorial,h=held();if(!s||t.delivered||(s.pid&&!t.actor))return null;
+ const serve=pid=>h?.pid===pid&&(h.ready||!COOK[h.key])?'service':null;
+ switch(s.id){
+  case 'cigarro':return serve('cigarro')||'shop:cigarro';
+  case 'cerveja':return h?.pid==='cerveja'&&h.ready?'service':'tap:cerveja';
+  case 'trago':return h?.pid==='cachaca'&&h.ready?'service':'pour';
+  case 'erva':return h?.pid==='erva'?'service':'bag';
+  case 'fiado':return h?.pid==='codorna'?'service':'shop:codorna';
+  case 'mate':return 'mate';
+  case 'clean':return 'table:0';
+  case 'xis':return tutorialXisTarget();
+ }
+ return null;
+}
+function tutorialXisTarget(){
+ const press=G.kitchen.press,h=held(),bi=G.kitchen.bench.findIndex(Boolean),b=G.kitchen.bench[bi],grill=G.kitchen.grill;
+ if(h?.pid==='xis_salada'&&h.ready)return 'table:0';
+ if(press)return press.ready||press.burned?'press':null;
+ if(h?.burned)return 'trash';
+ if(h?.kind==='assembled')return 'press';
+ if(h?.kind==='ingredient'){if(COOK[h.key]&&!h.ready){const g=grill.findIndex(x=>!x);return g>=0?'grill:'+g:null;}return 'bench:'+Math.max(0,bi);}
+ if(!b)return 'bin:pao_xis';
+ const parts=benchParts(b);if(matchRecipe(parts))return 'bench:'+bi;
+ const gi=grill.findIndex(Boolean);if(gi>=0)return grill[gi].ready||grill[gi].burned?'grill:'+gi:null;
+ const next=['queijo','salada','burger','ovo'].find(k=>!parts.includes(k));return next?'bin:'+next:null;
 }
 function tutorialXisHint(){
  const press=G.kitchen.press,h=held(),b=G.kitchen.bench.find(Boolean);

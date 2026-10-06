@@ -25,6 +25,7 @@ function levelProgress(){const l=bodegaLevel();if(l>=LEVELS.length)return 1;retu
 function gainXP(n){G.xp=Math.max(0,(G.xp||0)+n);}
 // O aluguel cresce com a bodega; o caderno de fiado também comporta mais.
 function rentForLevel(level=bodegaLevel()){return 15+8*(level-1);}
+const COSTELAO_SUPPLIES=9; // lenha extra e sal grosso do costelão
 function creditLimit(level=bodegaLevel()){return 40+20*level;}
 
 // ---------- Metas e conquistas ----------
@@ -60,13 +61,13 @@ function progressCheck(){
  if(!started||!G)return;
  checkAchievements();
  const level=bodegaLevel();G.levelSeen??=level;
- if(level>G.levelSeen){G.levelSeen=level;showBanner('Nível '+level+' · '+levelInfo(level).name,'Novas melhorias liberadas. Aluguel agora: '+money(rentForLevel(level))+' por dia.','level');AudioEngine.ready();}
+ if(level>G.levelSeen){G.levelSeen=level;showBanner('Nível '+level+' · '+levelInfo(level).name,'Novas melhorias liberadas.','level');AudioEngine.ready();}
  socialCheck();
 }
 function progressTick(dt){progressClock+=dt;if(progressClock<.5)return;progressClock=0;progressCheck();}
 function achievementsHTML(){
  const l=bodegaLevel(),next=LEVELS[l];
- return `<section class="goals"><h3>Nível ${l} · ${levelInfo(l).name}</h3><div class="xp-track"><div style="width:${Math.round(levelProgress()*100)}%"></div></div><p>${G.xp} XP${next?' · faltam '+(next.xp-G.xp)+' para '+next.name:' · nível máximo'}. Aluguel diário: ${money(rentForLevel(l))} · limite do fiado: ${money(creditLimit(l))}.</p>
+ return `<section class="goals"><h3>Nível ${l} · ${levelInfo(l).name}</h3><div class="xp-track"><div style="width:${Math.round(levelProgress()*100)}%"></div></div><p>${G.xp} XP${next?' · faltam '+(next.xp-G.xp)+' para '+next.name:' · nível máximo'}. Limite do fiado: ${money(creditLimit(l))}.</p>
  <div class="level-steps">${LEVELS.map((v,i)=>`<span class="${i<l?'done':''}">${i+1} · ${v.name}</span>`).join('')}</div>
  <h3>Conquistas · ${Object.keys(G.achievements||{}).length}/${ACHIEVEMENTS.length}</h3><div class="achievements">${ACHIEVEMENTS.map(a=>{const got=G.achievements?.[a.id];return `<div class="achievement ${got?'got':''}"><b>${got?'★':'☆'} ${a.name}</b><small>${a.desc}${a.xp?' · '+a.xp+' XP':''}${got?' · dia '+got:''}</small></div>`;}).join('')}</div></section>`;
 }
@@ -75,8 +76,9 @@ function achievementsHTML(){
 function litLamps(){return DECOR.filter(d=>d.light&&decorVisible(d)).length;}
 function dailyCosts(){
  // No costelão a bodega fica fechada: sem luz nem querosene, só o fogo de chão.
- const share=Math.min(G.elapsed/DAY,1),power=G.event.id==='costelao'?0:round(6+6*share+litLamps()),rent=G.day===1?0:rentForLevel();
- return {power,rent};
+ // Sem aluguel: o galpão foi herdado do vô. No costelão não há luz, mas vão lenha e sal.
+ const share=Math.min(G.elapsed/DAY,1),costelao=G.event.id==='costelao',power=costelao?0:round(6+6*share+litLamps()),supplies=costelao?COSTELAO_SUPPLIES:0;
+ return {power,rent:0,supplies};
 }
 
 // ---------- Calendário gaúcho ----------
