@@ -8,7 +8,7 @@ let scene = null, sceneForcesCampo = false;
 function scenesEnabled() { return !window.NO_SCENES; }
 
 const SCENES = {
-  // Jogo novo: o galpão herdado, a carta do vô, a lembrança do CTG e o jornal.
+  // Jogo novo: o galpão herdado, a carta do vô e o jornal.
   intro: () => [
     { view: 'galpao' }, { actor: 'sadi', x: ENTRY.x, y: ENTRY.y, dx: -1 }, { fade: 'in', time: 1 },
     { walk: 'sadi', to: { x: 800, y: 640 } },
@@ -16,10 +16,7 @@ const SCENES = {
     { walk: 'sadi', to: { x: 700, y: 610 } },
     { say: 'sadi', text: 'Ué… uma caixa velha. Tem uma carta aqui dentro.' },
     { overlay: 'letter' },
-    { say: 'sadi', text: 'Esse galpão foi de tudo: construíram na época das tropeadas, depois virou CTG…' },
-    { fade: 'out', time: .6 }, { view: 'flash' }, { music: 'chamame' }, { fade: 'in', time: .6 }, { wait: 6 },
-    { fade: 'out', time: .6 }, { view: 'galpao' }, { fade: 'in', time: .6 },
-    { say: 'sadi', text: '…e agora tá abandonado.' },
+    { say: 'sadi', text: 'Esse galpão foi de tudo: construíram na época das tropeadas, depois virou CTG… e agora tá abandonado.' },
     { say: 'sadi', text: 'Vou revitalizar e realizar meu sonho: abrir minha própria bodega!' },
     { fade: 'out', time: 1 }, { caption: 'Algumas semanas depois…', time: 2 },
     { overlay: 'news' },
@@ -63,7 +60,6 @@ function sceneAdvance() {
     if (st.view) { s.view = st.view; continue; }
     if (st.actor) { s.actors[st.actor] = { x: st.x, y: st.y, dx: st.dx ?? 1, walk: false }; continue; }
     if (st.do) { st.do(); continue; }
-    if (st.music) { AudioEngine.chamame(); continue; }
     s.step = st;
     if (st.say) showRpgBox('sceneTalk', { ...sceneSpeaker(st.say), player: '', reply: st.text });
     if (st.overlay) { $(st.overlay === 'letter' ? 'sceneLetter' : 'sceneNews').classList.remove('hidden'); AudioEngine.paper(); }
@@ -137,22 +133,6 @@ function drawGalpao() {
   drawSceneActors();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
-// Lembrança do passado: o galpão em sépia, cheio de gente dançando no tempo do CTG.
-const FLASH_PAIRS = [[480, 620], [760, 560], [1060, 640], [620, 780], [930, 790]];
-function drawFlashback() {
-  const commons = PEOPLE.map((p, i) => i).filter(i => !isSpecial(i) && !PEOPLE[i].team);
-  beginWorld(); ctx.filter = 'sepia(.9) saturate(.75) brightness(.95)';
-  if (roomArt.complete && roomArt.naturalWidth) { ctx.imageSmoothingEnabled = false; ctx.drawImage(roomArt, 0, 0, W, H); ctx.imageSmoothingEnabled = true; }
-  const dancers = [];
-  FLASH_PAIRS.forEach(([cx, cy], k) => { for (let j = 0; j < 2; j++) { const a = frameClock * 1.7 + k + j * Math.PI, x = cx + Math.cos(a) * 34, y = cy + Math.sin(a) * 12, who = commons[(k * 2 + j) % commons.length]; dancers.push({ y, draw: () => personDraw(PEOPLE[who].sprite, x, y - Math.abs(Math.sin(frameClock * 6 + k + j)) * 5, true, false, Math.cos(a) > 0 ? -1 : 1) }); } });
-  dancers.push({ y: 470, draw: () => personDraw(PEOPLE[commons[10 % commons.length]].sprite, 300, 470, false, false, 1) });
-  dancers.sort((a, b) => a.y - b.y).forEach(d => d.draw());
-  ctx.filter = 'none'; ctx.setTransform(1, 0, 0, 1, 0, 0);
-  const cw = canvas.width, ch = canvas.height, g = ctx.createRadialGradient(cw / 2, ch / 2, ch * .3, cw / 2, ch / 2, ch * .85);
-  g.addColorStop(0, 'rgba(40,24,8,0)'); g.addColorStop(1, 'rgba(40,24,8,.75)'); ctx.fillStyle = g; ctx.fillRect(0, 0, cw, ch);
-  ctx.fillStyle = `rgba(255,240,200,${.04 + .03 * Math.sin(frameClock * 23)})`; ctx.fillRect(0, 0, cw, ch);
-  for (let i = 0; i < 30; i++) { ctx.fillStyle = 'rgba(30,20,10,.35)'; ctx.fillRect((Math.sin(i * 91 + frameClock * 17) * .5 + .5) * cw, (Math.cos(i * 37 + frameClock * 13) * .5 + .5) * ch, 2, 2); }
-}
 // Campo: rebanho, quero-queros no céu e no chão e, na montagem, as estações aparecendo.
 function drawSceneCampo() {
   const s = scene; beginWorld(); drawCampoBackground();
@@ -168,7 +148,7 @@ function drawScene() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cw, ch);
     ctx.globalAlpha = clamp(Math.min(s.t / .5, (s.step.time - s.t) / .5), 0, 1); ctx.fillStyle = '#f1e6c8'; ctx.font = `italic ${Math.round(ch / 20)}px Georgia, serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(s.step.caption, cw / 2, ch / 2); ctx.globalAlpha = 1;
   } else {
-    if (s.view === 'galpao') drawGalpao(); else if (s.view === 'flash') drawFlashback(); else if (s.view === 'campo') drawSceneCampo();
+    if (s.view === 'galpao') drawGalpao(); else if (s.view === 'campo') drawSceneCampo();
     else if (s.view === 'bodega') { draw(); ctx.setTransform(1, 0, 0, 1, 0, 0); }
     else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cw, ch); }
     if (s.fade > 0) { ctx.fillStyle = `rgba(0,0,0,${s.fade})`; ctx.fillRect(0, 0, cw, ch); }

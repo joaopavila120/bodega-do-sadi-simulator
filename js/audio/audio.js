@@ -89,15 +89,6 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
  blip(){this.note(1100+Math.random()*180,.03,'square',.01);},
  // Papel desdobrando (carta e jornal).
  paper(){this.hiss(.22,.06,2600);this.hiss(.18,.05,3600,.12);},
- // Trecho de chamamé numa gaita: duas palhetas desafinadas, melodia e baixo.
- chamame(){if(!this.on||!this.ctx||this.ctx.state!=='running')return;const c=this.ctx,start=c.currentTime+.05,beat=.3;
-  const N=n=>440*Math.pow(2,(n-69)/12);
-  const melody=[76,74,72,71,72,74,76,76,76,74,72,71,69,71,72,74,72,71,69,null];
-  const bass=[45,null,52,40,null,52,45,null,52,43,null,50,41,null,48,43,null,50,45,null];
-  const voice=(note,t,dur,vol,cut)=>{const f=c.createBiquadFilter(),g=c.createGain();f.type='lowpass';f.frequency.value=cut;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.03);g.gain.setValueAtTime(vol,t+dur*.75);g.gain.exponentialRampToValueAtTime(.0001,t+dur);f.connect(g);g.connect(this.out());[-7,7].forEach(det=>{const o=c.createOscillator();o.type='sawtooth';o.frequency.value=N(note);o.detune.value=det;o.connect(f);o.start(t);o.stop(t+dur+.02);});};
-  melody.forEach((n,i)=>{if(n)voice(n,start+i*beat,beat*(i===melody.length-2?2:1)*.95,.035,2200);});
-  bass.forEach((n,i)=>{if(n)voice(n,start+i*beat,beat*.8,.03,700);});
- },
  brawl(){[0,.09,.2,.3].forEach((t,i)=>{this.note(95+i*14,.07,'triangle',.09,t);this.noise(.08,.14,900+i*300);});},
  crash(){this.noise(.4,.3,3200);[2350,3100,2650,3900,2900].forEach((f,i)=>this.note(f,.18,'sine',.05,.02+i*.045));this.note(70,.25,'triangle',.12);},
  near(x,y,range=800){return clamp(1.15-Math.hypot(G.player.x-x,G.player.y-y)/range,.3,1);},

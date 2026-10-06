@@ -11,7 +11,6 @@
  const runScene=(until,max=400)=>{for(let n=0;n<max&&scene&&!until();n++){if(scene.step?.say||scene.step?.overlay)sceneNext();else sceneTick(1/20);}};
  runScene(()=>scene.step?.say);check(scene.view==='galpao'&&$('sceneTalkName').textContent==='Sadi','o Sadi conta a história em caixa de diálogo');
  runScene(()=>scene.step?.overlay==='letter');check(!$('sceneLetter').classList.contains('hidden'),'ele acha a carta do vô');
- runScene(()=>scene.view==='flash');check(scene.view==='flash','a lembrança do CTG aparece em sépia');
  runScene(()=>scene.step?.overlay==='news');check($('sceneNews').textContent.includes('Velho galpão vai virar bodega'),'o Jornal da Comunidade anuncia a bodega');
  runScene(()=>scene.view==='bodega'&&scene.step?.say);check(rpgBoxes.sceneTalk.text.includes('gente conhecida'),'a bodega aparece montada e ele fala das figuras conhecidas');
  runScene(()=>false);check(!scene&&!document.body.classList.contains('intro-playing'),'a introdução termina e devolve o jogo');
