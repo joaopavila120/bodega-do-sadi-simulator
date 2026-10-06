@@ -73,7 +73,7 @@ function showGiftVisit(){
 }
 function acceptGiftVisit(){const item=G.giftQueue?.shift();deliverGift(item);closeDialog(true);challengeVisitLeave();save();}
 function socialCheck(){
- G.contacts??={};G.giftsGiven??={};G.playable??={};
+ G.contacts??={};G.giftsGiven??={};G.playable??={};arcCheck();
  for(const i of specialPeople()){
   const id=PEOPLE[i].id,f=G.friends[i]||0;
   if(f>=CONTACT_AT)unlockContact(i);
@@ -118,7 +118,7 @@ function contactsPanel(){
  return `<div class="phone-intro"><h3>Contatos da bodega</h3><p>Só os personagens especiais viram amigos. Atenda e jogue com eles: com ${CONTACT_AT} de afeto você ganha o contato e pode convidá-los para truco e bocha; com ${GIFT_AT}, eles trazem presentes; com ${MAX_FRIENDSHIP}, dá para jogar com eles.</p>${G.avatarId!=='sadi'?'<button data-act="playAs" data-id="sadi">Voltar a jogar com Sadi</button>':''}</div>`+people.map(i=>{
   const p=PEOPLE[i],f=G.friends[i]||0,contact=hasContact(i),met=G.metSpecial?.[p.id],me=p.id===G.avatarId;
   const next=!contact?CONTACT_AT:f<GIFT_AT?GIFT_AT:MAX_FRIENDSHIP;
-  return `<article class="contact-card ${contact?'':'locked'}"><canvas width="64" height="90" data-contact="${i}" aria-label="${escapeHTML(met?p.name:'Desconhecido')}"></canvas><div><h3>${contact?'☎ ':''}${escapeHTML(met||contact?p.name:'???')}</h3><div class="xp-track small"><div style="width:${f}%"></div></div><p>Afeto ${f} / ${MAX_FRIENDSHIP}${f<MAX_FRIENDSHIP?' · próximo marco: '+next:''}</p><small>${me?'É você agora.':contact?(p.origin||'Personagem especial'):met?'Atenda mais vezes para ganhar o contato.':'Ainda não apareceu na bodega.'}</small>${contact&&!me?`<div class="contact-actions"><button class="small" data-act="invite" data-id="${i}:truco">Convidar · truco</button><button class="small" data-act="invite" data-id="${i}:bocha">Convidar · bocha</button>${G.playable?.[p.id]?`<button class="small" data-act="playAs" data-id="${p.id}">Jogar com ${escapeHTML(p.name)}</button>`:''}</div>`:''}</div></article>`;
+  return `<article class="contact-card ${contact?'':'locked'}"><canvas width="64" height="90" data-contact="${i}" aria-label="${escapeHTML(met?p.name:'Desconhecido')}"></canvas><div><h3>${contact?'☎ ':''}${escapeHTML(met||contact?p.name:'???')}</h3><div class="xp-track small"><div style="width:${f}%"></div></div><p>Afeto ${f} / ${MAX_FRIENDSHIP}${f<MAX_FRIENDSHIP?' · próximo marco: '+next:''}</p>${arcProgressText(i)}<small>${me?'É você agora.':contact?(p.origin||'Personagem especial'):met?'Atenda mais vezes para ganhar o contato.':'Ainda não apareceu na bodega.'}</small>${contact&&!me?`<div class="contact-actions"><button class="small" data-act="invite" data-id="${i}:truco">Convidar · truco</button><button class="small" data-act="invite" data-id="${i}:bocha">Convidar · bocha</button>${G.playable?.[p.id]?`<button class="small" data-act="playAs" data-id="${p.id}">Jogar com ${escapeHTML(p.name)}</button>`:''}</div>`:''}</div></article>`;
  }).join('');
 }
 function drawContactPortraits(){document.querySelectorAll('[data-contact]').forEach(c=>{const i=Number(c.dataset.contact),context=c.getContext('2d');drawCharacterPortrait(context,PEOPLE[i].sprite,32,88,86);if(!hasContact(i)){context.globalCompositeOperation='source-atop';context.fillStyle=G.metSpecial?.[PEOPLE[i].id]?'#3a2b1ccc':'#2a1f15';context.fillRect(0,0,c.width,c.height);context.globalCompositeOperation='source-over';}});}

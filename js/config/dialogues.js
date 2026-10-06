@@ -18,15 +18,15 @@ const DEFAULT_DIALOGUES={
   "guri": [
   {"player": "E aí, Guri?", "reply": "Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam."},
   {"player": "Como tá a fronteira?", "reply": "Tranquila! Atravessei a ponte pra Paso de los Libres, comprei uma erva e voltei. Só se fala de outra coisa!"},
-  {"player": "Cadê o Licurgo?", "reply": "O Licurgo ficou em casa ouvindo música triste. É o único gaúcho emo do Rio Grande, tchê. Mas que falta de opção!"},
-  {"player": "E a Silvia Helena?", "reply": "A patroa mandou eu voltar cedo. Eu disse que vinha só tomar um mate… ela já sabe que mate meu dura a tarde inteira."},
+  {"player": "Como tá Uruguaiana?", "reply": "Quente que nem chapa de xis, tchê! Lá o sol nasce já de bombacha."},
+  {"player": "Vai um mate?", "reply": "Vai! Mas mate meu dura a tarde inteira, tchê. Separa a térmica grande."},
   {"player": "Vai um xis?", "reply": "Capricha, que gaudério da fronteira não come pouco. Bota tudo que tiver, que se faltar eu reclamo cantando!"},
   {"player": "Que música tu tá cantando?", "reply": "Uma paródia nova, tchê! Pego o sucesso do momento e boto bombacha nele. Até o Canto Alegretense entra no meio."},
   {"player": "Como foi o show?", "reply": "Theatro São Pedro lotado em Porto Alegre! Gaúcho rindo de gaúcho, que é o melhor tipo de riso que tem."},
   {"player": "Tu usa WhatsApp?", "reply": "Uso, mas no meu ritmo. Mando áudio de sete minutos e começo com bom dia, que educação vem antes da tecnologia."},
   {"player": "Mais um mate?", "reply": "Mas bah, sempre! Cuia bem cevada, água no ponto e conversa sem pressa. O resto é modernagem."},
   {"player": "Vai jogar truco?", "reply": "Truco com gaudério da fronteira é perigoso, tchê. Eu já peço o truco olhando pro horizonte, que é pra não entregar a carta."},
-  {"player": "Tá pilchado hoje?", "reply": "Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece. Nem a Silvia Helena."},
+  {"player": "Tá pilchado hoje?", "reply": "Sempre! Boina, bigode e lenço no pescoço. Se tirar a boina, ninguém me reconhece."},
   {"player": "Qual a novidade?", "reply": "A novidade é que não tem novidade! Mas que falta de opção, tchê. Por isso vim pra bodega: aqui sempre tem causo."}
  ],
   "marcio": [

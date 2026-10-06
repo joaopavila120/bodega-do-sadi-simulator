@@ -22,8 +22,8 @@ Qual o segredo do teu humor? | É só contar como é a vida na colônia, sem des
 [guri]
 E aí, Guri? | Mas bah, tchê! Vim de Uruguaiana, da fronteira, só pra ver se o xis daqui é tão taura quanto falam.
 Como tá a fronteira? | Tranquila! Atravessei a ponte pra Paso de los Libres, comprei uma erva e voltei. Só se fala de outra coisa!
-Cadê o Licurgo? | O Licurgo ficou em casa ouvindo música triste. É o único gaúcho emo do Rio Grande, tchê. Mas que falta de opção!
-E a Silvia Helena? | A patroa mandou eu voltar cedo. Eu disse que vinha só tomar um mate… ela já sabe que mate meu dura a tarde inteira.
+Como tá Uruguaiana? | Quente que nem chapa de xis, tchê! Lá o sol nasce já de bombacha.
+Vai um mate? | Vai! Mas mate meu dura a tarde inteira, tchê. Separa a térmica grande.
 Vai um xis? | Capricha, que gaudério da fronteira não come pouco. Bota tudo que tiver, que se faltar eu reclamo cantando!
 Que música tu tá cantando? | Uma paródia nova, tchê! Pego o sucesso do momento e boto bombacha nele. Até o Canto Alegretense entra no meio.
 Como foi o show? | Theatro São Pedro lotado em Porto Alegre! Gaúcho rindo de gaúcho, que é o melhor tipo de riso que tem.
@@ -370,9 +370,9 @@ Tu ganhou… | Ganhei, rapaz. Fica pra janta que a gente comemora.
 # Escreva as falas abaixo, uma por linha.
 Bora pra cancha? | Mas bah, bora! Gaudério da fronteira não recusa desafio.
 Vamos jogar uma bocha? | Vamos, tchê! Aprendi bocha com os castelhanos do outro lado da ponte.
-Topa uma partida? | Bora! Só não conta pra Silvia Helena que eu vim jogar.
+Topa uma partida? | Bora! Gaudério da fronteira não recusa desafio.
 Vamos de bocha? | Bocha? Mas que falta de opção… claro que eu vou!
-Bora ver quem é bom de bocha? | Bora, que o Licurgo ficou em casa chorando e eu tô livre.
+Bora ver quem é bom de bocha? | Bora, que hoje eu tô com a mão quente, tchê.
 Bora pra cancha? | Vamos, tchê! Taura bagual joga bocha de bombacha.
 Vamos jogar uma bocha? | Bora! Hoje eu tô inspirado, fiz até uma paródia da bocha.
 Topa uma partida? | Partida boa é assim: mate do lado e prosa no meio.
@@ -386,7 +386,7 @@ Tá boa essa mira? | Mas bah, essa mira tá torta igual castelhano no forró.
 Mirando no bolim… | Um pouco mais pro meio, vivente.
 E essa direção? | Assim! Reto que nem estrada pra Alegrete.
 Pra onde eu miro? | Mira com calma, que bocha não é corrida de cancha reta.
-Tá boa essa mira? | Tá mirando no Licurgo? Mira no bolim, tchê!
+Tá boa essa mira? | Mira no bolim, tchê, não no meu chimarrão!
 Mirando no bolim… | Boa direção! Até eu ia mirar assim.
 E essa direção? | Mais pra esquerda… agora mais pra direita… mas que falta de opção!
 Pra onde eu miro? | Isso, firme! Olho de gaudério não erra.
@@ -399,7 +399,7 @@ Vou com tudo? | Força de taura, mas com jeito.
 Devagar ou forte? | Bah, nem tanto! Bocha é carinho, não tropeada.
 E agora, a força? | Um pouquinho mais, que essa não chega.
 Quanta força? | Força na medida, que nem mate bem cevado.
-Vou com tudo? | Se for muito forte, a Silvia Helena escuta lá de casa.
+Vou com tudo? | Se for muito forte, escutam lá em Uruguaiana.
 Devagar ou forte? | Isso! Força de quem tomou chimarrão de manhã.
 E agora, a força? | Calma, vivente, não precisa derrubar a cerca.
 Quanta força? | Leve que nem pena de quero-quero.
@@ -413,21 +413,21 @@ Viu o lançamento? | Rolou macio que nem milonga.
 E aí? | Essa foi pro rumo certo!
 Que tal essa? | Ih, essa saiu meio torta… mas tem esperança.
 Foi bem? | Lançamento de fronteira: com estilo e bigode.
-Viu o lançamento? | Bah, até o Licurgo ia parar de chorar pra ver essa.
+Viu o lançamento? | Bah, essa merece uma paródia!
 E aí? | Saiu com força de cavalo crioulo!
 Que tal essa? | Essa merece paródia, tchê!
 Foi bem? | Bonita, vivente! Agora é ver onde para.
 
 [guri.bocha.aproximacao]
 # Escreva as falas abaixo, uma por linha.
-Encostou? | Encostou! Mais grudada que o Licurgo em música triste.
+Encostou? | Encostou! Mais grudada que erva na cuia.
 Ficou perto? | Bah, ficou colada!
 Tá colada no bolim? | Isso que é bocha, tchê! Coladinha no bolim.
 E essa? | Ficou perto que nem ponte de Uruguaiana pro outro lado.
 Encostou? | Mas que capricho!
 Ficou perto? | Encostou de leve, coisa de taura.
 Tá colada no bolim? | Bah, essa vai ser difícil de tirar.
-E essa? | Pertinho! A Silvia Helena ia aprovar.
+E essa? | Pertinho! Isso é bocha de fronteira, tchê.
 Encostou? | Ficou bonita, vivente!
 Ficou perto? | Encostou! Só se fala de outra coisa agora.
 
@@ -446,11 +446,11 @@ E a rodada? | Próxima, tchê! O sol ainda tá alto.
 
 [guri.bocha.vitoria]
 # Escreva as falas abaixo, uma por linha.
-Ganhei! | Ganhou do Guri de Uruguaiana? Vou contar pro Licurgo, ele vai chorar.
+Ganhei! | Ganhou do Guri de Uruguaiana? Vou ter que fazer uma música triste sobre isso.
 Venci! | Mas bah, tu joga bem, tchê!
 Foi minha! | Perdi pra quem sabe. Respeito.
 Ganhei a partida! | Ganhou! Mas que falta de opção, vou ter que treinar.
-Ganhei! | A Silvia Helena não pode saber disso.
+Ganhei! | Ninguém na fronteira pode saber disso, tchê.
 Venci! | Parabéns, vivente! Bocha bem jogada.
 Foi minha! | Ganhou honesto, tchê. Taura reconhece taura.
 Ganhei a partida! | Bah, até fiquei sem bigode de vergonha.
@@ -464,10 +464,10 @@ Tu ganhou… | Ganhei, tchê! Gaudério da fronteira não perde em casa.
 Perdi a partida… | Bah, vitória do Guri!
 Foi tua… | Não fica triste, vivente. Bocha se aprende com o tempo.
 Perdi… | Ganhei! Vou fazer uma paródia dessa vitória.
-Tu ganhou… | Venci! O Licurgo vai até sorrir.
+Tu ganhou… | Venci! Vou cantar essa vitória até Uruguaiana.
 Perdi a partida… | Taura bagual é assim: joga bem e ainda conta causo.
 Foi tua… | Essa foi minha, tchê! Revanche quando quiser.
-Perdi… | Ganhei! A Silvia Helena vai ficar orgulhosa.
+Perdi… | Ganhei! Já tenho o refrão da paródia nova.
 Tu ganhou… | Bah, que partida! Mas a vitória é da fronteira.
 
 [guri.truco.inicio]
@@ -477,10 +477,10 @@ Vamos de truco? | Bora! Mas aviso: eu blefo olhando pro horizonte.
 Topa uma mão? | Mas bah, truco! Melhor que novela.
 Embaralha aí? | Vamos, vivente! Gaudério não recusa uma mão.
 Bora um truco? | Topo! Quem perder canta uma milonga.
-Vamos de truco? | Bora um truco, que a Silvia Helena tá longe.
+Vamos de truco? | Bora um truco, que eu trouxe a sorte da fronteira.
 Topa uma mão? | Truco? Mas que falta de opção… claro que sim!
 Embaralha aí? | Embaralha bem, tchê, que eu confiro tudo.
-Bora um truco? | Vamos jogar! O Licurgo ia junto, mas ficou triste.
+Bora um truco? | Vamos jogar! Embaralha que eu canto enquanto isso.
 Vamos de truco? | Bora, que hoje a carta tá do meu lado.
 
 [guri.truco.carta]
@@ -525,7 +525,7 @@ Quero! | Agora não tem volta, tchê!
 [guri.truco.correr]
 # Escreva as falas abaixo, uma por linha.
 Corro… | Correu! Mas que falta de opção, né?
-Essa eu corro. | Bah, correu igual o Licurgo de briga.
+Essa eu corro. | Bah, correu mais que boi de rodeio!
 Não quero… | Melhor correr do que perder feio.
 Tô fora dessa. | Correu, tchê? Eu tava blefando!
 Corro… | Tudo bem, quem corre hoje joga amanhã.
@@ -533,7 +533,7 @@ Essa eu corro. | Fugiu bonito, vivente.
 Não quero… | Correu? Ponto pra fronteira!
 Tô fora dessa. | Prudência é boa, mas truco é coragem.
 Corro… | Bah, nem deu tempo de eu blefar.
-Essa eu corro. | Correu! A Silvia Helena ia rir disso.
+Essa eu corro. | Correu! Isso vai virar verso, tchê.
 
 [guri.truco.rodada]
 # Escreva as falas abaixo, uma por linha.
@@ -550,7 +550,7 @@ E essa mão? | Bah, que jogo bom!
 
 [guri.truco.vitoria]
 # Escreva as falas abaixo, uma por linha.
-Ganhei! | Bah, tu é bom! A Silvia Helena não pode saber que eu perdi.
+Ganhei! | Bah, tu é bom! Ninguém na fronteira pode saber que eu perdi.
 Venci o truco! | Ganhou do Guri! Respeito, tchê.
 Foi minha! | Mas que falta de opção: perdi!
 Ganhei a partida! | Parabéns, vivente. Truco bem jogado.
@@ -558,7 +558,7 @@ Ganhei! | Ganhou honesto. Taura reconhece taura.
 Venci o truco! | Bah, que cartas tu tinha!
 Foi minha! | Perdi, mas foi partida boa.
 Ganhei a partida! | Revanche na próxima, tchê!
-Ganhei! | O Licurgo vai chorar quando souber.
+Ganhei! | Vou ter que compor uma milonga triste agora.
 Venci o truco! | Ganhou bonito, vivente!
 
 [guri.truco.derrota]
@@ -568,9 +568,9 @@ Tu ganhou… | Ganhei, tchê! Fronteira não perde em casa.
 Perdi o truco… | Bah, vitória do Guri!
 Foi tua… | Não fica triste, vivente. Truco se aprende.
 Perdi… | Ganhei! Vou fazer uma paródia disso.
-Tu ganhou… | Venci! Até o Licurgo vai sorrir.
+Tu ganhou… | Venci! Até o chimarrão ficou mais doce.
 Perdi o truco… | Essa foi minha, tchê!
-Foi tua… | Ganhei! A Silvia Helena vai ficar orgulhosa.
+Foi tua… | Ganhei! Gaudério da fronteira não perde duas.
 Perdi… | Bah, que partida! Mas a vitória é da fronteira.
 Tu ganhou… | Só se fala de outra coisa: o Guri ganhou!
 

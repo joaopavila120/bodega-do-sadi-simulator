@@ -73,9 +73,11 @@ const SCENES = {
   ]
 };
 
-function playScene(id, onEnd) {
+function playScene(id, onEnd) { playSteps(SCENES[id](), id, onEnd); }
+// Cena montada na hora (arcos dos personagens).
+function playSteps(steps, id, onEnd) {
   if (modal) closeDialog(true); if (phoneOpen) togglePhone(false);
-  scene = { id, steps: SCENES[id](), i: -1, t: 0, step: null, actors: {}, view: 'black', fade: 1, built: 0, onEnd };
+  scene = { id, steps, i: -1, t: 0, step: null, actors: {}, view: 'black', fade: 1, built: 0, onEnd };
   keys.clear(); document.body.classList.add('intro-playing'); $('sceneSkip').classList.remove('hidden');
   AudioEngine.sceneQuiet = true; sceneAdvance();
 }

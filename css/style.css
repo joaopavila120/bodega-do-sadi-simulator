@@ -293,3 +293,5 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 
 .mode-row{display:grid;grid-template-columns:1fr auto;gap:6px}
 .mode-row .mode-new{padding:8px 12px;font-size:14px}
+
+.arc-progress{display:block;color:#6b4a26;font-weight:bold;margin:2px 0 4px}

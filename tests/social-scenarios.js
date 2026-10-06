@@ -65,6 +65,12 @@
 
  phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Contatos da bodega')&&document.querySelectorAll('[data-contact]').length===ALWAYS_TALK.size,'aba Contatos lista só os especiais, com retratos e afeto; preferências');
  phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&[...$('phoneContent').querySelectorAll('.upgrade-cats button')].map(b=>b.textContent).join()==='Botas,Mate,Cozinha,Balcão,Outros'&&$('phoneContent').querySelectorAll('.upgrade-category').length===1,'melhorias em abas: Botas, Mate, Cozinha, Balcão e Outros');
+ {const lauroI=index('lauro');window.NO_SCENES=false;G.arcs={};G.arcQueue=[];G.phase='open';deliveryConversation(lauroI,{});check(scene?.id==='arcMeet'&&arcState('lauro').met,'primeiro atendimento do Lauro abre a conversa de apresentação');sceneSkip();
+  G.friends[lauroI]=80;arcCheck();check(G.arcQueue.length===3&&G.arcQueue.every(q=>q.arc==='lauro'),'amizade libera os três capítulos em ordem');
+  const repBefore=G.rep;G.phase='closed';let guard=0;while(G.arcQueue.length&&guard++<5){playNextArc(null);let n=0;while(scene&&n++<900){if(scene.step?.say){sceneNext();sceneNext();}else sceneTick(1/20);}}
+  check(arcState('lauro').done.filter(Boolean).length===3&&G.rep>repBefore,'os capítulos acontecem em cena e o último dá recompensa');
+  phoneOpen=true;phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Lauro na câmera: 3/3'),'aba Contatos mostra o progresso do arco');phoneOpen=false;
+  const mm=index('marcio');deliveryConversation(mm,{});check(scene?.id==='arcMeet'&&arcState('marciomarcelo').met,'Márcio e Marcelo dividem o mesmo arco');sceneSkip();window.NO_SCENES=true;}
  for(const id of ['indavirus','lauro','peixinhonabrasa']){const p=index(id);G.friends[p]=100;G.conversations[p]=4;check(!!personalizedProse(p)&&nextProse(p).id?.includes(id),'voz própria permanece com afinidade alta: '+id);}
  const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!line.id?.includes('manolima'))throw Error('Mano perdeu a voz própria');}check(true,'Mano Lima mantém voz própria sem cair nas falas genéricas');
  for(const id of ['guri','manolima','peixinhonabrasa','indavirus','lauro']){const lines=customDialogues[id]||DEFAULT_DIALOGUES[id];check(lines?.length>=12&&!lines.some(l=>/imigração|lobisome do Arvoredo te/.test(l.reply)),'falas novas de '+id);}
