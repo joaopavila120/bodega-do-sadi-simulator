@@ -282,8 +282,8 @@ function costelaoTarget(){
 }
 // Seta amarela pulando sobre a estação que o tutorial pede (costelão e primeiro dia).
 function drawTutorialArrow(){
- if(modal)return;const id=costelaoTutorialActive()?costelaoTarget():tutorialActive()&&G.phase==='open'?tutorialTarget():null;
- const f=id&&furniture().find(f=>f.id===id);if(!f)return;
+ if(modal)return;const id=costelaoTutorialActive()?costelaoTarget():tutorialActive()&&['open','prep'].includes(G.phase)?tutorialTarget():null;
+ const f=id==='door'?{id:'door',x:ENTRY.x-20,y:H-60,w:40,h:20}:id&&furniture().find(f=>f.id===id);if(!f)return;
  const x=f.x+f.w/2,y=f.y-(f.id==='fogo'?150:f.id.startsWith('espeto')?95:f.id.startsWith('table')?60:40)-Math.abs(Math.sin(frameClock*5))*12;
  ctx.fillStyle='#ffd34a';ctx.strokeStyle='#5a3a10';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-16,y-22);ctx.lineTo(x+16,y-22);ctx.lineTo(x+16,y-6);ctx.lineTo(x+26,y-6);ctx.lineTo(x,y+16);ctx.lineTo(x-26,y-6);ctx.lineTo(x-16,y-6);ctx.closePath();ctx.fill();ctx.stroke();
 }

@@ -16,7 +16,8 @@
  check(G.phase==='open'&&G.shop.length===1&&!G.groups.length&&G.shop[0].patience===COUNTER_WAIT,'tutorial não expira nem cria clientes extras após mais de um expediente');
  const actor=G.tutorial.actor;save();G=readSave();check(G.tutorial.actor===actor&&G.shop.length===1,'salvar e continuar preserva o freguês e a etapa');advance(2);check(G.shop.length===1&&!modal,'retomar não duplica cliente nem explicação');
  check(tutorialTarget()==='shop:cigarro','a seta aponta para o cigarro');use('shop:cigarro');check(tutorialTarget()==='service','com o maço na mão, a seta vai para o balcão');counter();lesson('cerveja');
- use('tap:cerveja');keys.add('e');advance(1.25);keys.delete('e');cancelHold();check(held()?.pid==='cerveja','tutorial usa minigame real da cerveja');counter();lesson('xis');
+ use('tap:cerveja');keys.add('e');advance(1.25);keys.delete('e');cancelHold();check(held()?.pid==='cerveja','tutorial usa minigame real da cerveja');counter();lesson('fila');
+ check(G.shop.length===2&&queuedShop()[0].pid==='cigarro'&&tutorialTarget()==='shop:cigarro','fila do balcão: dois fregueses, a seta aponta o pedido do primeiro');for(let n=0;n<300;n++)customersTick(.05);use('shop:cigarro');use('service');check(G.tutorial.actors.length===1&&tutorialTarget()==='bottle:refri','servido o primeiro, a seta passa para o próximo da fila');for(let n=0;n<300;n++)customersTick(.05);use('bottle:refri');use('service');check(G.tutorial.delivered,'atender a fila na ordem conclui a etapa');advance(20);lesson('xis');
  check(G.groups.length===1&&G.groups[0].size===1&&G.groups[0].orders.join()==='xis_salada'&&!G.shop.length,'xis chega sozinho na mesa 1');
  check(tutorialTarget()==='bin:pao_xis','no xis a seta começa pelo pão');use('bin:pao_xis');use('bench:0');use('bin:queijo');use('bench:0');use('bin:salada');use('bench:0');
  use('bin:burger');use('grill:0');advance(COOK.burger+.1);use('grill:0');use('bench:0');
@@ -32,7 +33,7 @@
  const fiadoCash=G.cash;use('shop:codorna');counter();check(G.cash===fiadoCash&&fiadoOpen().length===1&&fiadoOpen()[0].amount===price('codorna'),'entrega fiado vai para o caderninho, sem entrar no caixa');lesson('mate');
  const stock=G.stock.erva;use('mate');keys.add('e');advance(1.2);keys.delete('e');const boosted=G.boost>0;lesson('clean');check(boosted&&G.stock.erva===stock,'mate da lição dá impulso sem gastar erva nem pedir reposição');
  use('table:0');keys.add('e');advance(1.1);keys.delete('e');advance(2);
- check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===6&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
+ check(G.tutorial.complete&&G.phase==='closed'&&G.stats.served===8&&G.stats.lost===0&&modal==='tvAward','concluir as lições encerra o dia, sem perdas, e entrega a TV');
  check(G.tv&&G.up.trago&&!G.tables[0].dirty,'TV, melhoria e limpeza permanecem após tutorial');
  action('tvAwardClose');check(modal==='report'&&sportState().challenge.tutorial,'relatório aparece antes do convite');closeDialog();
  check(!modal&&PEOPLE[G.challengeVisit?.person]?.id==='lauro','o Lauro Boleador entra pela porta da bodega antes de convidar');for(let n=0;n<400&&modal!=='sportChallenge';n++)simulate(.05);

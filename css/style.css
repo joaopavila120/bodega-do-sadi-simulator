@@ -295,3 +295,48 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 .mode-row .mode-new{padding:8px 12px;font-size:14px}
 
 .arc-progress{display:block;color:#6b4a26;font-weight:bold;margin:2px 0 4px}
+
+/* Dicas, tutorial e minijogos aparecem sobre a tela de jogo, onde o jogador está olhando */
+#hudLayer{position:absolute;inset:0;pointer-events:none;z-index:8}
+#hudLayer>*{pointer-events:auto}
+#hudLayer .coach-stack{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:min(640px,calc(100% - 24px));display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+#hudLayer #tutorialHint{display:block;width:100%;margin:0;padding:12px 16px;background:linear-gradient(180deg,#24306aee,#121a44ee);color:#f6f2e4;border:3px solid #f1ead2;outline:2px solid #0a0e26;border-radius:6px;font:15px/1.45 Arial,sans-serif;box-shadow:0 8px 22px #0007;max-height:none}
+#hudLayer #tutorialHint b{color:#ffd96a;font-size:16px}
+#hudLayer #tutorialHint p{margin:6px 0 0}
+#hudLayer #tutorialHint:empty{display:none}
+#hudLayer #tutorialHint .need{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#hudLayer #tutorialHint .need span{background:#0a0e26aa;border:1px solid #6a7ab8;border-radius:12px;padding:2px 9px;font-size:13px}
+#hudLayer #tutorialHint .need span.ok{border-color:#7ac46a;color:#b8f0a0;text-decoration:line-through}
+#hudLayer #tutorialHint .keycap{display:inline-block;background:#ffd96a;color:#2a1d12;border-radius:4px;padding:0 6px;font-weight:bold}
+#hudLayer #hint{flex:none;width:auto;max-width:100%;min-height:0;margin:0;padding:6px 14px;border-radius:18px;background:#251d13ee;border:2px solid #b58e52;color:#fff0ce;font-size:15px;line-height:1.4;order:0}
+#hudLayer #hint:empty{display:none}
+#hudLayer .pour-ui,#hudLayer .weigh-ui,#hudLayer .mix-ui,#hudLayer .fight-ui{position:absolute!important;left:50%!important;right:auto!important;top:auto!important;bottom:20%!important;transform:translateX(-50%)!important;width:min(380px,calc(100% - 24px))!important;max-height:none!important;z-index:9;box-shadow:0 10px 30px #0008}
+#hudLayer .mix-ui{background:#fff2d3;color:#3e522f;border:3px solid #a88042;border-radius:9px;padding:12px;text-align:center}
+/* Fila: ampulheta no balão do pedido nos fregueses que esperam a vez */
+#phoneContent .supply.needed{outline:3px solid #ffd96a;box-shadow:0 0 0 6px #ffd96a44;position:relative}
+#phoneContent .supply.needed::after{content:'Tutorial: compre';position:absolute;top:-10px;right:8px;background:#ffd96a;color:#2a1d12;font:bold 11px Arial;padding:1px 7px;border-radius:9px}
+#phoneContent .phone-cat button.needed{outline:2px solid #ffd96a;background:#fff3c4}
+#hudLayer #tutorialHint{order:0}
+#hudLayer #hint{order:1}
+#hudLayer #tutorialHint.coach-new{animation:coachPop .9s ease-out}
+@keyframes coachPop{0%{transform:scale(.9);opacity:.2}35%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
+@media(max-width:750px){#hudLayer .coach-stack{top:6px;gap:4px}#hudLayer #tutorialHint{font-size:12px;padding:7px 10px;line-height:1.35}#hudLayer #tutorialHint b{font-size:13px}#hudLayer #tutorialHint .need span{font-size:10px;padding:1px 6px}#hudLayer #hint{font-size:12px;padding:4px 10px}#hudLayer .pour-ui,#hudLayer .weigh-ui,#hudLayer .mix-ui,#hudLayer .fight-ui{bottom:6px!important}}
+/* A dica de ação fica embaixo, perto do jogador; o topo é do tutorial e dos avisos */
+#hudLayer #hint{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);white-space:nowrap;max-width:calc(100% - 24px);overflow:hidden;text-overflow:ellipsis;pointer-events:none;box-shadow:0 4px 14px #0007}
+@media(max-width:750px){#hudLayer #hint{bottom:8px;white-space:normal;text-align:center}}
+
+/* Tela inicial: menu de um lado e a vitrine com capturas do jogo do outro */
+#start.title-screen{background:radial-gradient(ellipse at 28% 18%,#5c3b20 0,#2b1c10 52%,#120b06 100%);backdrop-filter:none;overflow:auto;padding:24px}
+.title-wrap{display:grid;grid-template-columns:minmax(320px,430px) minmax(0,800px);gap:32px;align-items:center;width:min(1300px,100%)}
+.title-wrap .start-menu{width:100%;margin:0;padding:22px 26px}
+.title-wrap .landing .start-logo{width:min(250px,62vw);max-height:30dvh}
+.showcase{display:flex;flex-direction:column;gap:14px;min-width:0}
+.showcase-intro{margin:0;font:17px/1.5 Georgia,serif;color:#f1ddb0}
+.showcase-intro b{display:block;font-size:26px;color:#ffd78a;margin-bottom:4px;text-shadow:2px 2px #1b130b}
+.showcase-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.showcase-card{margin:0;display:flex;flex-direction:column;border:3px solid #a77439;outline:2px solid #2e1e13;border-radius:8px;overflow:hidden;background:linear-gradient(#2b1c10,#1a110a);box-shadow:0 10px 26px #0009}
+.showcase-card img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-bottom:2px solid #a77439}
+.showcase-card figcaption{padding:8px 10px 10px}
+.showcase-card figcaption b{display:block;font:bold 14px/1.25 Georgia,serif;color:#ffe2a6}
+.showcase-card figcaption span{display:block;margin-top:3px;font-size:12px;line-height:1.35;color:#d9c79f}
+@media(max-width:960px){#start.title-screen{place-items:start center;padding:14px}.title-wrap{grid-template-columns:1fr;gap:18px;width:min(560px,100%)}.title-wrap .start-menu{max-height:none}.showcase-intro{font-size:15px}.showcase-intro b{font-size:20px}.showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.showcase-card figcaption b{font-size:12px}.showcase-card figcaption span{font-size:11px}}

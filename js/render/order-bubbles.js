@@ -16,7 +16,19 @@ function customerOrderBubbles(){
   return {...b,width,height,left:clamp(b.x-width/2,4,W-width-4),top:Math.max(414,b.y-height-5)};
  });
 }
+// Ampulheta sobre quem espera a vez: na fila do balcão (atrás de quem está sendo atendido) e grupos sem mesa.
+function drawHourglass(x,y){
+ const t=frameClock*1.5%2,flip=t>1.8?(t-1.8)/.2*Math.PI:0;ctx.save();ctx.translate(x,y);ctx.rotate(flip);
+ rect(-10,-15,20,30,'#fff1d1',6,'#866840');ctx.fillStyle='#866840';ctx.fillRect(-6,-11,12,2);ctx.fillRect(-6,9,12,2);
+ const k=(t%1);ctx.fillStyle='#d8a93e';ctx.beginPath();ctx.moveTo(-5,-9);ctx.lineTo(5,-9);ctx.lineTo(0,-1);ctx.closePath();ctx.globalAlpha=1-k*.8;ctx.fill();ctx.globalAlpha=1;
+ ctx.beginPath();ctx.moveTo(0,1);ctx.lineTo(5,9);ctx.lineTo(-5,9);ctx.closePath();ctx.globalAlpha=.3+k*.7;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle='#866840';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-6,-9);ctx.lineTo(6,9);ctx.moveTo(6,-9);ctx.lineTo(-6,9);ctx.stroke();ctx.restore();
+}
+function drawWaiting(){
+ queuedShop().slice(counterCount()).forEach(c=>drawHourglass(c.x,c.y-140));
+ for(const g of G.groups)if(g.state==='wait')drawHourglass(g.x-(g.size-1)*12,g.y-150);
+}
 function drawCustomerOrders(){
+ drawWaiting();
  for(const b of customerOrderBubbles()){
   const x=b.left,y=b.top,w=b.width,h=b.height;
   rect(x,y,w,h,'#fff1d1',5,'#866840');

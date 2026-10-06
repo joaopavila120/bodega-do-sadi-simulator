@@ -4,6 +4,7 @@
 const TUTORIAL_STEPS=[
  {id:'cigarro',title:'Seu primeiro freguês',pid:'cigarro',text:'Pegue um maço na prateleira de cigarros com E. Leve até o balcão de atendimento, embaixo à direita, e aperte E para entregar.'},
  {id:'cerveja',title:'Cerveja na caneca',pid:'cerveja',text:'Vá à torneira de cerveja, ao lado da geladeira. Segure E e solte na faixa verde. Leve a caneca ao balcão e entregue com E.'},
+ {id:'fila',title:'A fila do balcão',queue:['cigarro','refri'],text:'Chegaram dois fregueses de uma vez! Quem está na frente é atendido primeiro; quem espera atrás tem a ampulheta ⌛ e perde a paciência mais devagar. Atenda na ordem: primeiro o maço de cigarros, depois o refri da geladeira.'},
  {id:'xis',title:'Um xis no capricho',pid:'xis_salada',text:'Este freguês espera na mesa 1. Prepare o xis seguindo a dica ao lado: monte, prense e entregue com E perto da mesa.'},
  {id:'upgrade',title:'Sua primeira melhoria é grátis',text:'Vamos fazer uma pausa nas chegadas. Aperte C, abra Melhorias e instale a Mesa de tragos por R$ 0. Ela inclui dez doses. Depois feche o celular com C.'},
  {id:'trago',title:'Inaugure a mesa de tragos',pid:'cachaca',text:'A mesa nova fica abaixo da torneira de cerveja. Segure E para servir a cachaça, solte na faixa verde e entregue ao freguês no balcão.'},
@@ -15,11 +16,20 @@ const TUTORIAL_STEPS=[
 // Primeira lição: o jogo começa sem estoque e com dinheiro para comprar no fornecedor.
 const TUTORIAL_GOODS=['pao_xis','burger','ovo','queijo','salada','cerveja','refri','cigarro','codorna','erva'];
 function tutorialStockMissing(){if(!G.tutorial?.stockLesson)return [];return TUTORIAL_GOODS.filter(k=>(G.stock[k]||0)+G.deliveries.filter(d=>d.key===k).reduce((n,d)=>n+d.qty,0)<=0);}
-function startWithoutStock(g){let cash=0;for(const[k,v]of Object.entries(GOODS))if(v.initial>0&&k!=='azeite'){cash+=v.initial*v.cost;g.stock[k]=0;}g.cash=round(g.cash+cash);g.stats=stats(g.cash);g.tutorial.stockLesson=true;}
+function startWithoutStock(g){let cash=0;for(const[k,v]of Object.entries(GOODS))if(v.initial>0&&k!=='azeite'){cash+=v.initial*v.cost;g.stock[k]=0;}g.cash=round(g.cash+cash);g.stats=stats(g.cash);g.tutorial.stockLesson=true;g.tutorial.cleanLesson=true;for(const t of g.tables)if(!t.unlock){t.dirty=true;t.plates=2;}}
+function tutorialDirtyTables(){return G.tutorial?.cleanLesson?G.tables.filter(t=>t.dirty&&!t.unlock&&!t.group):[];}
+// Antes de abrir no primeiro dia: comprar, limpar as mesas e abrir pela porta.
+function tutorialPrepHint(){
+ const miss=tutorialStockMissing();
+ if(miss.length)return '<b>1/3 · Compre o estoque</b><p>Aperte <span class="keycap">C</span> para abrir o celular → <b>Fornecedor</b>. Os itens marcados em amarelo são os que faltam; troque de aba (Cozinha, Bebidas, Balcão) para achar todos.</p><div class="need">'+TUTORIAL_GOODS.map(k=>'<span class="'+(miss.includes(k)?'':'ok')+'">'+nameOf(k)+'</span>').join('')+'</div>';
+ const dirty=tutorialDirtyTables();
+ if(dirty.length)return '<b>2/3 · Limpe as mesas</b><p>O galpão ficou fechado muito tempo. Com as mãos livres, vá até a mesa indicada pela seta e <b>segure</b> <span class="keycap">E</span> por 1 segundo. Faltam '+dirty.length+(dirty.length>1?' mesas':' mesa')+'.</p>';
+ return '<b>3/3 · Abra a bodega</b><p>Tudo pronto! Vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span> para abrir e receber o primeiro freguês.</p>';
+}
 function tutorialActive(){return G.day===1&&G.tutorial.guided&&!G.tutorial.complete;}
 function tutorialStep(){return TUTORIAL_STEPS[G.tutorial.step||0];}
 function tutorialUpgradeAllowed(id){return !tutorialActive()||tutorialStep()?.id==='upgrade'&&id==='trago';}
-function tutorialDelivered(actor,pid){if(!tutorialActive()||actor.id!==G.tutorial.actor||pid!==tutorialStep().pid)return;G.tutorial.delivered=true;save();}
+function tutorialDelivered(actor,pid){if(!tutorialActive())return;const s=tutorialStep(),t=G.tutorial;if(s.queue){if(!(t.actors||[]).includes(actor.id))return;t.actors=t.actors.filter(id=>id!==actor.id);if(!t.actors.length)t.delivered=true;save();return;}if(actor.id!==t.actor||pid!==s.pid)return;t.delivered=true;save();}
 function tutorialAdvance(){G.tutorial.step++;G.tutorial.actor=null;G.tutorial.delivered=false;G.tutorial.introduced=false;save();}
 function tutorialTick(){
  if(!tutorialActive()||G.phase!=='open')return;
@@ -32,23 +42,26 @@ function tutorialTick(){
   t.introduced=true;
   if(s.id==='upgrade')phoneTab='upgrades';
   if(s.id==='mate')t.mate=false;
-  if(s.pid){
+  if(s.pid||s.queue){
    let actor;
-   if(s.id==='xis')actor=spawnGroup({size:1,targetTable:0,fixedOrders:[s.pid],training:true});
+   if(s.queue){const list=s.queue.map(pid=>spawnShop({pid,training:true,fiado:false}));if(list.some(c=>!c)){G.shop=G.shop.filter(c=>!list.includes(c));t.introduced=false;return;}t.actors=list.map(c=>c.id);actor=list[0];}
+   else if(s.id==='xis')actor=spawnGroup({size:1,targetTable:0,fixedOrders:[s.pid],training:true});
    else actor=spawnShop({pid:s.pid,grams:s.grams,training:true,fiado:!!s.fiado});
    if(!actor){t.introduced=false;return;}
    t.actor=actor.id;
   }
   // Só a primeira etapa para o jogo; as seguintes entram num aviso rápido, com a seta mostrando onde ir.
   if(t.step===0)openDialog(s.title,`<p>${s.text}</p><p>Siga a seta amarela: ela mostra onde ir em cada etapa. Hoje é sem pressa, um freguês por vez.</p><button class="primary" data-act="close">Vamos lá</button>`,'tutorial');
-  else{showBanner((t.step+1)+'/'+TUTORIAL_STEPS.length+' · '+s.title,s.text.replace(/<[^>]+>/g,''),'info');AudioEngine.tick();}
+  else{$('tutorialHint').classList.add('coach-new');setTimeout(()=>$('tutorialHint').classList.remove('coach-new'),900);AudioEngine.tick();}
   save();return;
  }
  if(s.id==='upgrade'&&G.up.trago&&!phoneOpen||s.id==='mate'&&t.mate||s.id==='clean'&&!G.tables[0].dirty&&!G.tables[0].group)tutorialAdvance();
 }
 // Para onde a seta aponta em cada etapa, conforme o que está na mão.
 function tutorialTarget(){
+ if(G.phase==='prep'){if(tutorialStockMissing().length)return null;const d=tutorialDirtyTables()[0];return d?'table:'+d.id:'door';}
  const s=tutorialStep(),t=G.tutorial,h=held();if(!s||t.delivered||(s.pid&&!t.actor))return null;
+ if(s.queue){if(h&&!h.burned)return 'service';const c=queuedShop()[0];return c?c.pid==='refri'?'bottle:refri':'shop:'+c.pid:null;}
  const serve=pid=>h?.pid===pid&&(h.ready||!COOK[h.key])?'service':null;
  switch(s.id){
   case 'cigarro':return serve('cigarro')||'shop:cigarro';
@@ -88,9 +101,10 @@ function tutorialXisHint(){
  const next=['queijo','salada','burger','ovo'].find(k=>!parts.includes(k));return 'Pegue '+nameOf(next)+'. '+(COOK[next]?'Cozinhe na chapa antes de colocar na bancada.':'Coloque diretamente no pão na bancada com E.');
 }
 function tutorialHint(){
- if(!tutorialActive())return '<b>Tutorial concluído ✓</b><p>Consulte o Guia para receitas e melhorias.</p>';
+ if(!tutorialActive())return '';
  const s=tutorialStep();if(!s)return '<b>Primeiro dia concluído!</b>';
- const text=G.phase==='prep'?(tutorialStockMissing().length?'Compre o estoque no celular (C → Fornecedor). Falta: '+tutorialStockMissing().map(nameOf).join(', ')+'.':'Vá até a porta da bodega, embaixo, e aperte E para abrir e receber o primeiro freguês.'):G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
+ if(G.phase==='prep')return tutorialPrepHint();
+ const text=G.phase==='prep'?'':G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
  return '<b>'+(G.tutorial.step+1)+' / '+TUTORIAL_STEPS.length+' · '+s.title+'</b><p>'+text+'</p>';
 }
-function tutorialWelcome(){if(tutorialStockMissing().length){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa.</p><div class="callout"><b>Primeiro, o estoque</b><br>A bodega está vazia. Aperte <b>C</b> para abrir o celular e, em <b>Fornecedor</b>, compre um pacote de cada: pão, hambúrguer, ovo, queijo, salada, cerveja, refri, cigarro, ovos de codorna em conserva e erva-mate. A entrega chega pela porta em alguns segundos.</div><p>Cuide sempre do estoque: o número em cada estação mostra quanto sobrou, e o que acaba não dá para vender. Comprado tudo, vá até a <b>porta da bodega</b> e aperte E para abrir.</p><button class="primary" data-act="planBuy">Abrir o celular</button>','welcome');return;}openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa. Amanhã começam os eventos e os pedidos com prazo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
+function tutorialWelcome(){if(tutorialStockMissing().length){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa.</p><div class="callout"><b>Primeiro, o estoque</b><br>A bodega está vazia. Aperte <b>C</b> para abrir o celular e, em <b>Fornecedor</b>, compre um pacote de cada: pão, hambúrguer, ovo, queijo, salada, cerveja, refri, cigarro, ovos de codorna em conserva e erva-mate. A entrega chega pela porta em alguns segundos.</div><p>Cuide sempre do estoque: o número em cada estação mostra quanto sobrou, e o que acaba não dá para vender. Comprado tudo, limpe as mesas que ficaram sujas e vá até a <b>porta da bodega</b> para abrir. O quadro azul no alto da tela mostra cada passo.</p><button class="primary" data-act="planBuy">Abrir o celular</button>','welcome');return;}openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa. Amanhã começam os eventos e os pedidos com prazo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
