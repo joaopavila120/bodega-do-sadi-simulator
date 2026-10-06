@@ -27,7 +27,9 @@ const GIFTS={
 // Amizade traz o especial mais vezes: a chance geral sobe e, entre eles, quem tem mais afeto vem mais.
 function specialChance(){return Math.min(.35,SPECIAL_CHANCE+specialPeople().reduce((n,i)=>n+(G.friends[i]||0),0)/100*.06);}
 function pickByFriendship(list){const w=list.map(i=>1+(G.friends[i]||0)/20);let r=Math.random()*w.reduce((a,b)=>a+b,0);for(let k=0;k<list.length;k++){if((r-=w[k])<=0)return list[k];}return list[list.length-1];}
-function dailySpecial(extra=[]){if(G.phase!=='open'||tutorialActive()||G.dailySpecialDay===G.day||G.elapsed<DAY*.2)return null;const all=specialPeople().filter(i=>visitorAvailable(i,extra));if(!all.length)return null;const fresh=all.filter(i=>!G.metSpecial?.[PEOPLE[i].id]);return fresh.length?pick(fresh):pickByFriendship(all);}
+// Quem ainda está com corpo provisório só aparece depois que todos os de pixel art própria já vieram.
+function specialReady(i){if(!PEOPLE[i]?.placeholder)return true;return specialPeople().every(j=>PEOPLE[j].placeholder||G.metSpecial?.[PEOPLE[j].id]);}
+function dailySpecial(extra=[]){if(G.phase!=='open'||tutorialActive()||G.dailySpecialDay===G.day||G.elapsed<DAY*.2)return null;const all=specialPeople().filter(i=>visitorAvailable(i,extra)&&specialReady(i));if(!all.length)return null;const fresh=all.filter(i=>!G.metSpecial?.[PEOPLE[i].id]);return fresh.length?pick(fresh):pickByFriendship(all);}
 function isSpecial(i){return ALWAYS_TALK.has(PEOPLE[i]?.id);}
 function specialPeople(){return PEOPLE.map((p,i)=>i).filter(i=>isSpecial(i)&&PEOPLE[i].id!==G.avatarId);}
 function hasContact(i){return !!G.contacts?.[PEOPLE[i]?.id];}
@@ -79,6 +81,17 @@ function showGiftVisit(){
  openDialog('Presente de '+p.name,`<div class="rpg-speaker">${portraitHTML(item.person,88)}<div><p><b>${p.name}</b> trouxe um presente.</p><div class="callout"><b>🎁 ${giftLabel(item)}</b><p>${item.text}</p></div></div></div><div class="actions"><button class="primary" data-act="giftAccept">Receber o presente</button></div>`,'giftVisit');return true;
 }
 function acceptGiftVisit(){const item=G.giftQueue?.shift();deliverGift(item);closeDialog(true);challengeVisitLeave();save();}
+// Modo dinheiro infinito: nível e reputação no máximo e amizade máxima com todos os especiais.
+// Contatos, personagens jogáveis e peças de presente já ficam liberados, sem fila de visitas.
+function maxTestProgress(){
+ if(!G.testMode)return;G.rep=100;G.xp=Math.max(G.xp||0,LEVELS[LEVELS.length-1].xp);G.levelSeen=LEVELS.length;
+ G.contacts??={};G.playable??={};G.giftsGiven??={};G.giftQueue=[];
+ for(const i of PEOPLE.map((p,i)=>i).filter(isSpecial)){
+  const id=PEOPLE[i].id;G.friends[i]=MAX_FRIENDSHIP;G.contacts[id]??=G.day;G.playable[id]??=G.day;
+  for(const g of GIFTS[id]||[]){G.giftsGiven[id+':'+g.at]??=G.day;for(const d of g.decor||[])if(!decorOwned(d))decorState()[d]=false;}
+  for(const at of GOODS_GIFT_AT)G.giftsGiven[id+':'+at]??=G.day;
+ }
+}
 function socialCheck(){
  G.contacts??={};G.giftsGiven??={};G.playable??={};arcCheck();
  for(const i of specialPeople()){

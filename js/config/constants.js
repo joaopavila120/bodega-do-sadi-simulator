@@ -14,6 +14,8 @@ const DAY = 180, ORDER_WAIT = 110, COUNTER_WAIT = 95;
 // Mantidos para recuperar partidas anteriores à separação dos arquivos.
 // Saves separados: jogo normal, testes com dinheiro infinito e testes sem tutorial (escolhe eventos, dinheiro normal).
 const KEY = 'bodega-interior-v3', TEST_KEY = 'bodega-interior-tests', TEST2_KEY = 'bodega-interior-tests-eventos';
+// Versão das regras do modo dinheiro infinito (só dinheiro infinito e escolha de eventos).
+const TEST_RULES = 2;
 function saveKey(mode){return mode===true?TEST_KEY:mode==='eventos'?TEST2_KEY:KEY;}
 const BASE_SPEED=280;
 

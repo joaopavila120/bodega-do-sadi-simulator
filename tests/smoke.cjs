@@ -195,7 +195,7 @@ async function main() {
     await send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
     console.log('PASS cancha e lançamentos por botões no celular');
 
-    await evaluate('G.testMode=true;G.cash=0;save()');
+    await evaluate('G.testMode=true;G.testRules=TEST_RULES;G.cash=0;save()');
     await load(base + '/index.html');
     await click('#start [data-act="test"]'); await click('#overlay [data-act="close"]');
     assert(await evaluate('G.testMode&&hasCash(999999)&&G.cash===0'));

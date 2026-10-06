@@ -46,7 +46,7 @@ function pickVisitor(extra=[]) {
  let pool=visitorPool(team).filter(i=>visitorAvailable(i,extra));
  if(!team){const fans=Math.random()<.18;const subset=pool.filter(i=>fans?!!PEOPLE[i].team:!PEOPLE[i].team);if(subset.length)pool=subset;}
  // Personagens especiais são raros: aparecem em cerca de 12% das chegadas.
- const specials=pool.filter(isSpecial),commons=pool.filter(i=>!isSpecial(i));
+ const specials=pool.filter(i=>isSpecial(i)&&specialReady(i)),commons=pool.filter(i=>!isSpecial(i));
  if(specials.length&&(!commons.length||Math.random()<specialChance()))return pickByFriendship(specials);
  if(commons.length)pool=commons;
  return pool.length?pick(pool):null;
