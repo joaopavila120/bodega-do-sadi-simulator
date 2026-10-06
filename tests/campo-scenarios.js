@@ -78,7 +78,15 @@
   check(costelaoStep().id==='servir','etapa: servir maionese');simulate(.05);for(let n=0;n<300;n++)customersTick(.05);use('maionese');use('service');
   check(!costelaoTutorialActive()&&G.costelaoTaught,'tutorial do costelão concluído');
   // laçada de sábado
-  reset();G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};nextDay();check(modal==='lassoIntro','sábado exige a laçada antes do próximo dia');
+  // primeiro sábado: cena no campo, o boi do pai, um quero-quero só e a montagem do costelão
+  reset();window.NO_SCENES=false;G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};nextDay();check(scene?.id==='sabado'&&G.herd===1,'primeiro sábado abre a cena do boi que o pai deu');
+  sceneSkip();check(modal==='lassoIntro','depois da cena vêm as instruções da laçada');action('lassoStart');check(G.lasso.bois.length===1&&activeQueros(G.lasso).length<=1,'primeira laçada: um boi e um quero-quero só');
+  {const L1=G.lasso;L1.queros=[];const b1=L1.bois[0];for(let k=0;k<LASSO_HITS;k++){G.player={x:b1.x-200,y:b1.y+40,dx:1,dy:0};L1.fx=1;L1.fy=0;lassoCharge();let best=0,bd=1e9;for(let t=0;t<1.4;t+=.01){L1.charge=t;const a=lassoAim(),d=Math.hypot(a.x-b1.x,a.y-(b1.y-28));if(d<bd){bd=d;best=t;}}L1.charge=best;b1.speed=0;b1.dx=b1.dy=0;b1.t=99;lassoRelease();for(let t=0;t<1;t+=.05){b1.t=99;lassoTick(.05);}}}
+  finishLasso();check(scene?.id==='montagem'&&isCampo(),'depois da primeira laçada vem a cena da montagem do costelão');
+  {let n=0;while(scene&&n++<800){if(scene.step?.say){if(scene.step.say==='marcio')check(rpgBoxes.sceneTalk.text.includes('Presença de Márcio e Marcelo'),'Márcio e Marcelo confirmam presença no costelão');sceneNext();sceneNext();}else sceneTick(1/20);}}
+  check(!scene&&!isCampo()&&modal==='planning','a cena termina e segue para o domingo');closeDialog(true);
+  buyManta();check(!G.deliveries.length,'no primeiro costelão não dá pra comprar manta do açougue');window.NO_SCENES=true;
+  reset();G.day=2;G.phase='closed';G.event={id:'normal',seen:true,fired:{}};G.report={};G.herd=5;G.lassoTaught=true;nextDay();check(modal==='lassoIntro','sábado exige a laçada antes do próximo dia');
   action('lassoStart');const L=G.lasso;L.queros=[];check(L&&L.bois.length===5&&isCampo()&&!$('lassoUI').classList.contains('hidden'),'campo com o rebanho para laçar');
   finishLasso();check(G.lasso,'não termina sem laçar nenhum boi');
   const boi=L.bois.find(b=>b.state==='free');
