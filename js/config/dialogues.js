@@ -150,7 +150,7 @@ const DEFAULT_DIALOGUES={
     },
     {
       "player": "Sai mais um petisco?",
-      "reply": "Sai! Pra cada escanteio eu pego uma codorna. Hoje o prato tá sofrendo."
+      "reply": "Sai! Pra cada escanteio eu pego um ovo de codorna em conserva. Hoje o prato tá sofrendo."
     },
     {
       "player": "Quem ganha hoje?",
@@ -236,5 +236,17 @@ const DEFAULT_DIALOGUES={
   {"player": "O senhor tá apressado?", "reply": "Apressado não, tô impaciente! É diferente. O apressado corre, o impaciente reclama."},
   {"player": "Vai um xis?", "reply": "Vai, mas não me inventa moda! Xis é xis: pão, carne, ovo e capricho."},
   {"player": "Como tá a lida?", "reply": "A lida tá braba! Mas gaúcho bagual não se queixa… só um pouquinho, enquanto toma o mate."}
+  ],
+  "valter": [
+  {"player": "E aí, Valter?", "reply": "Buenas, guri! Passei pra ver se o filho do meu velho parceiro tá cuidando direito do galpão."},
+  {"player": "O senhor conheceu meu pai?", "reply": "Se conheci! Nos criamos juntos, lidando com gado desde piá. Teu pai laçava melhor que eu, mas eu domava melhor."},
+  {"player": "Como era meu pai na lida?", "reply": "Trabalhador que só! Acordava antes do galo e ainda reclamava que o galo era preguiçoso."},
+  {"player": "E o meu vô?", "reply": "O velho Sadi era bom de causo e ruim de truco. Teu pai puxou o causo; tu, espero que não tenha puxado o truco."},
+  {"player": "Vai um trago?", "reply": "Um traguinho de canha, que eu e teu pai sempre fechávamos a lida assim, no galpão."},
+  {"player": "A TV tá ajudando?", "reply": "Tá! Mas nem me fala do último Gre-Nal. Colorado de coração sofre, mas não larga."},
+  {"player": "O senhor ainda lida no campo?", "reply": "Lido sim! O corpo reclama, mas o campo chama. E de vez em quando eu dou uma olhada no teu rebanho."},
+  {"player": "Gostou da bodega?", "reply": "Bah, se teu pai visse o galpão aceso de novo, ia chorar fingindo que era fumaça do fogo."},
+  {"player": "Me conta um causo da lida?", "reply": "Uma vez teu pai e eu tropeamos uma boiada inteira na chuva. Chegamos tão molhados que o pasto achou que era açude."},
+  {"player": "Vai um xis?", "reply": "Vai! Mas faz do jeito que tua mãe fazia o carreteiro: com carinho e sem pressa."}
   ]
 };

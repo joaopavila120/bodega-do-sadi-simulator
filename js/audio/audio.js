@@ -107,7 +107,7 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
   const l=this.loop('pour',pour?(beer?.07:.04):0,{type:'bandpass',freq:900,q:1.1});
   if(l&&pour)l.filter.frequency.setTargetAtTime((beer?1100:700)+fill*(beer?1500:1300),this.ctx.currentTime,.05);
   this.glugClock-=dt;if(pour&&!beer&&this.glugClock<=0){this.glugClock=.11+Math.random()*.05;this.bloop(240+fill*380,.05);}
-  // Cafeteira passando café: gorgolejo grave e chiado do vapor.
+  // Cambona passando café: gorgolejo grave e chiado do vapor.
   const brewing=G.task?.type==='coffee';this.loop('brew',brewing?.03:0,{type:'bandpass',freq:1500,q:.9});
   this.brewClock=(this.brewClock||0)-dt;if(brewing&&this.brewClock<=0){this.brewClock=.05+Math.random()*.12;this.bloop(140+Math.random()*220,.045);}
   // Muvuca da briga: falatório embolado, gritos, socos e cadeiras arrastando.

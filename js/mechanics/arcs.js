@@ -35,7 +35,7 @@ const ARCS = {
   },
   badin: {
     title: 'A mãe do Badin',
-    meet: [['x', 'Badin, o colono, de Erechim! A mãe mandou perguntar se aqui tem comida de verdade.'], ['sadi', 'Tem xis, codorna, salame…'], ['x', 'Vou dizer que tem. Se ela achar que não, ela vem conferir pessoalmente.']],
+    meet: [['x', 'Badin, o colono, de Erechim! A mãe mandou perguntar se aqui tem comida de verdade.'], ['sadi', 'Tem xis, ovos de codorna em conserva, salame…'], ['x', 'Vou dizer que tem. Se ela achar que não, ela vem conferir pessoalmente.']],
     chapters: [
       { title: 'Ligação de Erechim', lines: [['x', 'A mãe ligou. Pra ti. Perguntou se eu tô comendo direito.'], ['sadi', 'Pra mim? Como ela conseguiu o número da bodega?'], ['x', 'Mãe de colono tem rede de contatos maior que a do governo. Diz que eu comi dois xis, por favor.']] },
       { title: 'A receita da nona', lines: [['x', 'Te trouxe a receita do salame da nona. Não conta pra ninguém, que é segredo de família.'], ['sadi', 'Bah, Badin, que honra!'], ['x', 'Honra nada: é pra eu ter onde comer salame bom longe de casa. Colono pensa no futuro.']] },
@@ -97,6 +97,15 @@ const ARCS = {
       { title: 'Payada no rádio', lines: [['x', 'Declamei a décima no rádio hoje cedo. O Rio Grande inteiro ouviu o nome da tua bodega.'], ['sadi', 'Não acredito, seu Jayme!'], ['x', 'Acredita, vivente. Verso bom anda mais longe que cavalo. Agora tua bodega é tradição.']], reward: { rep: 5, xp: 120, text: 'A payada tocou no rádio: +5 de reputação.' } }
     ]
   },
+  valter: {
+    title: 'Amigo de lida',
+    meet: [['x', 'Opa, guri! Agora sim, atendido na bodega do filho do meu velho parceiro.'], ['sadi', 'Volta sempre, Valter!'], ['x', 'Volto todo dia, se deixar. Teu pai ia gostar de ver a gente aqui.']],
+    chapters: [
+      { title: 'Histórias do meu pai', lines: [['x', 'Teu pai e eu nos criamos juntos, guri. Desde piá na lida, tocando gado pela estrada.'], ['sadi', 'Ele quase não falava daquele tempo.'], ['x', 'Era de pouca conversa e muito serviço. Mas nas noites de galpão, contava causo até o fogo apagar.']] },
+      { title: 'A foto da lida', lines: [['x', 'Achei uma foto velha: eu e teu pai encilhando, os dois com cara de quem não dormiu.'], ['sadi', 'Bah, ele tava tão novo!'], ['x', 'E metido! Dizia que laçava melhor que eu. E laçava mesmo, o danado. Fica com a foto, guri.']] },
+      { title: 'Um boi pra lida', lines: [['x', 'Teu pai me ajudou muito quando eu comecei. Agora é minha vez de ajudar o filho dele.'], ['sadi', 'Valter, não precisa…'], ['x', 'Precisa sim! Separei um boi do meu campo pro teu rebanho. Vizinho que é vizinho, ajuda na lida.']], reward: { rep: 3, xp: 100, herd: 1, text: 'O Valter deu um boi pro teu rebanho: +3 de reputação e +1 boi.' } }
+    ]
+  },
   gaudencio: {
     title: 'O bagual da campanha',
     meet: [['x', 'Buenas! Gaudêncio, gaúcho bagual. Bodega nova, é? Vamos ver se é bodega de verdade ou só de enfeite.'], ['sadi', 'Pode conferir à vontade!'], ['x', 'Chão batido, galpão e chimarrão… Bah, até que tem jeito. Mas não te acostuma com elogio, piá.']],
@@ -154,6 +163,7 @@ function arcReward(arc, i) {
   if (r.rep) repChange(r.rep);
   if (r.xp) gainXP(r.xp);
   if (r.bocha) { const s = sportState().bocha; s.reputation = clamp(s.reputation + r.bocha, 0, 100); }
+  if (r.herd) G.herd = (G.herd || 0) + r.herd;
   for (const [k, n] of Object.entries(r.stock || {})) if (GOODS[k]) G.stock[k] = (G.stock[k] || 0) + n;
   showBanner(ARCS[arc].title + ' · fim', r.text, 'gift');
 }

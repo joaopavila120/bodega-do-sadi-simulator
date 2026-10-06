@@ -32,8 +32,8 @@ const FIXED=[
  {id:'bench:0',x:300,y:480,w:83,h:108,label:'Montagem · bancada 1'}, {id:'bench:1',x:392,y:480,w:83,h:108,label:'Montagem · bancada 2'}, {id:'press',x:40,y:705,w:110,h:82,label:'Prensa'},
  {id:'bottle:refri',x:560,y:455,w:55,h:92,label:'Refrigerante'}, {id:'tap:cerveja',x:625,y:455,w:55,h:92,label:'Cerveja'}, {id:'pour',x:560,y:610,w:90,h:87,label:'Servir uma dose',unlock:'trago'},
  {id:'parking:0',x:300,y:680,w:83,h:78,label:'Apoio · lugar 1'}, {id:'parking:1',x:392,y:680,w:83,h:78,label:'Apoio · lugar 2'}, {id:'trash',x:50,y:815,w:48,h:52,label:'Lixeira'},
- {id:'shop:cigarro',x:960,y:355,w:52,h:57,label:'Maços de cigarros'}, {id:'shop:codorna',x:1022,y:355,w:52,h:57,label:'Ovos de codorna'}, {id:'bag',x:1084,y:355,w:52,h:57,label:'Balança de erva-mate'},
+ {id:'shop:cigarro',x:960,y:355,w:52,h:57,label:'Maços de cigarros'}, {id:'shop:codorna',x:1022,y:355,w:52,h:57,label:'Ovos de codorna em conserva'}, {id:'bag',x:1084,y:355,w:52,h:57,label:'Balança de erva-mate'},
  {id:'shop:pepino',x:1146,y:355,w:52,h:57,label:'Pepino em conserva',unlock:'pepino'}, {id:'shop:salame',x:1208,y:355,w:52,h:57,label:'Salame de colônia',unlock:'salame'}, {id:'shop:amendoim',x:1270,y:355,w:52,h:57,label:'Amendoim torrado',unlock:'amendoim'}, {id:'shop:pinhao',x:1332,y:355,w:52,h:57,label:'Pinhão a granel',unlock:'pinhao'}, {id:'shop:bergamota',x:1394,y:355,w:52,h:57,label:'Bergamota',unlock:'bergamota'},
  {id:'service',x:1150,y:770,w:200,h:55,label:'Balcão de atendimento'}, {id:'mate',x:780,y:470,w:66,h:54,label:'Chimarrão · segure E'}, {id:'bitter',x:690,y:620,w:67,h:64,label:'Servir bitter',unlock:'bitter'},
- {id:'coffee',x:690,y:730,w:67,h:55,label:'Cafeteira · segure E',unlock:'coffee'}
+ {id:'coffee',x:690,y:730,w:67,h:55,label:'Café de cambona · segure E',unlock:'coffee'}
 ];

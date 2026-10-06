@@ -72,7 +72,7 @@ function deck(){const a=[];for(let s=0;s<4;s++)for(const r of [1,2,3,4,5,6,7,10,
 
 // Só troca o HTML quando ele muda: evita recriar imagens e refazer o layout a cada atualização.
 function setHTML(element,html){if(element._html===html)return false;element.innerHTML=html;element._html=html;return true;}
-function cardName(c){return `${c.r} de ${['espadas','bastos','ouros','copas'][c.s]}`;}
+function cardName(c){return `${c.r} de ${['Espada','Paus','Ouro','Copas'][c.s]}`;}
 
 function distRect(p,r){return Math.hypot(p.x-clamp(p.x,r.x,r.x+r.w),p.y-clamp(p.y,r.y,r.y+r.h));}
 

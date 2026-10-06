@@ -26,7 +26,7 @@ function trucoLessonTip(g){
  if(!g.tutorial)return '';
  const tip=g.phase==='over'?'Fim do treino! Volte à bodega: o Mano Lima tem uma coisa pra ti.'
   :g.phase==='between'?'Mão encerrada. A partida vai até 6 tentos: aperte Próxima rodada.'
-  :g.history.length===0?'Cada mão tem até 3 vazas: leva a mão quem ganhar 2. Clique numa carta para jogar. As mais fortes: 1 de espadas, 1 de bastos, 7 de espadas e 7 de ouros; depois os 3 e os 2.'
+  :g.history.length===0?'Cada mão tem até 3 vazas: leva a mão quem ganhar 2. Clique numa carta para jogar. As mais fortes: 1 de Espada, 1 de Paus, 7 de Espada e 7 de Ouro; depois os 3 e os 2.'
   :g.stake===1?'Com carta boa na mão, peça truco: a mão passa a valer 2 tentos (depois retruco 3 e vale quatro 4). Com mão fraca, dá pra correr e ceder só o que vale.'
   :'Truco pedido! Agora a mão vale mais. Ganhe as vazas para levar os tentos.';
  return `<div class="callout"><b>Lição do Mano Lima</b><br>${tip}</div>`;
@@ -55,6 +55,6 @@ function validCardInvite(invite){if(!invite)return false;const t=G.tables.find(t
 
 function joinSeatedTruco(){if(!started||paused||modal||phoneOpen)return;if(G.game){showCards();return;}if(G.task){say('Termine a ação antes de puxar uma cadeira.');return;}const table=seatedTrucoTable();if(!table){const near=nearTrucoTable();if(near&&!near.fight)cardsMenu();else say('Chegue perto da mesa de truco para jogar.');return;}if(table.fight){say('Aparte a briga com E antes de jogar com a turma.');return;}const group=G.groups.find(g=>g.id===table.group),person=personCandidates().filter(c=>c.actor.id===group.id&&c.table?.id===table.id).sort((a,b)=>Math.hypot(a.x-G.player.x,a.y-G.player.y)-Math.hypot(b.x-G.player.x,b.y-G.player.y))[0]?.person??group.person;if(!specialOpponent(person)){cardInvite=null;showTrucoOffer(false);return;}cardInvite={tableId:table.id,groupId:group.id,person};G.dialogue=null;G.fightTarget=null;updateDialogue();updateFightUI();showTrucoOffer(true);}
 
-function cardHTML(c,{action='',index=0,disabled=false}={}){if(!c)return'<span class="card back" aria-label="Carta virada"></span>';const rank=c.r,suit=['Espadas','Bastos','Ouros','Copas'][c.s],tag=action?'button':'span';return`<${tag} class="card ${c.s>=2?'red':''} " ${action?`data-card="true" data-act="${action}" data-id="${index}" ${disabled?'disabled':''}`:''} aria-label="${cardName(c)}">${rank}<span>${['♠','♣','♦','♥'][c.s]}</span><small>${suit}</small></${tag}>`;}
+function cardHTML(c,{action='',index=0,disabled=false}={}){if(!c)return'<span class="card back" aria-label="Carta virada"></span>';const rank=c.r,suit=['Espada','Paus','Ouro','Copas'][c.s],tag=action?'button':'span';return`<${tag} class="card ${c.s>=2?'red':''} " ${action?`data-card="true" data-act="${action}" data-id="${index}" ${disabled?'disabled':''}`:''} aria-label="${cardName(c)}">${rank}<span>${['♠','♣','♦','♥'][c.s]}</span><small>${suit}</small></${tag}>`;}
 
 function gameLog(t){G.game.log.push(t);G.game.log=G.game.log.slice(-12);}

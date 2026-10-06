@@ -18,6 +18,7 @@ const GIFTS={
  mitodosul:[{at:GIFT_AT,decor:['planta_esq'],text:'“O chat escolheu: uma samambaia pro cantinho da bodega.”'}],
  loligebien:[{at:GIFT_AT,decor:['prateleira_potes','frigideiras'],text:'“Panelas da oma, de Pomerode. Prosit!”'}],
  jayme:[{at:GIFT_AT,decor:['comoda','kit_chimarrao'],text:'“Cômoda e cuia: todo galpão precisa de um canto pro mate e pro verso.”'}],
+ valter:[{at:GIFT_AT,decor:['planta_dir'],text:'“Da horta da minha patroa. Teu pai sempre dizia que galpão sem planta é galpão triste.”'}],
  gaudencio:[{at:GIFT_AT,decor:['fogao_lenha'],text:'“Fogão a lenha de verdade, não essas modernagem. Agora sim é galpão!”'}],
  baitaca:[{at:GIFT_AT,decor:['lampiao_centro'],text:'“Um lampião pra iluminar os bailes da bodega.”'}],
  peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]

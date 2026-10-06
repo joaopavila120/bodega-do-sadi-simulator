@@ -1,7 +1,7 @@
 // Sistema de conversa com os fregueses e contação de causos
 'use strict';
 
-const ALWAYS_TALK = new Set(['badin','guri','marcio','marcelo','indavirus','lauro','peixinhonabrasa','manolima','dianho','mitodosul','loligebien','jayme','baitaca','gaudencio']);
+const ALWAYS_TALK = new Set(['badin','guri','marcio','marcelo','indavirus','lauro','peixinhonabrasa','manolima','dianho','mitodosul','loligebien','jayme','baitaca','gaudencio','valter']);
 
 function deliveryConversation(person,actor,diner=null){
  G.conversations[person]++;addFriendship(person,3);

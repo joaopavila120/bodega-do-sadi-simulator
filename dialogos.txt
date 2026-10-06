@@ -68,7 +68,7 @@ Preparado pro jogo? | Colorado pronto! Já pedi o petisco pra não perder nenhum
 Tá confiante? | Confiança eu trouxe de casa. A calma eu esqueci no portão.
 Vai um trago? | Depois desse lance, vai uma água primeiro que eu gritei até secar a garganta!
 O que achou do primeiro tempo? | Meu coração correu mais que os pontas. Vamos, Inter!
-Sai mais um petisco? | Sai! Pra cada escanteio eu pego uma codorna. Hoje o prato tá sofrendo.
+Sai mais um petisco? | Sai! Pra cada escanteio eu pego um ovo de codorna em conserva. Hoje o prato tá sofrendo.
 Quem ganha hoje? | O Inter, se depender de mim. Se depender do meu palpite, melhor não apostar.
 Como tá a imagem? | Boa demais. Até a bola parece saber que a gente tá olhando.
 Tudo tranquilo na mesa? | Tranquilo, chê. Posso discordar do gremista e dividir o salame. Só o último pedaço complica.
@@ -86,7 +86,16 @@ Tudo tranquilo na mesa? | Tranquilo, chê. Posso discordar do gremista e dividir
 # Acrescente suas falas aqui.
 
 [valter]
-# Acrescente suas falas aqui.
+E aí, Valter? | Buenas, guri! Passei pra ver se o filho do meu velho parceiro tá cuidando direito do galpão.
+O senhor conheceu meu pai? | Se conheci! Nos criamos juntos, lidando com gado desde piá. Teu pai laçava melhor que eu, mas eu domava melhor.
+Como era meu pai na lida? | Trabalhador que só! Acordava antes do galo e ainda reclamava que o galo era preguiçoso.
+E o meu vô? | O velho Sadi era bom de causo e ruim de truco. Teu pai puxou o causo; tu, espero que não tenha puxado o truco.
+Vai um trago? | Um traguinho de canha, que eu e teu pai sempre fechávamos a lida assim, no galpão.
+A TV tá ajudando? | Tá! Mas nem me fala do último Gre-Nal. Colorado de coração sofre, mas não larga.
+O senhor ainda lida no campo? | Lido sim! O corpo reclama, mas o campo chama. E de vez em quando eu dou uma olhada no teu rebanho.
+Gostou da bodega? | Bah, se teu pai visse o galpão aceso de novo, ia chorar fingindo que era fumaça do fogo.
+Me conta um causo da lida? | Uma vez teu pai e eu tropeamos uma boiada inteira na chuva. Chegamos tão molhados que o pasto achou que era açude.
+Vai um xis? | Vai! Mas faz do jeito que tua mãe fazia o carreteiro: com carinho e sem pressa.
 
 [arlindo]
 # Acrescente suas falas aqui.
@@ -3164,6 +3173,215 @@ Perdi… | Vitória, tchê!
 Tu ganhou… | Ganhei, mas tu jogou direito.
 Foi tua… | Venci sem frescura.
 Perdi o truco… | Vitória! Paga a canha.
+Perdi… | Ganhei!
+Tu ganhou… | Vitória, e o galpão viu.
+
+
+[valter.bocha.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora pra cancha? | Bora, guri! Teu pai nunca me ganhou na bocha.
+Vamos jogar uma bocha? | Bocha? Vamos, que eu ainda tenho mão boa.
+Topa uma partida? | Topo! Vamos ver se tu puxou o pai.
+Vamos de bocha? | Bora pra cancha, como nos velhos tempos.
+Bora ver quem é bom de bocha? | Vamos! Eu jogava bocha com teu pai no domingo.
+Bora pra cancha? | Partida aceita, de vizinho pra vizinho.
+Vamos jogar uma bocha? | Bora, mas não chora se perder.
+Topa uma partida? | Vamos, que o velho Valter tá com a mão quente.
+Vamos de bocha? | Bocha? É comigo, guri.
+Bora ver quem é bom de bocha? | Bora, que o galpão tá bonito pra isso.
+
+[valter.bocha.direcao]
+# Escreva as falas abaixo, uma por linha.
+Pra onde eu miro? | Mira reto, igual teu pai mirava o laço.
+Tá boa essa mira? | Mira no bolim, guri, não na minha cerveja.
+E essa direção? | Direção boa!
+Mirando no bolim… | Mais pra esquerda… isso, guri!
+Pra onde eu miro? | Mira com calma, que o campo ensina paciência.
+Tá boa essa mira? | Tá mirando bonito.
+E essa direção? | Mira firme, como palanque de cerca.
+Mirando no bolim… | Direção de gente da lida!
+Pra onde eu miro? | Assim tá bom.
+Tá boa essa mira? | Se errar, a gente diz que foi o vento.
+
+[valter.bocha.forca]
+# Escreva as falas abaixo, uma por linha.
+Quanta força? | Força de quem carrega saco de sal.
+Vou com tudo? | Devagar, que bocha não é coice de égua.
+Devagar ou forte? | Força média, igual mate bem cevado.
+E agora, a força? | Com tudo não, que a bocha sai da cancha!
+Quanta força? | Dosa bem, guri.
+Vou com tudo? | Força de lida!
+Devagar ou forte? | Solta firme.
+E agora, a força? | Meio termo, que é o certo.
+Quanta força? | Vai com calma.
+Vou com tudo? | Força certa, igual laço bem jogado.
+
+[valter.bocha.lancamento]
+# Escreva as falas abaixo, uma por linha.
+Viu o lançamento? | Bonito, guri! Teu pai ia gostar.
+Que tal essa? | Lançamento de gente da lida!
+Foi bem? | Que curva!
+E aí? | Essa foi bonita.
+Viu o lançamento? | Lançou com raça!
+Que tal essa? | Bah, que jogada!
+Foi bem? | Essa merece um trago.
+E aí? | Lançou igual peão laçando: com vontade.
+Viu o lançamento? | Bonito! O galpão viu.
+Que tal essa? | Essa até eu aplaudo.
+
+[valter.bocha.aproximacao]
+# Escreva as falas abaixo, uma por linha.
+Encostou? | Encostou! Bah!
+Ficou perto? | Pertinho, guri!
+Tá colada no bolim? | Coladinha no bolim.
+E essa? | Encostou bonito.
+Encostou? | Essa ficou perto, como vizinho bom.
+Ficou perto? | Encostou de mansinho.
+Tá colada no bolim? | Tá colada!
+E essa? | Pertinho, digno de causo.
+Encostou? | Encostou, guri!
+Ficou perto? | Essa foi caprichada.
+
+[valter.bocha.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a rodada! | Rodada fechada! Bora a próxima.
+Quem levou essa? | Próxima, guri.
+Próxima rodada? | Rodada boa.
+E a rodada? | Fechou! Um traguinho.
+Fechou a rodada! | Rodada de vizinho.
+Quem levou essa? | Bora a próxima.
+Próxima rodada? | Rodada encerrada.
+E a rodada? | Essa rodada teve raça.
+Fechou a rodada! | Próxima rodada!
+Quem levou essa? | Rodada de lida.
+
+[valter.bocha.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi pro filho do meu parceiro! Ele ia rir de mim.
+Venci! | Tu ganhou, guri. Puxou o pai.
+Foi minha! | Vitória tua.
+Ganhei a partida! | Ganhou bonito.
+Ganhei! | Perdi! Vou contar pro teu pai lá no céu.
+Venci! | Derrota aceita, com orgulho.
+Foi minha! | Ganhou com raça.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns, guri! Revanche domingo.
+Venci! | Venceu. O velho Valter tá ficando lento.
+
+[valter.bocha.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! O velho ainda tem mão.
+Tu ganhou… | Vitória do vizinho!
+Foi tua… | Ganhei, guri! Teu pai também nunca me ganhou.
+Perdi a partida… | Venci!
+Perdi… | Vitória da lida!
+Tu ganhou… | Ganhei, mas tu jogou bonito.
+Foi tua… | Venci com calma.
+Perdi a partida… | Vitória! Paga um traguinho.
+Perdi… | Ganhei, guri!
+Tu ganhou… | Vitória, e o galpão viu.
+
+[valter.truco.inicio]
+# Escreva as falas abaixo, uma por linha.
+Bora um truco? | Truco? Bora, que eu e teu pai jogávamos toda noite.
+Vamos de truco? | Embaralha aí, guri.
+Topa uma mão? | Topo uma mão!
+Embaralha aí? | Vamos ao truco, como nos velhos tempos.
+Bora um truco? | Bora, truco de galpão.
+Vamos de truco? | Distribui, que eu tô com sorte.
+Topa uma mão? | Uma mão? Com gosto.
+Embaralha aí? | Truco! Tradição da família.
+Bora um truco? | Vamos, que o teu vô era ruim de truco… vamos ver tu.
+Vamos de truco? | Bora, guri!
+
+[valter.truco.carta]
+# Escreva as falas abaixo, uma por linha.
+Joga aí! | Joguei!
+Tua vez! | Essa carta tem história.
+E essa carta? | Lá vai, guri.
+Vai, joga! | Carta de vizinho.
+Joga aí! | Joguei a do meio.
+Tua vez! | Ó essa!
+E essa carta? | Essa é da lida.
+Vai, joga! | Carta na mesa.
+Joga aí! | Vai essa!
+Tua vez! | Joguei, agora é contigo.
+
+[valter.truco.truco]
+# Escreva as falas abaixo, uma por linha.
+TRUCO! | TRUCO? Que venha!
+Truco nele! | Truco no Valter? Coragem, guri!
+Vai um truco? | Truco! Agora esquentou.
+Truco, tchê! | Tá blefando igual teu pai?
+TRUCO! | Truco, como nos velhos tempos.
+Truco nele! | Ui, truco!
+Vai um truco? | Truco pra mim? Hm…
+Truco, tchê! | Essa eu penso.
+TRUCO! | Truco! O galpão escuta.
+Truco nele! | Truco, tchê!
+
+[valter.truco.aceitar]
+# Escreva as falas abaixo, uma por linha.
+Aceito! | Aceitou!
+Quero! | Topou, com coragem.
+Topo o truco! | Aceitou, agora vale mais.
+Aceito, bora! | Bora, gaúcho não foge.
+Aceito! | Aceitou bonito.
+Quero! | Topou!
+Topo o truco! | Aceitou, puxou o pai.
+Aceito, bora! | Então vale!
+Aceito! | Aceitou, guri.
+Quero! | Bora!
+
+[valter.truco.correr]
+# Escreva as falas abaixo, uma por linha.
+Corro… | Correu, guri!
+Essa eu corro. | Fugiu do Valter!
+Não quero… | Correu com prudência.
+Tô fora dessa. | Ui, correu.
+Corro… | Correu igual teu pai na chuva.
+Essa eu corro. | Tudo bem, faz parte.
+Não quero… | Correu! Ponto pra mim.
+Tô fora dessa. | Fugiu!
+Corro… | Correu, e o galpão viu.
+Essa eu corro. | Correu bonito.
+
+[valter.truco.rodada]
+# Escreva as falas abaixo, uma por linha.
+Fechou a mão! | Mão fechada!
+Quem levou? | Próxima, guri.
+Próxima mão? | Essa mão teve raça.
+E essa mão? | Fechou! Um traguinho.
+Fechou a mão! | Mão de vizinho.
+Quem levou? | Bora a próxima.
+Próxima mão? | Mão encerrada.
+E essa mão? | Que mão!
+Fechou a mão! | Essa foi caprichada.
+Quem levou? | Próxima mão!
+
+[valter.truco.vitoria]
+# Escreva as falas abaixo, uma por linha.
+Ganhei! | Perdi pro filho do meu parceiro!
+Venci o truco! | Tu ganhou, guri. Puxou o pai.
+Foi minha! | Vitória tua.
+Ganhei a partida! | Ganhou bonito.
+Ganhei! | Perdi! Teu vô ia rir de mim.
+Venci o truco! | Derrota aceita.
+Foi minha! | Ganhou com raça.
+Ganhei a partida! | Perdi, mas a prosa valeu.
+Ganhei! | Parabéns, guri!
+Venci o truco! | Venceu. Respeito.
+
+[valter.truco.derrota]
+# Escreva as falas abaixo, uma por linha.
+Perdi… | Ganhei! O velho ainda sabe.
+Tu ganhou… | Vitória do vizinho!
+Foi tua… | Ganhei, guri!
+Perdi o truco… | Venci!
+Perdi… | Vitória da lida!
+Tu ganhou… | Ganhei, mas tu jogou bem.
+Foi tua… | Venci com calma.
+Perdi o truco… | Vitória! Paga um traguinho.
 Perdi… | Ganhei!
 Tu ganhou… | Vitória, e o galpão viu.
 

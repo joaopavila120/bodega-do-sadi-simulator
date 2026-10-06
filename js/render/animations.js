@@ -209,11 +209,26 @@ function drawPressLid(x, y, w, p) {
   for (let j = 0; j < 4; j++) rect(x + 14 + j * (w - 28) / 3 - 2, ly + 9, 4, 5, '#6f776d', 1);
   rect(x + w / 2 - 26, ly - 9, 52, 7, '#2b2a28', 3, '#141413');
 }
-function drawCoffeeBrew(x, y, w) {
-  if (G.task?.type !== 'coffee') return;
-  // bolhas subindo no reservatório e o fio de café caindo na xícara
-  for (let i = 0; i < 5; i++) { const ph = (frameClock * 1.6 + i * .21) % 1; ellipse(x + 17 + (i * 11) % (w - 30), y - 10 - ph * 10, 1.6 + ph, 1.6 + ph, `rgba(214,236,222,${.8 * (1 - ph)})`); }
-  rect(x + w / 2 - 1, y + 9, 2, 9 + Math.sin(frameClock * 30) * 1.5, '#3b220f');
+// Café de cambona: fogareiro a lenha rústico com a chaleira preta. O fogo tremula sempre;
+// passando café, a cambona chacoalha e solta vapor pelo bico.
+const cambonaArt = new Image(); cambonaArt.src = 'assets/images/icons/cambona.png';
+function drawCambona(x, y, w, h) {
+  const k = 1.8, sw = 44 * k, sh = 52 * k, ox = x + w / 2 - sw / 2, oy = y + h + 8 - sh, brewing = G.task?.type === 'coffee';
+  ellipse(x + w / 2, y + h + 6, sw * .45, 8, '#22180b55');
+  if (cambonaArt.complete && cambonaArt.naturalWidth) {
+    ctx.save(); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(cambonaArt, 0, 25, 44, 27, ox, oy + 25 * k, sw, 27 * k);
+    const shake = brewing ? Math.sin(frameClock * 40) * 1.2 : 0;
+    ctx.drawImage(cambonaArt, 0, 0, 44, 25, ox + shake, oy, sw, 25 * k);
+    ctx.restore();
+  }
+  // brilho do fogo pela portinhola
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .25 + .15 * Math.sin(frameClock * 9) + .08 * Math.sin(frameClock * 23);
+  ellipse(ox + 20 * k, oy + 35 * k, 13 * k, 7 * k, '#ff8a30'); ctx.restore();
+  // vapor pelo bico
+  const n = brewing ? 4 : G.stock.cafe > 0 ? 2 : 0;
+  for (let i = 0; i < n; i++) { const a = (frameClock * (brewing ? 1.1 : .5) + i / n) % 1; ellipse(ox + 1 * k - a * 10, oy + 7 * k - a * 26, 2 + a * 4, 3 + a * 5, `rgba(255,241,215,${(brewing ? .6 : .35) * (1 - a)})`); }
+  if (G.stock.cafe > 0) food('cafe', ox + sw - 6, oy + 18 * k, 26);
 }
 function drawCupSteam(x, y) {
   for (let k = 0; k < 2; k++) { const a = (frameClock * .5 + k * .5) % 1; ellipse(x - 4 + k * 8 + Math.sin(a * 7 + k) * 3, y - a * 24, 2 + a * 3, 3 + a * 4, `rgba(255,241,215,${.4 * (1 - a)})`); }
