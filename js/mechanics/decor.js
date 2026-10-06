@@ -25,7 +25,7 @@ const DECOR=[
  {id:'lampiao_centro',cat:'Luz e plantas',name:'Lampião do meio',cost:35,rep:0,at:[575,44],light:[595,124,90],desc:'Lampião de parede: à noite clareia o meio do salão.'},
  {id:'lampiao_dir',cat:'Luz e plantas',name:'Lampião do salão',cost:35,rep:0,at:[1589,0],light:[1613,121,100],desc:'Lampião que, à noite, ilumina o canto do salão.'},
  {id:'planta_esq',cat:'Luz e plantas',name:'Samambaia pendurada',cost:25,rep:0,at:[49,36],desc:'Samambaia caindo do vaso no canto da cozinha.'},
- {id:'lampada_coracao',cat:'Luz e plantas',name:'Lâmpada de coração',cost:0,rep:0,gift:'Lauro Boleador',at:[1335,0],light:[1358,92,85],lightColor:'255,96,110',desc:'Presente do Lauro Boleador depois da primeira bocha. À noite, deixa o salão vermelhinho.'},
+ {id:'lampada',cat:'Luz e plantas',name:'Lâmpada pendente',cost:0,rep:0,gift:'Lauro Boleador',at:[1091,0],light:[1114,80,90],desc:'Presente do Lauro Boleador depois da primeira bocha. À noite clareia o salão.'},
  {id:'planta_dir',cat:'Luz e plantas',name:'Folhagem no vaso de barro',cost:30,rep:0,at:[1467,0],desc:'Vaso pendurado ao lado da janela, com folhas até o chão.'}
 ];
 const DECOR_ART=Object.fromEntries(DECOR.map(d=>{const image=new Image();image.src='assets/images/decor/'+d.id+'.png';return[d.id,image];}));
@@ -43,7 +43,7 @@ function drawRoomArt(image,ox,oy){
  ctx.drawImage(image,roomX(ox),roomY(oy),roomX(image.naturalWidth),roomY(image.naturalHeight));
 }
 
-function decorState(state=G){if(!state.decor||typeof state.decor!=='object')state.decor={};return state.decor;}
+function decorState(state=G){if(!state.decor||typeof state.decor!=='object')state.decor={};if('lampada_coracao' in state.decor){state.decor.lampada=state.decor.lampada_coracao;delete state.decor.lampada_coracao;}return state.decor;}
 function decorOwned(id,state=G){return Object.hasOwn(decorState(state),id);}
 function decorVisible(d){return decorState()[d.id]===true&&(!d.requires||decorState()[d.requires]===true);}
 function decorCount(){return DECOR.filter(d=>decorOwned(d.id)).length;}

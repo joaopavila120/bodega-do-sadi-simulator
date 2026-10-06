@@ -13,7 +13,7 @@ const GIFTS={
  marcio:[{at:GIFT_AT,decor:['poncho'],text:'“Pro inverno da bodega.”'}],
  marcelo:[{at:GIFT_AT,decor:['cabaca'],text:'“Porongo da roça lá de casa.”'}],
  indavirus:[{at:GIFT_AT,decor:['alho'],text:'“Réstia da colônia. Espanta até mau-olhado.”'}],
- lauro:[{at:'tutorial',decor:['lampada_coracao'],text:'“Pra tua bodega ficar com a luz do coração. E treina, que a revanche vem!”'},{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
+ lauro:[{at:'tutorial',decor:['lampada'],text:'“Uma lâmpada pra clarear a bodega. E treina, que a revanche vem!”'},{at:GIFT_AT,decor:['ervas'],text:'“Ervas secas pro chá e pro tempero.”'}],
  peixinhonabrasa:[{at:GIFT_AT,decor:['lampiao_dir'],text:'“Um lampião pra noite não ficar escura.”'}]
 };
 
