@@ -4,7 +4,7 @@
  const approach=id=>{const f=furniture().find(f=>f.id===id);if(!f)throw Error('Ausente: '+id);
   for(let x=f.x-50;x<f.x+f.w+50;x+=8)for(let y=f.y-50;y<f.y+f.h+50;y+=8){if(!canWalk(x,y)||distRect({x,y},f)>45)continue;G.player={x,y,dx:1,dy:0};if(nearest()?.id===id)return;}throw Error('Inacessível: '+id);
  };
- reset();check($('openButton').closest('#gameSidebar')&&!document.querySelector('.hud #openButton'),'abrir bodega fica no menu lateral');
+ reset();check($('openButton').classList.contains('hidden'),'sem botão lateral: a bodega abre pela porta');G.player={x:ENTRY.x,y:ENTRY.y-15,dx:0,dy:1,walk:false};check(nearShopDoor()&&hintText(nearest()).includes('Abrir a bodega'),'perto da porta aparece E para abrir');interact();check(G.phase==='open'||modal==='event','E na porta abre a bodega');closeDialog(true);
  check(!$('orderRail')&&$('toasts').closest('#gameSidebar')&&getComputedStyle($('toasts')).position!=='fixed','nenhuma faixa de pedidos ou avisos ocupa o topo');
  $('start').classList.remove('hidden');const logo=$('startLogo');logo.scrollIntoView({block:'center'});const r=logo.getBoundingClientRect();check(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2).closest('#start'),'tela inicial cobre totalmente a interface de gameplay');$('start').classList.add('hidden');
  check(!$('startingCharacter')&&$('avatarPreview'),'tela inicial mostra só o Sadi, sem seleção de personagem');

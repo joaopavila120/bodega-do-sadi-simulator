@@ -115,7 +115,7 @@ async function main() {
       await evaluate('save()');
       await load(protocol === 'file' ? pathToFileURL(path.join(root, entry)).href : base + '/' + entry);
       await click('#continue'); await click('#overlay [data-act="close"]');
-      assert(await evaluate('started&&!G.testMode&&G.stock.pao_xis===12'));
+      assert(await evaluate('started&&!G.testMode&&G.stock.pao_xis===0&&G.cash>480&&tutorialStockMissing().includes("pao_xis")'), 'Jogo novo começa sem estoque e com dinheiro para comprar');
       console.log('PASS iniciar, andar, abrir celular e continuar: ' + protocol + ' / ' + entry);
     }
 

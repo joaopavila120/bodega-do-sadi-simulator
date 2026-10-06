@@ -12,6 +12,10 @@ const TUTORIAL_STEPS=[
  {id:'mate',title:'Uma pausa para o chimarrão',text:'Agora, com as mãos livres, vá à cuia e segure E para tomar mate. Ele dá velocidade por alguns segundos e pode ser tomado sempre que quiser.'},
  {id:'clean',title:'Casa pronta para amanhã',text:'Com as mãos livres, aproxime-se da mesa 1 e segure E para limpar. Depois o primeiro dia termina. Amanhã o movimento e a dificuldade começam a crescer.'}
 ];
+// Primeira lição: o jogo começa sem estoque e com dinheiro para comprar no fornecedor.
+const TUTORIAL_GOODS=['pao_xis','burger','ovo','queijo','salada','cerveja','refri','cigarro','codorna','erva'];
+function tutorialStockMissing(){if(!G.tutorial?.stockLesson)return [];return TUTORIAL_GOODS.filter(k=>(G.stock[k]||0)+G.deliveries.filter(d=>d.key===k).reduce((n,d)=>n+d.qty,0)<=0);}
+function startWithoutStock(g){let cash=0;for(const[k,v]of Object.entries(GOODS))if(v.initial>0&&k!=='azeite'){cash+=v.initial*v.cost;g.stock[k]=0;}g.cash=round(g.cash+cash);g.stats=stats(g.cash);g.tutorial.stockLesson=true;}
 function tutorialActive(){return G.day===1&&G.tutorial.guided&&!G.tutorial.complete;}
 function tutorialStep(){return TUTORIAL_STEPS[G.tutorial.step||0];}
 function tutorialUpgradeAllowed(id){return !tutorialActive()||tutorialStep()?.id==='upgrade'&&id==='trago';}
@@ -86,7 +90,7 @@ function tutorialXisHint(){
 function tutorialHint(){
  if(!tutorialActive())return '<b>Tutorial concluído ✓</b><p>Consulte o Guia para receitas e melhorias.</p>';
  const s=tutorialStep();if(!s)return '<b>Primeiro dia concluído!</b>';
- const text=G.phase==='prep'?'Abra a bodega no botão do menu lateral para receber seu primeiro freguês.':G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
+ const text=G.phase==='prep'?(tutorialStockMissing().length?'Compre o estoque no celular (C → Fornecedor). Falta: '+tutorialStockMissing().map(nameOf).join(', ')+'.':'Vá até a porta da bodega, embaixo, e aperte E para abrir e receber o primeiro freguês.'):G.tutorial.delivered?'Atendimento concluído! Espere o freguês sair para a próxima etapa.':s.id==='xis'?tutorialXisHint():s.text;
  return '<b>'+(G.tutorial.step+1)+' / '+TUTORIAL_STEPS.length+' · '+s.title+'</b><p>'+text+'</p>';
 }
-function tutorialWelcome(){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa. Amanhã começam os eventos e os pedidos com prazo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
+function tutorialWelcome(){if(tutorialStockMissing().length){openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa.</p><div class="callout"><b>Primeiro, o estoque</b><br>A bodega está vazia. Aperte <b>C</b> para abrir o celular e, em <b>Fornecedor</b>, compre um pacote de cada: pão, hambúrguer, ovo, queijo, salada, cerveja, refri, cigarro, ovos de codorna em conserva e erva-mate. A entrega chega pela porta em alguns segundos.</div><p>Cuide sempre do estoque: o número em cada estação mostra quanto sobrou, e o que acaba não dá para vender. Comprado tudo, vá até a <b>porta da bodega</b> e aperte E para abrir.</p><button class="primary" data-act="planBuy">Abrir o celular</button>','welcome');return;}openDialog('Dia 1 · Um passo de cada vez','<p>Hoje é sem pressa: um freguês por vez, com as instruções em cada etapa. Amanhã começam os eventos e os pedidos com prazo.</p><button class="primary" data-act="close">Preparar para abrir</button>','welcome');}
