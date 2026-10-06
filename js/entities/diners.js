@@ -55,7 +55,7 @@ function tickDiners(g,dt){
    d.think-=dt;if(d.think<=0){orderNext(d);syncGroupOrders(g);}continue;
   }
   if(d.status!=='waiting')continue;d.patience=Math.max(0,d.patience-(g.training?0:dt));if(d.patience>0)continue;
-  d.status='lost';d.orders=[];d.later=[];G.stats.lost++;G.rep=clamp(G.rep-1.5,0,100);
+  d.status='lost';d.orders=[];d.later=[];G.stats.lost++;repChange(-2.5);
   G.stats.waste+=d.delivered.reduce((sum,item)=>sum+(item.cost||0),0);d.delivered=[];
   effect(PEOPLE[d.person].name+': desisti do pedido',g.x,g.y-80,'#e7b097');fxAnger(g.x,g.y-130);
  }

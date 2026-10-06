@@ -149,7 +149,7 @@ function refuseFiado(){
  const c=fiadoFirst();if(!c)return;
  if(tutorialActive()){say('Hoje é dia de aprender: anote este no caderninho entregando com E.');return;}
  if(Math.random()<.6){c.fiado=false;say(PEOPLE[c.person].name+': “Tá, tá… pago à vista então.”');}
- else{c.state='leave';c.dest=null;setDestination(c,EXIT);G.rep=clamp(G.rep-1,0,100);G.stats.lost++;resetQueuePaths();say(PEOPLE[c.person].name+' foi embora sem levar nada.');}
+ else{c.state='leave';c.dest=null;setDestination(c,EXIT);repChange(-1.5);G.stats.lost++;resetQueuePaths();say(PEOPLE[c.person].name+' foi embora sem levar nada.');}
  save();refreshHUD();
 }
 function settleFiado(e,amount,why){e.status='paid';e.paidDay=G.day;e.paid=round(amount);G.cash=round(G.cash+amount);G.stats.fiadoIn=round((G.stats.fiadoIn||0)+amount);G.fiadoPaid=(G.fiadoPaid||0)+1;gainXP(5);return why;}
@@ -170,7 +170,7 @@ function chargeFiado(id){
  else{e.due=Math.max(e.due,G.day+2);say(PEOPLE[e.person].name+': “Semana que vem eu acerto, palavra!”');}
  save();renderPhone();
 }
-function forgiveFiado(id){const e=fiadoOpen().find(e=>e.id===Number(id));if(!e)return;e.status='forgiven';e.paidDay=G.day;G.rep=clamp(G.rep+1,0,100);say('Conta perdoada. A vizinhança comenta tua bondade.');save();renderPhone();}
+function forgiveFiado(id){const e=fiadoOpen().find(e=>e.id===Number(id));if(!e)return;e.status='forgiven';e.paidDay=G.day;repChange(1);say('Conta perdoada. A vizinhança comenta tua bondade.');save();renderPhone();}
 function fiadoPanel(){
  const open=fiadoOpen(),closed=fiadoState().filter(e=>e.status!=='open').slice(-8).reverse(),total=fiadoTotal(),limit=creditLimit();
  const status={paid:'pago',lost:'sumiu',forgiven:'perdoado'};

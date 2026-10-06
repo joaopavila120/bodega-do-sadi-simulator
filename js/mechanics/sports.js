@@ -39,7 +39,7 @@ function updateBocceSocial(){
  updateBocceTalk();
 }
 function settleSport(type,match,won){
- if(match.sportSettled)return;match.sportSettled=true;
+ if(match.sportSettled)return;match.sportSettled=true;if(!match.tutorial)repChange(won?1:-1.5);
  const s=sportState()[type];s.matches++;if(won)s.wins++;s.reputation=clamp(s.reputation+(won?10:-3),0,100);
  addFriendship(match.opponent,won?5:3);gainXP(won?20:6);
  sportTalk(match,type,won?'vitoria':'derrota');

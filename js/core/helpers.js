@@ -58,6 +58,11 @@ function fitOrder(person,key){
  if(p.lovesChopp&&DRINKS.includes(key)&&unlocked('cerveja')&&Math.random()<.85)return 'cerveja';
  return key;
 }
+// Reputação: sobe devagar com bom atendimento e cai rápido com descaso. O saldo do dia vai pro relatório.
+function repChange(delta){if(!G||!delta)return;const before=G.rep;G.rep=clamp(round(G.rep+delta),0,100);if(G.stats)G.stats.repDelta=round((G.stats.repDelta||0)+G.rep-before);}
+// A fama da bodega traz mais gente e gorjetas melhores (60 é o ponto neutro).
+function repArrival(){return clamp(1.3-G.rep/200,.8,1.3);}
+function repTips(){return clamp(.5+G.rep/120,.5,1.35);}
 function drinksForGroup(g){return G.event.id==='campeonato'?alcoholPool():drinkPool();}
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}

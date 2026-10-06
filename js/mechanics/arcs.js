@@ -151,7 +151,7 @@ function arcCheck() {
 }
 function arcReward(arc, i) {
   const r = ARCS[arc].chapters[i].reward; if (!r) return;
-  if (r.rep) G.rep = clamp(G.rep + r.rep, 0, 100);
+  if (r.rep) repChange(r.rep);
   if (r.xp) gainXP(r.xp);
   if (r.bocha) { const s = sportState().bocha; s.reputation = clamp(s.reputation + r.bocha, 0, 100); }
   for (const [k, n] of Object.entries(r.stock || {})) if (GOODS[k]) G.stock[k] = (G.stock[k] || 0) + n;
