@@ -1,3 +1,6 @@
 Thumbs.db
 Desktop.ini
 *.log
+
+# Documentos pessoais não vão para o repositório público
+*.pdf

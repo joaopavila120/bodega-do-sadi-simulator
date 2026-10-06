@@ -195,12 +195,14 @@ async function main() {
     await send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
     console.log('PASS cancha e lançamentos por botões no celular');
 
+    assert(await evaluate(`$('testModes').classList.contains('hidden')`), 'Modos de teste ficam escondidos no endereço normal');
     await evaluate('G.testMode=true;G.testRules=TEST_RULES;G.cash=0;save()');
-    await load(base + '/index.html');
+    await load(base + '/index.html?testes');
+    assert(await evaluate(`!$('testModes').classList.contains('hidden')`), 'Com ?testes os modos de teste aparecem');
     await click('#start [data-act="test"]'); await click('#overlay [data-act="close"]');
     assert(await evaluate('G.testMode&&hasCash(999999)&&G.cash===0'));
     await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
-    await load(base + '/index.html');
+    await load(base + '/index.html?testes');
     assert(await evaluate(`(()=>{const r=$('startLogo').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth;})()`));
     await click('#start [data-act="test"]'); await click('#overlay [data-act="close"]');
     assert(await evaluate(`(()=>{const r=$('interactButton').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight;})()`));

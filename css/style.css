@@ -344,3 +344,4 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 .game-menu .restart-day{grid-column:1/-1;background:#f3e2c0;border-color:#a8472c;color:#7a2f1c}
 .start-menu #startupStatus.gpu-warning{background:#f6dcc4;border:1px solid #a8472c;color:#6d2a17;border-radius:6px;padding:8px 10px;font-size:13px;line-height:1.4;text-align:left}
 #weightHold.retry{background:#a8472c;border-color:#7a2f1c;color:#fff3d0;animation:coachPop .6s ease-out}
+.test-modes{border-top:1px dashed #c9b284;margin-top:10px;padding-top:4px}

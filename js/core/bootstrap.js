@@ -45,6 +45,8 @@ async function initializeGame() {
     draw();
     $('continue').disabled = !readSave();
     document.querySelector('#start [data-act="new"]').disabled = false;
+    // Modos de teste só aparecem com ?testes no endereço (ex.: index.html?testes), para não confundir quem só vai jogar.
+    $('testModes').classList.toggle('hidden', !/[?&#]testes\b/.test(location.search + location.hash));
     document.querySelector('#start [data-act="test"]').disabled = false;
     document.querySelector('#start [data-act="test2"]').disabled = false;
     document.querySelectorAll('#start [data-act="testNew"]').forEach(b => b.disabled = false);
