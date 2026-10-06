@@ -2,7 +2,7 @@
 (() => {
  const results=[],check=(v,m)=>{if(!v)throw Error(m);results.push(m);};
  const random=Math.random;
- const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=2000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();bannerQueue=[];['start','overlay','phone','weighUI','mixUI','lassoUI'].forEach(id=>$(id).classList.add('hidden'));};
+ const reset=()=>{G=fresh();G.xp=99999;G.levelSeen=7;G.levelStory=7;G.tutorial.guided=false;G.tutorial.complete=true;G.cash=2000;G.rep=100;started=true;paused=false;modal=null;phoneOpen=false;AudioEngine.on=false;keys.clear();bannerQueue=[];['start','overlay','phone','weighUI','mixUI','lassoUI'].forEach(id=>$(id).classList.add('hidden'));};
  const sunday=()=>{reset();G.day=3;G.event={id:'costelao',seen:true,fired:{}};G.phase='prep';G.costelaoTaught=true;G.stock.costela_crua=9;G.avg.costela_crua=40;campoState().fuel=100;campoState().lit=true;};
  const roast=()=>{for(let t=0;t<COOK_SIDE+.2;t+=.05){campoState().fuel=100;campoTick(.05);if(campoState().espetos.some(e=>e&&e.heat[e.fire]>=1))break;}};
  const chop=()=>{use('lenha');for(let k=0;k<CHOP_HITS;k++){keys.add('e');holdTick(.05);for(let t=0;t<CHOP_TIME*.7;t+=.05)holdTick(.05);keys.delete('e');holdTick(.05);}};
@@ -118,7 +118,7 @@
   campoState().espetos[0]={heat:[0,0],fire:0,burned:false,cost:1,turns:0};G.player={x:525,y:640,dx:1,dy:0};campoBirds=[];spawnCampoBird();const calm=campoBirds[0];for(let t=0;t<6;t+=.05)campoBirdsTick(.05);calm.aggr=0;calm.state='ground';calm.t=9;G.player={x:calm.x+40,y:calm.y-10,dx:1,dy:0};campoBirdsTick(.05);check(calm.state==='ground'&&calm.calm>0,'quero-quero manso só grita e se afasta');campoBirds=[];campoState().espetos[0]=null;
   // sobras do costelão
   sunday();G.phase='open';G.stock.costela=1500;G.stock.costela_crua=2;campoState().espetos[1]={heat:[1,0],fire:1,burned:false,cost:40,turns:1};finishDay(true);
-  check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&G.report.waste>0,'carne que sobra no fim do costelão é descartada');check(G.report.power===0&&G.report.supplies===COSTELAO_SUPPLIES&&!G.report.rent,'no costelão não há luz: vão lenha e sal');closeDialog(true);
+  check(!G.stock.costela&&!G.stock.costela_crua&&!campoState().espetos[1]&&!G.report.waste,'carne que sobra no fim do costelão sai sem contar como prejuízo');check(G.report.power===0&&G.report.supplies===COSTELAO_SUPPLIES&&!G.report.rent,'no costelão não há luz: vão lenha e sal');closeDialog(true);
   // sem carne e sem dinheiro, o domingo vira dia normal (menos no primeiro costelão)
   reset();G.costelaoTaught=true;G.day=2;G.phase='closed';G.lassoDay=2;G.event={id:'normal',seen:true,fired:{}};G.stock.costela_crua=0;G.stock.costela=0;G.cash=20;nextDay('automatic');
   check(G.day===3&&G.event.id==='normal'&&G.event.noCostelao&&$('dialogContent').textContent.includes('Sem costelão hoje'),'sem carne nem dinheiro, o domingo vira dia normal com aviso');closeDialog(true);

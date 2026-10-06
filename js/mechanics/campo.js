@@ -482,7 +482,7 @@ function drawCampoBirds(layers){
   ellipse(b.x,b.y+3,18*(1-Math.min(.7,b.h/400)),5,'#1c140c33');drawQuero(Math.floor(b.flap*9)%2?1:2,b.x,b.y-28-b.h,1.9,b.face<0,b.state==='out'?-.15:.1);
  }});
 }
-// Fim do costelão: carne que sobrou (crua, no espeto, na tábua ou na mão) vai fora e entra como desperdício.
+// Fim do costelão: carne que sobrou (crua, no espeto, na tábua ou na mão) vai fora, sem contar como prejuízo.
 function discardCostelao(){
  const c=campoState(),meat=i=>i&&['costela_crua','costela_assada'].includes(i.key)||i?.pid==='costela';let cost=0,any=false;
  if(G.stock.costela_crua>0){cost+=G.stock.costela_crua*(G.avg.costela_crua||0);G.stock.costela_crua=0;any=true;}
@@ -490,7 +490,7 @@ function discardCostelao(){
  c.espetos.forEach((e,i)=>{if(e){cost+=e.cost||0;c.espetos[i]=null;any=true;}});
  G.hands=G.hands.map(i=>{if(meat(i)){cost+=i.cost||0;any=true;return null;}return i;});
  G.floor=G.floor.filter(f=>{if(meat(f.item)){cost+=f.item.cost||0;any=true;return false;}return true;});
- if(any){G.stats.waste=round((G.stats.waste||0)+cost);say('Sobrou carne do costelão: foi descartada.');}
+ if(any)say('Sobrou carne do costelão: foi repartida com a vizinhança.');
  return any;
 }
 function skipLasso(){G.lassoDay=G.day;closeDialog(true);say('Sem bois, o costelão de amanhã fica só com o que sobrou no estoque.');nextDay();}

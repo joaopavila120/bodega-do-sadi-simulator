@@ -84,7 +84,7 @@ function acceptGiftVisit(){const item=G.giftQueue?.shift();deliverGift(item);clo
 // Modo dinheiro infinito: nível e reputação no máximo e amizade máxima com todos os especiais.
 // Contatos, personagens jogáveis e peças de presente já ficam liberados, sem fila de visitas.
 function maxTestProgress(){
- if(!G.testMode)return;G.rep=100;G.xp=Math.max(G.xp||0,LEVELS[LEVELS.length-1].xp);G.levelSeen=LEVELS.length;
+ if(!G.testMode)return;G.rep=100;G.xp=Math.max(G.xp||0,LEVELS[LEVELS.length-1].xp);G.levelSeen=LEVELS.length;G.levelStory=LEVELS.length;
  G.contacts??={};G.playable??={};G.giftsGiven??={};G.giftQueue=[];
  for(const i of PEOPLE.map((p,i)=>i).filter(isSpecial)){
   const id=PEOPLE[i].id;G.friends[i]=MAX_FRIENDSHIP;G.contacts[id]??=G.day;G.playable[id]??=G.day;

@@ -77,6 +77,11 @@
   {const saved=G.metSpecial;G.metSpecial={};check(!specialReady(index('dianho'))&&specialReady(index('badin')),'personagens com corpo provisório esperam os de pixel art própria');
    G.metSpecial=Object.fromEntries(specialPeople().filter(i=>!PEOPLE[i].placeholder).map(i=>[PEOPLE[i].id,1]));check(specialReady(index('dianho')),'depois que todos os de pixel art vieram, os provisórios aparecem');G.metSpecial=saved;}
   check(isSpecial(index('valter'))&&ARCS.valter&&GIFTS.valter&&PEOPLE[index('valter')].name==='Valter'&&ARCS.valter.chapters[2].reward.herd===1,'Valter virou especial: amigo de lida do pai do Sadi, com arco que dá um boi');}
+ {window.NO_SCENES=false;G.levelStory=1;G.xp=LEVELS[2].xp;G.phase='closed';check(nextLevelStory()===2,'subir de nível libera o capítulo da história');
+  const seen=[];for(let k=0;k<3&&nextLevelStory();k++){playLevelStory(null);let n=0;while(scene&&n++<900){if(scene.step?.say){seen.push(scene.step.say);sceneNext();sceneNext();}else if(scene.step?.overlay){sceneNext();}else sceneTick(1/20);}}
+  check(G.levelStory===3&&seen.includes('valter')&&!$('sceneNote').classList.contains('hidden')===false,'capítulos por nível tocam um de cada vez (notícia e caderno do vô)');
+  G.xp=LEVELS[6].xp;G.levelStory=6;playLevelStory(null);let n=0,photo=false;while(scene&&n++<1500){if(scene.step?.overlay==='photo')photo=true;if(scene.step?.say||scene.step?.overlay){sceneNext();sceneNext();}else sceneTick(1/20);}
+  check(photo&&G.levelStory===7&&!nextLevelStory(),'final da Bodega lendária com a foto do vô');window.NO_SCENES=true;}
  for(const id of ['indavirus','lauro','peixinhonabrasa']){const p=index(id);G.friends[p]=100;G.conversations[p]=4;check(!!personalizedProse(p)&&nextProse(p).id?.includes(id),'voz própria permanece com afinidade alta: '+id);}
  const mano=index('manolima');for(let i=0;i<16;i++){G.conversations[mano]=i;G.friends[mano]=100;const line=nextProse(mano);if(!line.id?.includes('manolima'))throw Error('Mano perdeu a voz própria');}check(true,'Mano Lima mantém voz própria sem cair nas falas genéricas');
  for(const id of ['guri','manolima','peixinhonabrasa','indavirus','lauro']){const lines=customDialogues[id]||DEFAULT_DIALOGUES[id];check(lines?.length>=12&&!lines.some(l=>/imigração|lobisome do Arvoredo te/.test(l.reply)),'falas novas de '+id);}

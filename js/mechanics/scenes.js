@@ -3,7 +3,7 @@
 // Esc ou "Pular" encerra a cena. A interface do jogo some e entram faixas de cinema.
 'use strict';
 
-let scene = null, sceneForcesCampo = false;
+let scene = null, sceneForcesCampo = false, NEWS_DEFAULT = null;
 // Os testes automáticos desligam as cenas do meio do jogo (a introdução continua testável).
 function scenesEnabled() { return !window.NO_SCENES; }
 
@@ -92,12 +92,14 @@ function sceneAdvance() {
     if (st.do) { st.do(); continue; }
     s.step = st;
     if (st.say) showRpgBox('sceneTalk', { ...sceneSpeaker(st.say), player: '', reply: st.text });
-    if (st.overlay) { if (st.overlay === 'photo') $('scenePhotoFace').innerHTML = portraitFromSprite(avatarSprite(), 150); $(SCENE_OVERLAYS[st.overlay]).classList.remove('hidden'); AudioEngine.paper(); }
+    if (st.overlay) { if (st.overlay === 'photo') $('scenePhotoFace').innerHTML = portraitFromSprite(avatarSprite(), 150);
+      if (st.overlay === 'note') $('sceneNoteText').innerHTML = st.text;
+      if (st.overlay === 'news') { NEWS_DEFAULT ??= [$('sceneNewsHead').textContent, $('sceneNewsBody').textContent]; $('sceneNewsHead').textContent = st.headline || NEWS_DEFAULT[0]; $('sceneNewsBody').textContent = st.body || NEWS_DEFAULT[1]; } $(SCENE_OVERLAYS[st.overlay]).classList.remove('hidden'); AudioEngine.paper(); }
     if (st.build) s.built = 0;
     return;
   }
 }
-const SCENE_OVERLAYS = { letter: 'sceneLetter', news: 'sceneNews', photo: 'scenePhoto' };
+const SCENE_OVERLAYS = { letter: 'sceneLetter', news: 'sceneNews', photo: 'scenePhoto', note: 'sceneNote' };
 function hideSceneOverlays() { for (const id of Object.values(SCENE_OVERLAYS)) $(id).classList.add('hidden'); }
 function sceneSpeaker(who) {
   if (who === 'dica') return { portrait: '<span class="portrait portrait-phone" style="width:104px;height:104px">💡</span>', name: 'Dica' };
