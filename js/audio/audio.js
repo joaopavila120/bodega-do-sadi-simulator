@@ -22,7 +22,9 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
  boost(){[392,494,587,784,988].forEach((f,i)=>this.note(f,.14,'triangle',.065,i*.055));this.noise(.25,.1,1200);},
  drop(){this.note(115,.09,'triangle',.11);},
  trash(){this.noise(.15,.22,700);this.note(85,.12,'triangle',.07);},
- clean(){this.noise(.2,.22,2100);this.note(1174,.22,'sine',.055,.1);},
+ // Pano esfregando a mesa (vai e vem) e, no fim, louça recolhida e o brilho de limpo.
+ scrub(){if(!this.on||!this.ctx||this.ctx.state!=='running')return;const c=this.ctx,now=c.currentTime,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain(),up=(this.scrubDir=!this.scrubDir);s.buffer=this.whiteBuffer;f.type='bandpass';f.Q.value=1.4;f.frequency.setValueAtTime(up?1600:2800,now);f.frequency.linearRampToValueAtTime(up?2800:1600,now+.15);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.09,now+.04);g.gain.exponentialRampToValueAtTime(.0001,now+.17);s.connect(f);f.connect(g);g.connect(this.out());s.start(now,Math.random());s.stop(now+.18);},
+ clean(){this.noise(.2,.18,2100);[2350,3050].forEach((f,i)=>this.note(f,.12,'sine',.035,i*.06));[1568,2093,2637].forEach((f,i)=>this.note(f,.22,'sine',.045,.16+i*.07));},
  heart(){[523,659,784,1046].forEach((f,i)=>this.note(f,.22,'triangle',.065,i*.12));},
  phone(){[880,1174,880,1174].forEach((f,i)=>this.note(f,.075,'sine',.055,i*.09));},
  crowd(){[196,246,294].forEach((f,i)=>this.note(f,.4,'triangle',.03,i*.08));},
