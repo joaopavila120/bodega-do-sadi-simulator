@@ -8,21 +8,37 @@ let scene = null, sceneForcesCampo = false;
 function scenesEnabled() { return !window.NO_SCENES; }
 
 const SCENES = {
-  // Jogo novo: o galpão herdado, a carta do vô e o jornal.
+  // Jogo novo: a chegada ao galpão herdado, a carta e a foto do vô, a faxina, o jornal, o telefonema do atacado e o primeiro vizinho.
   intro: () => [
-    { view: 'galpao' }, { actor: 'sadi', x: ENTRY.x, y: ENTRY.y, dx: -1 }, { fade: 'in', time: 1 },
+    { caption: 'Interior do Rio Grande do Sul…', time: 2.4 },
+    { view: 'galpao' }, { actor: 'sadi', x: ENTRY.x, y: ENTRY.y - 10, dx: -1 }, { fade: 'in', time: 1 },
+    { say: 'sadi', text: 'Faz uns quinze anos que eu não piso aqui…' },
+    { do: () => AudioEngine.creak() },
     { walk: 'sadi', to: { x: 800, y: 640 } },
     { say: 'sadi', text: 'Herdei esse galpão do meu velho vô, que foi pra outra morada.' },
+    { do: () => fxPuffs(820, 600, 8, 120, '#d8c8a8') },
+    { say: 'sadi', text: 'Ainda tem o cheiro de fumaça de fogo de chão.' },
     { walk: 'sadi', to: { x: 700, y: 610 } },
     { say: 'sadi', text: 'Ué… uma caixa velha. Tem uma carta aqui dentro.' },
     { overlay: 'letter' },
-    { say: 'sadi', text: 'Esse galpão foi de tudo: construíram na época das tropeadas, depois virou CTG… e agora tá abandonado.' },
+    { say: 'sadi', text: 'E uma foto do vô, atrás de um balcão…' },
+    { overlay: 'photo' },
+    { say: 'sadi', text: 'O vô era a minha cara… e tinha uma venda aqui! Esse galpão foi de tudo: construíram na época das tropeadas, depois virou CTG… e agora tá abandonado.' },
     { say: 'sadi', text: 'Vou revitalizar e realizar meu sonho: abrir minha própria bodega!' },
+    { do: () => { fxPuffs(680, 640, 10, 160, '#d8c8a8'); AudioEngine.scrub(); setTimeout(() => AudioEngine.scrub(), 200); setTimeout(() => AudioEngine.scrub(), 400); } },
+    { say: 'sadi', text: 'Primeiro, tirar a poeira de quinze anos…' },
+    { do: () => [0, 260, 520].forEach(t => setTimeout(() => AudioEngine.thud(), t)) },
+    { say: 'sadi', text: '…depois um balcão firme, que bodega sem balcão não é bodega.' },
     { fade: 'out', time: 1 }, { caption: 'Algumas semanas depois…', time: 2 },
     { overlay: 'news' },
+    { do: () => AudioEngine.phone() },
+    { say: 'fornecedor', text: 'Seu Sadi? Aqui é do atacado. A primeira entrega chega amanhã cedo: pão, erva, cerveja… O resto é só pedir pelo celular!' },
     { view: 'bodega' }, { do: () => { G.player = { ...G.player, x: 800, y: 640, dx: 0, dy: 1, walk: false }; } }, { fade: 'in', time: .6 },
     { build: true },
-    { say: 'sadi', text: 'Saiu até no jornal! E dizem que por aqui passa gente conhecida: o Mano Lima, o Lauro Boleador, o Indavirus… Se eu tratar bem, viram amigos e até trazem presente.' }
+    { actor: 'valter', x: ENTRY.x, y: ENTRY.y, dx: -1 }, { do: () => AudioEngine.doorChime() },
+    { walk: 'valter', to: { x: 900, y: 670 } },
+    { say: 'valter', text: 'Vai abrir mesmo, vivente? Já tava na hora de ter uma bodega por aqui!' },
+    { say: 'sadi', text: 'Amanhã, portas abertas! E dizem que por aqui passa gente conhecida: o Mano Lima, o Lauro Boleador, o Indavirus… Se eu tratar bem, viram amigos e até trazem presente.' }
   ],
   // Primeiro sábado: o costelão da inauguração e o boi que o pai deu.
   sabado: () => [
@@ -62,24 +78,27 @@ function sceneAdvance() {
     if (st.do) { st.do(); continue; }
     s.step = st;
     if (st.say) showRpgBox('sceneTalk', { ...sceneSpeaker(st.say), player: '', reply: st.text });
-    if (st.overlay) { $(st.overlay === 'letter' ? 'sceneLetter' : 'sceneNews').classList.remove('hidden'); AudioEngine.paper(); }
+    if (st.overlay) { if (st.overlay === 'photo') $('scenePhotoFace').innerHTML = portraitFromSprite(avatarSprite(), 150); $(SCENE_OVERLAYS[st.overlay]).classList.remove('hidden'); AudioEngine.paper(); }
     if (st.build) s.built = 0;
     return;
   }
 }
+const SCENE_OVERLAYS = { letter: 'sceneLetter', news: 'sceneNews', photo: 'scenePhoto' };
+function hideSceneOverlays() { for (const id of Object.values(SCENE_OVERLAYS)) $(id).classList.add('hidden'); }
 function sceneSpeaker(who) {
+  if (who === 'fornecedor') return { portrait: '<span class="portrait portrait-phone" style="width:104px;height:104px">📞</span>', name: 'Atacado · telefone' };
   if (who === 'sadi') return { portrait: portraitFromSprite(avatarSprite(), 104), name: PEOPLE.find(p => p.id === G.avatarId)?.name || 'Sadi' };
   const i = PEOPLE.findIndex(p => p.id === who); return { person: i, name: PEOPLE[i]?.name || who };
 }
 function sceneNext() {
   const s = scene, st = s?.step; if (!st) return;
   if (st.say) { if (rpgTyping('sceneTalk')) { finishRpgTyping('sceneTalk'); return; } showRpgBox('sceneTalk', null); sceneAdvance(); }
-  else if (st.overlay) { $('sceneLetter').classList.add('hidden'); $('sceneNews').classList.add('hidden'); sceneAdvance(); }
+  else if (st.overlay) { hideSceneOverlays(); sceneAdvance(); }
 }
 function sceneSkip() { if (scene) endScene(); return true; }
 function endScene() {
   const done = scene?.onEnd; scene = null; sceneForcesCampo = false; AudioEngine.sceneQuiet = false;
-  showRpgBox('sceneTalk', null); $('sceneLetter').classList.add('hidden'); $('sceneNews').classList.add('hidden');
+  showRpgBox('sceneTalk', null); hideSceneOverlays();
   document.body.classList.remove('intro-playing'); $('sceneSkip').classList.add('hidden');
   AudioEngine.loop('wind', 0, { type: 'bandpass', freq: 500, q: .5 });
   if (done) done();
@@ -156,5 +175,10 @@ function drawScene() {
   const bar = Math.round(ch * .07); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cw, bar); ctx.fillRect(0, ch - bar, cw, bar);
 }
 
+// Na bodega montada, quem participa da cena entra na mesma ordem de profundidade do salão.
+function sceneLayers(layers) {
+  if (scene?.view !== 'bodega') return;
+  for (const [id, a] of Object.entries(scene.actors)) if (id !== 'sadi') layers.push({ y: a.y, draw: () => personDraw(PEOPLE[PEOPLE.findIndex(p => p.id === id)].sprite, a.x, a.y, a.walk, false, a.dx) });
+}
 // Jogo novo começa pela introdução; no fim, o tutorial do primeiro dia.
 function startIntro() { playScene('intro', () => { G.player = { ...G.player, x: 520, y: 720, dx: 0, dy: 1, walk: false }; save(); welcome(); }); }

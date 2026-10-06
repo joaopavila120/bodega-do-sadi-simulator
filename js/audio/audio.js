@@ -87,6 +87,8 @@ const AudioEngine={ctx:null,master:null,on:true,music:true,tracks:null,stepClock
  register(){this.pop(900,.1,.03);this.noise(.08,.08,600);this.note(2794,.45,'sine',.05,.06);this.note(4186,.3,'sine',.02,.08);[1568,2093,2637].forEach((f,i)=>this.note(f,.12,'sine',.03,.2+i*.05));},
  // Bipe das letras aparecendo na caixa de diálogo.
  blip(){this.note(1100+Math.random()*180,.03,'square',.01);},
+ // Porta velha rangendo.
+ creak(){if(!this.on||!this.ctx||this.ctx.state!=='running')return;const c=this.ctx,now=c.currentTime,o=c.createOscillator(),f=c.createBiquadFilter(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(110,now);o.frequency.linearRampToValueAtTime(190,now+.25);o.frequency.linearRampToValueAtTime(130,now+.55);o.frequency.linearRampToValueAtTime(170,now+.8);f.type='bandpass';f.frequency.value=900;f.Q.value=3;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.06,now+.08);g.gain.setValueAtTime(.05,now+.7);g.gain.exponentialRampToValueAtTime(.0001,now+.9);o.connect(f);f.connect(g);g.connect(this.out());o.start(now);o.stop(now+.95);},
  // Papel desdobrando (carta e jornal).
  paper(){this.hiss(.22,.06,2600);this.hiss(.18,.05,3600,.12);},
  brawl(){[0,.09,.2,.3].forEach((t,i)=>{this.note(95+i*14,.07,'triangle',.09,t);this.noise(.08,.14,900+i*300);});},

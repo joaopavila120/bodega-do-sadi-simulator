@@ -17,7 +17,7 @@ function draw(){beginWorld();
  for(const c of G.shop)layers.push({y:c.y,draw:()=>{if(isSpecial(c.person)&&c.state!=='leave')specialRing(c.x,c.y);personDraw(PEOPLE[c.person].sprite,c.x,c.y,!!c.path?.length,false,c.dx,false,customerMood(c));}});
  for(const g of G.groups){const seated=['seated','chat'].includes(g.state),t=G.tables.find(t=>t.id===g.table);for(let j=0;j<g.size;j++){const {x,y}=groupSeatPosition(g,j);layers.push({y,draw:()=>{const pose=seated&&fightPose(t,x,y,j);if(isSpecial(groupPerson(g,j))&&g.state!=='leave')specialRing(x,y);if(pose)personDraw(PEOPLE[groupPerson(g,j)].sprite,pose.x,pose.y,true,false,pose.dx,false);else personDraw(PEOPLE[groupPerson(g,j)].sprite,x,y,!seated&&(g.state==='tournamentMove'||!!g.path?.length),false,g.dx,seated,dinerMood(g,j));}});}}
  if(deliveryVisitor>0)layers.push({y:ENTRY.y-20,draw:()=>{personDraw(5,ENTRY.x-10,ENTRY.y-20,true);food('erva',ENTRY.x-3,ENTRY.y-71,36);drawDeliveryCrates();}});
- drawChallengeVisit(layers);drawCampoBirds(layers);layers.push({y:G.player.y,draw:()=>personDraw(avatarSprite(),G.player.x,G.player.y,G.player.walk,true,G.player.dx)});layers.sort((a,b)=>a.y-b.y).forEach(l=>l.draw());
+ drawChallengeVisit(layers);drawCampoBirds(layers);sceneLayers(layers);layers.push({y:G.player.y,draw:()=>personDraw(avatarSprite(),G.player.x,G.player.y,G.player.walk,true,G.player.dx)});layers.sort((a,b)=>a.y-b.y).forEach(l=>l.draw());
  for(const t of availableTables())if(t.fight)drawBrawl(t);
 
  drawNight();

@@ -11,8 +11,11 @@
  const runScene=(until,max=400)=>{for(let n=0;n<max&&scene&&!until();n++){if(scene.step?.say||scene.step?.overlay)sceneNext();else sceneTick(1/20);}};
  runScene(()=>scene.step?.say);check(scene.view==='galpao'&&$('sceneTalkName').textContent==='Sadi','o Sadi conta a história em caixa de diálogo');
  runScene(()=>scene.step?.overlay==='letter');check(!$('sceneLetter').classList.contains('hidden'),'ele acha a carta do vô');
+ runScene(()=>scene.step?.overlay==='photo');check(!$('scenePhoto').classList.contains('hidden')&&$('scenePhoto').textContent.includes('1968'),'e uma foto do vô no armazém');
  runScene(()=>scene.step?.overlay==='news');check($('sceneNews').textContent.includes('Velho galpão vai virar bodega'),'o Jornal da Comunidade anuncia a bodega');
- runScene(()=>scene.view==='bodega'&&scene.step?.say);check(rpgBoxes.sceneTalk.text.includes('gente conhecida'),'a bodega aparece montada e ele fala das figuras conhecidas');
+ runScene(()=>scene.step?.say==='fornecedor');check($('sceneTalkName').textContent.includes('Atacado'),'o atacado liga avisando da primeira entrega');
+ runScene(()=>scene.step?.say==='valter');check(scene.view==='bodega'&&scene.actors.valter,'o primeiro vizinho aparece na porta');
+ runScene(()=>scene.view==='bodega'&&scene.step?.say==='sadi');check(rpgBoxes.sceneTalk.text.includes('gente conhecida'),'a bodega aparece montada e ele fala das figuras conhecidas');
  runScene(()=>false);check(!scene&&!document.body.classList.contains('intro-playing'),'a introdução termina e devolve o jogo');
  check(G.avatarId==='sadi'&&G.bodegaName==='Bodega do teste'&&modal==='welcome','novo jogo começa com Sadi, aplica nome e apresenta o guia');
  check($('dialogTitle').textContent.includes('Um passo de cada vez')&&$('dialogContent').textContent.includes('um freguês por vez'),'boas-vindas apresentam tutorial sequencial');gameGuide();check(['Bocha','Truco','Contatos','Estética'].every(text=>$('dialogContent').textContent.includes(text)),'guia apresenta lazer, contatos e caminho de progressão');

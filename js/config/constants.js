@@ -12,7 +12,9 @@ const W = 1600, H = 900;
 const ENTRY = {x:1060,y:880}, EXIT = {x:1060,y:870};
 const DAY = 180, ORDER_WAIT = 110, COUNTER_WAIT = 95;
 // Mantidos para recuperar partidas anteriores à separação dos arquivos.
-const KEY = 'bodega-interior-v3', TEST_KEY = 'bodega-interior-tests';
+// Saves separados: jogo normal, testes com dinheiro infinito e testes sem tutorial (escolhe eventos, dinheiro normal).
+const KEY = 'bodega-interior-v3', TEST_KEY = 'bodega-interior-tests', TEST2_KEY = 'bodega-interior-tests-eventos';
+function saveKey(mode){return mode===true?TEST_KEY:mode==='eventos'?TEST2_KEY:KEY;}
 const BASE_SPEED=280;
 
 const COOK={torrada:6,burger:11,ovo:7,bacon:8,coracao:10};

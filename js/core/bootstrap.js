@@ -46,6 +46,7 @@ async function initializeGame() {
     $('continue').disabled = !readSave();
     document.querySelector('#start [data-act="new"]').disabled = false;
     document.querySelector('#start [data-act="test"]').disabled = false;
+    document.querySelector('#start [data-act="test2"]').disabled = false;
     status.classList.add('hidden');
     document.documentElement.dataset.gameReady = 'true';
     lastFrame = performance.now();
