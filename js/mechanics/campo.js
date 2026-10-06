@@ -276,7 +276,7 @@ function startLasso(){
  const n=G.lassoTaught?Math.min(G.herd,8):1,bois=Array.from({length:n},(_,i)=>({id:i,coat:Math.floor(Math.random()*BOI_COATS.length),x:420+Math.random()*900,y:480+Math.random()*330,dx:Math.random()<.5?-1:1,dy:0,state:'free',t:Math.random()*3,speed:40}));
  G.lasso={bois,caught:0,need:Math.min(MIN_LASSO,G.herd),charge:0,charging:false,throw:null,saved:{...G.player},fx:1,fy:0,time:0};
  G.player={x:220,y:700,dx:1,dy:0,walk:false};$('lassoUI').classList.remove('hidden');updateLassoUI();
- if(!G.lassoTaught)showBanner('Gire o laço segurando E','Solte quando o círculo estiver sobre um boi.','info');
+ if(!G.lassoTaught)showBanner('Gire o laço segurando Q','Solte quando o círculo estiver sobre o boi. Espaço esquiva do quero-quero.','info');
  save();
 }
 const CURRAL={x:1360,y:470,w:200,h:190};

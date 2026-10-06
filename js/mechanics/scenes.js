@@ -162,6 +162,7 @@ function drawSceneCampo() {
   drawSceneActors(); drawFx(); ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 function drawScene() {
+  if (!scene) return;
   const s = scene, cw = canvas.width, ch = canvas.height;
   if (s.step?.caption) {
     ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, cw, ch);
