@@ -185,13 +185,13 @@ async function main() {
     console.log('PASS teclado, lançamento em duas etapas e retomada real da bocha após recarregar');
 
     await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
-    await evaluate(`G.player={x:1525,y:432,dx:1,dy:0};enterCancha()`);
+    await evaluate(`enterCancha(true)`);
     await click('#bocceButton');await click('[data-act="startBocce"]');
     await waitUntil(()=>evaluate(`G.bocce.phase==='direction'`),'O bolim não chegou no celular');
     await click('#bocceConfirm');assert(await evaluate(`G.bocce.phase==='power'`));
     assert(await evaluate(`(()=>{const r=$('bocceConfirm').getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.bottom<=innerHeight;})()`));
     await delay(300);await click('#bocceConfirm');assert(await evaluate('G.bocce.used[0]===1'));
-    await evaluate('settleBocce(0)');await click('#bocceExit');await click('[data-act="leaveCancha"]');
+    await evaluate('settleBocce(0)');await click('#bocceExit');await click('[data-act="canchaToPatio"]');assert(await evaluate('worldOut?.map==="vila"'), 'Saída da cancha leva ao pátio');await evaluate('goInside()');
     await send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
     console.log('PASS cancha e lançamentos por botões no celular');
 

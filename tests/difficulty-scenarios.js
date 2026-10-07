@@ -34,8 +34,8 @@
  }finally{bar=originalBar;G.task=null;G.boost=0;G.tables[1].dirty=false;}
  G.player={x:510,y:585,dx:1,dy:0};joinSeatedTruco();check(!modal,'truco não inicia longe da mesa');G.player={x:1334,y:590,dx:0,dy:-1};refreshHUD();check(!$('playTrucoButton').classList.contains('hidden'),'jogar truco aparece perto da mesa fixa');joinSeatedTruco();check(modal==='cards','mesa vazia também oferece partida contextual');closeDialog(true);
  G.player={x:510,y:585,dx:1,dy:0};enterCancha();check(!G.atCancha,'entrada na cancha exige proximidade da porta');
- G.player={x:1525,y:432,dx:1,dy:0};check(canWalk(G.player.x,G.player.y),'porta da cancha é alcançável');interact();
- check(G.atCancha&&!G.bocce&&!$('canchaLobby').classList.contains('hidden')&&$('bocceButton').getBoundingClientRect().width>0,'porta abre a cancha antes de oferecer jogar bocha');
+ enterCancha(true);
+ check(G.atCancha&&!G.bocce&&!$('canchaLobby').classList.contains('hidden')&&$('bocceButton').getBoundingClientRect().width>0,'entrar na cancha (pelo pátio) mostra a cancha antes de oferecer jogar bocha');
  const before=G.elapsed;G.phase='open';simulate(2);check(G.elapsed===before,'visita à cancha também pausa o atendimento');
  bocceMenu();$('bocceWager').value='0';startBocceGame();check(!!G.bocce&&$('canchaLobby').classList.contains('hidden'),'partida inicia a partir da cancha');
  settleBocce(1);leaveBocce();check(G.atCancha&&!G.bocce&&!$('canchaLobby').classList.contains('hidden'),'terminar a bocha volta à cancha');leaveCancha();check(!G.atCancha&&G.phase==='open'&&G.elapsed===before,'porta de volta preserva o expediente');

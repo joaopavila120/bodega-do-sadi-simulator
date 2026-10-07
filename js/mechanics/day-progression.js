@@ -15,7 +15,8 @@ function plannedEvent(){if(!G.nextEvent){G.nextEvent=eventForDay(G.day+1,G);save
 // A porta da cancha (fechada, com placa) está pintada no cenário, na parede direita (room2.png).
 const CANCHA_DOOR={id:'cancha',x:1485,y:300,w:80,h:80,label:'Porta da cancha de bocha'};
 const CANCHA_DOOR_SHAPE=[[1485,181],[1564,207],[1564,372],[1485,324]];
-function nearCanchaDoor(){return distRect(G.player,CANCHA_DOOR)<62;}
+// A cancha agora tem entrada só por fora, pelo pátio.
+function nearCanchaDoor(){return false;}
 function nearTrucoTable(){return availableTables().filter(isTableTruco).find(t=>distRect(G.player,t)<65);}
 function enterCancha(fromOutside=false){
  if(!started||G.task||G.game||G.bocce||!fromOutside&&!nearCanchaDoor()){say('Vá até a porta à direita do salão para entrar na cancha.');return;}
@@ -32,9 +33,8 @@ function drawCanchaLobby(){
  if(bocceCanvas.width!==Math.round(cw*dpr)||bocceCanvas.height!==Math.round(ch*dpr)){bocceCanvas.width=Math.round(cw*dpr);bocceCanvas.height=Math.round(ch*dpr);}
  c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#20180f';c.fillRect(0,0,cw,ch);
  const scale=Math.min(cw/1672,ch/941);c.translate((cw-1672*scale)/2,(ch-941*scale)/2);c.scale(scale,scale);c.drawImage(bocceArt,0,0,1672,941);
- drawCharacterPortrait(c,avatarSprite(),250,886,240);drawCharacterPortrait(c,PEOPLE[sportPeople()[0]].sprite,1410,820,205);
 }
-function leaveCancha(){if(G.bocce)return;G.atCancha=false;$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');closeDialog(true);save();refreshHUD();if(G.phase==='closed'&&G.giftQueue?.length)startGiftVisit();}
+function leaveCancha(toPatio=false){if(G.bocce)return;G.atCancha=false;$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');closeDialog(true);save();refreshHUD();if(!toPatio&&G.phase==='closed'&&G.giftQueue?.length)startGiftVisit();}
 function drawCanchaDoor(){
  if(!started||!nearCanchaDoor())return;
  ctx.save();ctx.beginPath();CANCHA_DOOR_SHAPE.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
