@@ -1,7 +1,7 @@
 // Mundo aberto: a vila da bodega e as estradas em volta, mapa por mapa.
 // Vila: plantação, fogo de chão do costelão, bodega, cancha e potreiro na estrada de cima; a praça com a capela e o
 // salão da comunidade no meio; o rio Uruguai na lateral esquerda e embaixo, onde fica a fronteira com o Uruguai.
-// Saindo pela direita, a estrada da colônia (open-world-colonia.js).
+// Saindo pela direita, a encruzilhada da região central e os outros mapas (open-world-regions.js).
 'use strict';
 
 const WORLD_MAPS = {};
@@ -130,8 +130,8 @@ WORLD_MAPS.vila = {
     if (x < VILA.river - 20 && !pier) return false;
     return !hitRect(this.obstacles(), x, y);
   },
-  // Pela direita, a estrada da colônia.
-  edge(p) { if (p.x > VILA.W - 20) return { map: 'colonia', x: 70, y: clamp(p.y - (VILA.roadY + VILA.roadH / 2) + COLONIA.roadY + COLONIA.roadH / 2, 200, COLONIA.H - 200), title: 'Estrada da colônia', text: '↑ colônia alemã · → colônia italiana, rumo a Erechim · ↓ Porto Alegre' }; return null; },
+  // Pela direita, a encruzilhada da região central (mapa 2).
+  edge(p) { if (p.x > VILA.W - 20) return { map: 'encruzilhada', x: 70, y: ENC.roadY + ENC.roadH / 2, title: 'Encruzilhada · região central', text: '↑ Pomerode · → Erechim e a Serra · ↓ Porto Alegre' }; return null; },
   spots() {
     const V = VILA, herd = G.herd || 0;
     return [
@@ -145,7 +145,7 @@ WORLD_MAPS.vila = {
       { id: 'capela', ...front(V.capela), label: 'Capela da comunidade', text: 'Capela da comunidade: em breve, a missa de domingo e a festa do padroeiro.' },
       { id: 'salao', ...front(V.salao), label: 'Salão da comunidade', text: 'Salão da comunidade: em breve, baile, jantar de galeto com cuca e campeonato de truco da comunidade.' },
       { id: 'marco', x: V.marco.x + 20, y: V.marco.y - 20, label: 'Marco da fronteira', text: 'Marco da fronteira: do outro lado do rio é o Uruguai. Em breve, a balsa e os fregueses castelhanos.' },
-      { id: 'leste', x: V.W - 120, y: V.roadY + V.roadH / 2, label: 'Estrada da colônia →', text: 'Siga pela direita: a estrada leva às colônias italiana e alemã e a Porto Alegre.' },
+      { id: 'leste', x: V.W - 120, y: V.roadY + V.roadH / 2, label: 'Estrada para a encruzilhada →', text: 'Siga pela direita: a estrada leva à encruzilhada da região central, de onde se vai a Pomerode, a Erechim e a Porto Alegre.' },
       ...V.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), house: h.id }))
     ];
   },
@@ -161,7 +161,7 @@ WORLD_MAPS.vila = {
     drawWorldPotreiro(layers, seen);
     for (const h of V.houses) { add(h, () => worldHouse(h, 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), h)); ownerAtDoor(layers, h, h.id, seen); }
     for (const [x, y, kind] of VILA_TREES) if (seen(x, y)) layers.push({ y, draw: () => drawWorldTree(x, y, kind) });
-    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('COLÔNIA · ERECHIM →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
+    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('ENCRUZILHADA →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
   }
 };
 
