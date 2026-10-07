@@ -19,6 +19,7 @@ function nearCanchaDoor(){return distRect(G.player,CANCHA_DOOR)<62;}
 function nearTrucoTable(){return availableTables().filter(isTableTruco).find(t=>distRect(G.player,t)<65);}
 function enterCancha(){
  if(!started||G.task||G.game||G.bocce||!nearCanchaDoor()){say('Vá até a porta à direita do salão para entrar na cancha.');return;}
+ if(sportState().bocceTutorialDay===G.day){say('Hoje o Lauro já guardou as bochas. A cancha abre de novo amanhã à noite.');AudioEngine.bad();return;}
  if(phoneOpen)togglePhone(false);G.atCancha=true;G.player.walk=false;keys.clear();pointerHold=false;modal=null;paused=false;$('overlay').classList.add('hidden');showCanchaLobby();save();
 }
 function showCanchaLobby(){
@@ -46,7 +47,7 @@ function updateContextActions(){
  $('enterCanchaButton').classList.toggle('hidden',!nearCanchaDoor()||!!G.task);
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
- $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);
+ $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();
  $('hint').classList.toggle('hidden',!!(G.lasso||G.bocce||scene)||nearShopDoor()&&!G.task||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||!!scene||(phoneOpen&&!tutorialStockMissing().length)||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';

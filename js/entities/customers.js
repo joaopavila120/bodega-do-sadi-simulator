@@ -30,6 +30,8 @@ function spawnGroup(options={}){
  const size=clamp(options.size??Math.max(G.event.id==='campeonato'?2:1,restaurantGroupSize(person)),1,4);
  let members=groupMembers(person,size);
  if(options.members){members=[];for(let i=0;i<size;i++){const candidate=options.members[i];members.push(visitorAvailable(candidate,members)?candidate:pickVisitor(members));}}
+ // Ninguém disponível para uma vaga: o grupo fica menor, sem lugar vazio.
+ members=members.filter(i=>Number.isInteger(i));if(!members.length)return null;
  const g={id:G.next++,x:ENTRY.x,y:ENTRY.y,path:[],dest:null,state:'wait',table:null,reserved:false,orders:[],delivered:[],patience:ORDER_WAIT,maxPatience:ORDER_WAIT,waitLeft:110,age:0,chat:0,round:0,paid:false,...options,person:members[0],size:members.length,members};
  G.groups.push(g);assignTables();announceArrivals(members);return g;
 }
@@ -56,3 +58,12 @@ function customersTick(dt){for(const c of G.shop){if(c.state==='queue'){moveActo
 function departGroup(g,unhappy=false){if(keepTournamentGroup(g,unhappy))return;const table=G.tables.find(t=>t.id===g.table);if(table?.fight){table.fight=null;if(G.fightTarget===table.id)G.fightTarget=null;updateFightUI();}if(table&&table.group===g.id){table.group=null;table.dirty=table.plates>0;if(table.dirty&&!G.tutorial.cleanTip){G.tutorial.cleanTip=true;say('Mesa suja: aproxime-se com as mãos livres e segure E para limpar.');}g.reserved=false;}if(unhappy){if(g.diners)syncGroupOrders(g);G.stats.lost+=g.diners?g.diners.filter(d=>d.status==='waiting').length:1;repChange(-3);G.stats.waste+=g.delivered.reduce((n,i)=>n+i.cost,0);g.delivered=[];effect('Até outra hora…',g.x,g.y-70,'#e7b097');for(let j=0;j<g.size;j++)fxAnger(g.x-j*25,g.y-135);}g.table=null;g.state='leave';g.dest=null;setDestination(g,EXIT);assignTables();}
 
 function clearUnserved(){let waste=0;for(const i of [...G.hands,...G.kitchen.grill,...G.kitchen.parking,G.kitchen.press,...G.floor.map(f=>f.item)])if(i)waste+=i.cost||0;for(const b of G.kitchen.bench)if(b)waste+=b.items.reduce((n,i)=>n+i.cost,0);G.stats.waste+=waste;G.hands=[null,null];G.kitchen={grill:[null,null,null],bench:[null,null],press:null,parking:[null,null]};G.floor=[];}
+
+// Dispensar o freguês do balcão: vai embora sem comprar e a bodega perde reputação.
+function counterCustomer(){return queuedShop().find(c=>atCounter(c))||null;}
+function dismissCustomer(){
+ const c=counterCustomer();if(!c){say('Ninguém esperando no balcão.');return;}
+ if(c.training||tutorialActive()||costelaoTutorialActive()){say('No tutorial, atenda o freguês.');return;}
+ c.state='leave';c.dest=null;c.dismissed=true;setDestination(c,EXIT);resetQueuePaths();repChange(-2);G.stats.dismissed=(G.stats.dismissed||0)+1;
+ AudioEngine.bad();effect('Dispensado · reputação caiu',c.x,c.y-150,'#ffb3a0');say((PEOPLE[c.person]?.name||'O freguês')+' foi dispensado e saiu de cara feia.');save();refreshHUD();
+}

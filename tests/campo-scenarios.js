@@ -58,8 +58,9 @@
   check(orderList(combo).join()==='costela,maionese'&&customerOrderBubbles()[0]?.items.length===2,'domingo: freguês pede costela e maionese juntas');
   weigh();use('service');check(combo.state==='queue'&&combo.pid==='maionese','entregou a costela, falta a maionese');const cash2=G.cash;use('maionese');use('service');check(combo.state==='leave'&&G.cash>cash2,'com a maionese o pedido em dobro é pago');
   // mantas do açougue, mais caras
-  const before=G.cash,mantas=G.stock.costela_crua;phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyManta"]'),'fornecedor vende mantas avulsas');phoneOpen=false;
+  G.stock.costela_crua=2;campoState().mantasUsed=0;G.deliveries=[];const before=G.cash,mantas=G.stock.costela_crua;phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyManta"]'),'fornecedor vende mantas avulsas');phoneOpen=false;
   buyManta();deliveryTick(8.1);check(G.cash===before-MANTA_BUY_COST&&G.stock.costela_crua===mantas+1&&MANTA_BUY_COST>BOI_COST/MANTAS_PER_BOI*2,'manta do açougue chega sem laçar, bem mais cara');
+  {G.stock.costela_crua=4;campoState().mantasUsed=2;const n=G.deliveries.length,cash=G.cash;buyManta();check(G.deliveries.length===n&&G.cash===cash,'no costelão vai no máximo a carne de um boi: 6 mantas por domingo');campoState().mantasUsed=0;}
   // clientes do campo
   check(['costela','maionese','refri'].includes(campoOrder())&&!spawnGroup(),'no campo só chegam fregueses ao balcão: costela, maionese ou refri');
   // tutorial do primeiro costelão
@@ -126,6 +127,14 @@
   // mate sem reposição no campo
   sunday();approach('mate');keys.add('e');interact();tick(1.2,holdTick);keys.clear();check(G.boost>0,'campo tem estação de mate, sem reposição de erva');
   save();check(readSave().herd===G.herd&&readSave().version===15,'rebanho e campo persistem no salvamento');
+  // laçou um boi: a laçada encerra sozinha e leva a carne de um boi
+  {reset();G.herd=3;G.lassoTaught=true;G.day=2;G.phase='closed';startLasso();const L=G.lasso;L.queros=[];const b=L.bois[0];b.rope=LASSO_HITS;b.state='caught';L.caught=1;b.x=CURRAL.x+40;b.y=CURRAL.y+60;
+   for(let n=0;n<80&&G.lasso;n++)lassoTick(.05);check(!G.lasso&&G.lassoDay===2&&G.stock.costela_crua===MANTAS_PER_BOI,'laçou um boi: ele vai pro curral e a laçada encerra sozinha');closeDialog(true);}
+  // bodoque: trancado até comprar; pedrada no tempo certo espanta o quero-quero
+  {sunday();openDay();closeDialog(true);campoBirds=[];G.player={x:600,y:760,dx:1,dy:0,walk:false};campoBirds.push({x:700,y:760,tx:700,ty:760,h:0,state:'ground',face:1,flap:0,t:20,hop:9,peck:0,calm:0,aggr:0});
+   slingStart();check(!sling.aim&&!slingOwned(),'sem comprar, o bodoque fica trancado');G.cash=500;buyUpgrade('bodoque');check(slingOwned(),'bodoque comprado no celular');
+   slingStart();check(sling.aim&&sling.aim.ref===campoBirds[0],'segurar F mira o quero-quero mais próximo');sling.aim.t=sling.aim.dur*.3;slingRelease();check(campoBirds[0].state==='ground','soltar cedo erra a pedrada');
+   sling.cool=0;slingStart();sling.aim.t=sling.aim.dur*.75;slingRelease();check(campoBirds[0].state==='out','soltar no verde espanta o quero-quero');}
  }finally{Math.random=random;keys.clear();if(G)G.lasso=null;$('lassoUI').classList.add('hidden');reset();}
  return results;
 })()

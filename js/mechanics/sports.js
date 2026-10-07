@@ -151,3 +151,11 @@ function sportsAction(act,id){
  else if(act==='learnBocce'){sportState().challenge={person:PEOPLE.findIndex(p=>p.id==='lauro'),wager:0,tutorial:true,type:'bocha'};showSportChallenge();}
  else return false;return true;
 }
+
+// Fim do treino com o Lauro (ganhando, perdendo ou desistindo): explica a cancha e volta para a bodega,
+// onde o Lauro entra para entregar a lâmpada. Campeonatos e desafios ficam para as próximas noites.
+function showBocceTutorialEnd(){
+ const lauro=PEOPLE.findIndex(p=>p.id==='lauro');sportState().bocceTutorialDay=G.day;
+ openDialog('A cancha é tua!',`<div class="rpg-speaker">${portraitHTML(lauro,88)}<div><p><b>Lauro Boleador</b></p><p>“Bah, tu leva jeito pra coisa! De agora em diante a cancha tá sempre aberta pra ti.”</p></div></div><div class="callout">Volte à cancha quando quiser pela <b>porta à direita do salão</b>. Lá você pode <b>organizar campeonatos de bocha</b> e <b>desafiar seus contatos</b>. Para ter com quem jogar, faça amizade com os fregueses especiais: atenda bem, converse e eles viram contatos.</div><p>Hoje o Lauro já guardou as bochas: a cancha abre de novo amanhã à noite.</p><button class="primary" data-act="bocceTutorialHome">Voltar para a bodega</button>`,'bocceTutorialEnd');
+}
+function bocceTutorialHome(){if(modal==='bocceTutorialEnd'){modal=null;$('overlay').classList.add('hidden');}G.atCancha=true;leaveCancha();}

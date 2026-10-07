@@ -43,7 +43,7 @@ const CAMPO_FIXED=[
 function espetoReady(e){return e&&!e.burned&&e.heat[0]>=1&&e.heat[1]>=1;}
 function campoTick(dt){
  if(!isCampo()||G.lasso)return;
- campoBirdsTick(dt);
+ campoBirdsTick(dt);slingTick(dt);
  // No primeiro costelão vêm só três fregueses (costela + maionese); atendidos, o dia fecha.
  if(firstCostelao()&&campoState().firstOrders>=FIRST_COSTELAO_ORDERS&&G.phase==='open'&&!G.shop.some(c=>c.state==='queue')&&G.elapsed<DAY){G.elapsed=DAY;say('Primeiro costelão vendido! Hora de fechar.');}
  const c=campoState(),before=c.fuel;
@@ -63,7 +63,7 @@ function useEspeto(i){
  const c=campoState(),e=c.espetos[i],h=held();
  if(!e){
   if(h?.key!=='costela_crua'){say(h?'No espeto vai a manta de costela crua.':'Pegue uma manta de costela crua na mesa ao lado do fogo.');return;}
-  takeHeld();c.espetos[i]={heat:[0,0],fire:0,burned:false,cost:h.cost,turns:0};AudioEngine.sizzle();costelaoTutorialEvent('espeto');save();return;
+  takeHeld();c.mantasUsed=(c.mantasUsed||0)+1;c.espetos[i]={heat:[0,0],fire:0,burned:false,cost:h.cost,turns:0};AudioEngine.sizzle();costelaoTutorialEvent('espeto');save();return;
  }
  if(e.burned){if(!freeHand()){say('Libere as mãos para tirar a costela queimada.');return;}putHeld({id:G.next++,kind:'ingredient',key:'costela_assada',cost:e.cost,burned:true,ready:false});c.espetos[i]=null;say('Queimou: leve à lixeira.');save();return;}
  if(espetoReady(e)){
@@ -139,7 +139,9 @@ function feedFire(){const c=campoState();takeHeld();c.fuel=Math.min(100,c.fuel+L
 function startLight(){G.task={type:'light',target:'fogo',time:0};AudioEngine.matchStrike();}
 function finishLight(){const c=campoState();G.task=null;c.lit=true;c.fuel=Math.min(100,c.fuel+KINDLING);AudioEngine.ignite();burst(525,500);fxPuffs(525,505,10,160,'#d8cfc0');effect('Fogo aceso!',525,430,'#ffd56a');costelaoTutorialEvent('acender');save();}
 // No primeiro costelão vai só a carne do boi do pai.
-function buyManta(){if(!G.costelaoTaught){say('No primeiro costelão vai só a carne do boi que teu pai deu.');AudioEngine.bad();return;}if(!hasCash(MANTA_BUY_COST)){say('Uma manta do açougue custa '+money(MANTA_BUY_COST)+'.');AudioEngine.bad();return;}spendCash(MANTA_BUY_COST);G.stats.purchases+=MANTA_BUY_COST;G.deliveries.push({id:G.next++,key:'costela_crua',qty:1,cost:MANTA_BUY_COST,left:8,total:8});AudioEngine.phone();say('Manta encomendada no açougue: chega em 8 s.');save();if(phoneOpen)renderPhone();}
+// No costelão vai no máximo a carne de um boi por domingo.
+function mantasToday(){return (G.stock.costela_crua||0)+G.deliveries.filter(d=>d.key==='costela_crua').reduce((n,d)=>n+d.qty,0)+(campoState().mantasUsed||0);}
+function buyManta(){if(mantasToday()>=MANTAS_PER_BOI){say('No costelão vai no máximo a carne de um boi: '+MANTAS_PER_BOI+' mantas por domingo.');AudioEngine.bad();return;}if(!G.costelaoTaught){say('No primeiro costelão vai só a carne do boi que teu pai deu.');AudioEngine.bad();return;}if(!hasCash(MANTA_BUY_COST)){say('Uma manta do açougue custa '+money(MANTA_BUY_COST)+'.');AudioEngine.bad();return;}spendCash(MANTA_BUY_COST);G.stats.purchases+=MANTA_BUY_COST;G.deliveries.push({id:G.next++,key:'costela_crua',qty:1,cost:MANTA_BUY_COST,left:8,total:8});AudioEngine.phone();say('Manta encomendada no açougue: chega em 8 s.');save();if(phoneOpen)renderPhone();}
 
 function campoInteract(n){
  if(!isCampo())return false;const[id,arg]=n.id.split(':');
@@ -294,7 +296,7 @@ function drawTutorialArrow(){
 function costelaoTutorialDelivered(c){const t=costelaoTutorial();if(costelaoTutorialActive()&&c.id===t.actor){t.actor=null;costelaoAdvance();}}
 function costelaoPrepFirst(){return isCampo()&&!G.lasso&&G.phase==='prep'&&!G.costelaoTaught&&!scene;}
 function costelaoTutorialHint(){if(costelaoPrepFirst())return '<b>Primeiro costelão · abra o domingo</b><p>Vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span>. Depois o passo a passo mostra cada etapa: lenha, fogo, espeto, corte e maionese.</p>';const t=costelaoTutorial(),s=costelaoStep();return s?'<b>Costelão '+(t.step+1)+' / '+COSTELAO_STEPS.length+' · '+s.title+'</b><p>'+s.text+'</p>':'';}
-function resetCampoDay(){const c=campoState();c.fuel=0;c.lit=false;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
+function resetCampoDay(){const c=campoState();c.mantasUsed=0;G.stock.costela_crua=Math.min(G.stock.costela_crua||0,MANTAS_PER_BOI);c.fuel=0;c.lit=false;c.espetos=[null,null,null,null];c.bowl={ovo:false,azeite:false,cost:0};}
 function costelaoWelcome(){
  const first=!G.costelaoTaught;
  // O fogo, os espetos e a tigela são zerados quando o domingo começa (resetCampoDay): o que foi feito antes de abrir continua valendo.
@@ -321,7 +323,7 @@ function startLasso(){
 const CURRAL={x:1360,y:470,w:200,h:190};
 function lassoTick(dt){
  const L=G.lasso;if(!L||modal||paused)return;L.time+=dt;for(const e of sparks)e.life-=dt;sparks=sparks.filter(e=>e.life>0);
- L.stun=Math.max(0,(L.stun||0)-dt);L.immune=Math.max(0,(L.immune||0)-dt);L.dashCool=Math.max(0,(L.dashCool||0)-dt);querosTick(L,dt);fxTick(dt);
+ L.stun=Math.max(0,(L.stun||0)-dt);L.immune=Math.max(0,(L.immune||0)-dt);L.dashCool=Math.max(0,(L.dashCool||0)-dt);querosTick(L,dt);slingTick(dt);fxTick(dt);
  let dx=(keys.has('d')||keys.has('ArrowRight')?1:0)-(keys.has('a')||keys.has('ArrowLeft')?1:0),dy=(keys.has('s')||keys.has('ArrowDown')?1:0)-(keys.has('w')||keys.has('ArrowUp')?1:0);const len=Math.hypot(dx,dy);
  G.player.walk=!!len&&!L.charging&&!L.stun;
  if(L.dash>0){L.dash-=dt;G.player.walk=true;G.player.x=clamp(G.player.x+L.dashX*640*dt,60,1340);G.player.y=clamp(G.player.y+L.dashY*640*dt,450,870);}
@@ -349,6 +351,8 @@ function lassoTick(dt){
   }
   if(t.time>=t.total+.35)L.throw=null;
  }
+ // Boi laçado: ele vai para o curral e a laçada encerra sozinha (no costelão vai a carne de um boi só).
+ if(L.caught>=L.need){L.endT=(L.endT||0)+dt;if(L.endT>.6&&L.bois.every(b=>b.state!=='caught')||L.endT>3)finishLasso();}
 }
 function lassoCharge(){const L=G.lasso;if(!L||L.throw||L.charging||L.stun>0||L.knock>0)return;L.charging=true;L.charge=0;}
 function lassoAim(){const L=G.lasso,p=.5-.5*Math.cos(L.charge*Math.PI*1.4),dist=110+p*380;return {x:clamp(G.player.x+L.fx*dist,40,W-40),y:clamp(G.player.y-40+L.fy*dist,430,880),p};}
@@ -358,14 +362,15 @@ function lassoKeyDown(e){
  if(key==='Escape'){pauseGame('Laçada pausada.');return;}
  // Q (ou E) gira e solta o laço; Espaço (ou Shift) esquiva do quero-quero.
  if((key==='q'||key==='e')&&!e.repeat){lassoCharge();return;}
+ if(key==='f'){if(!e.repeat)slingStart();return;}
  if(key===' '||key==='Shift'){if(!e.repeat)lassoDash();return;}
  keys.add(key);
 }
-function lassoKeyUp(e){const key=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(key);if(key==='q'||key==='e')lassoRelease();}
-function updateLassoUI(){const L=G.lasso;if(!L)return;const best=Math.max(0,...L.bois.filter(b=>b.state==='free').map(b=>b.rope||0));$('lassoCount').textContent=(L.caught?L.caught+(L.caught>1?' bois laçados':' boi laçado'):'Nenhum boi laçado')+(best?' · laço '+best+'/'+LASSO_HITS:'');$('lassoHerd').textContent='Rebanho no campo: '+L.bois.filter(b=>b.state==='free').length;$('lassoFinish').disabled=L.caught<L.need;$('lassoFinish').textContent=L.caught<L.need?'Lace pelo menos um boi':'Levar '+L.caught+(L.caught>1?' bois':' boi')+' para o costelão';}
+function lassoKeyUp(e){const key=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(key);if(key==='q'||key==='e')lassoRelease();if(key==='f')slingRelease();}
+function updateLassoUI(){const L=G.lasso;if(!L)return;const best=Math.max(0,...L.bois.filter(b=>b.state==='free').map(b=>b.rope||0));$('lassoCount').textContent=(L.caught?L.caught+(L.caught>1?' bois laçados':' boi laçado'):'Nenhum boi laçado')+(best?' · laço '+best+'/'+LASSO_HITS:'');$('lassoHerd').textContent='Rebanho no campo: '+L.bois.filter(b=>b.state==='free').length;$('lassoFinish').disabled=true;$('lassoFinish').textContent=L.caught<L.need?'Lace um boi':'Levando o boi pro curral…';}
 function finishLasso(){
  const L=G.lasso;if(!L||L.caught<L.need)return;const firstLasso=!G.lassoTaught;
- const mantas=L.caught*MANTAS_PER_BOI,units=G.stock.costela_crua;
+ const mantas=Math.min(L.caught*MANTAS_PER_BOI,Math.max(0,MANTAS_PER_BOI-G.stock.costela_crua)),units=G.stock.costela_crua;
  G.avg.costela_crua=(G.avg.costela_crua*units+L.caught*BOI_COST)/(units+mantas);G.stock.costela_crua+=mantas;G.herd-=L.caught;G.bullsLassoed=(G.bullsLassoed||0)+L.caught;
  G.player={...L.saved};G.lasso=null;G.lassoDay=G.day;G.lassoTaught=true;keys.clear();$('lassoUI').classList.add('hidden');
  showBanner(L.caught+(L.caught>1?' bois laçados!':' boi laçado!'),mantas+' mantas de costela prontas para o costelão de amanhã.','gift');save();refreshHUD();
@@ -400,6 +405,7 @@ function querosTick(L,dt){
    if(!(L.immune>0)&&!(L.dash>0)&&q.h<90&&Math.hypot(p.x-q.x,p.y-q.y)<QUERO_HIT)queroHit(L,q);
    if(k>1.7){q.state='circle';q.t=1.4+Math.random()*1.1;}
   }
+  else if(q.state==='flee'){q.h=Math.min(420,q.h+260*dt);q.x+=q.fleeDir*340*dt;if(q.t<=0){q.state='return';q.x=q.nest.x+q.fleeDir*900;q.h=300;}}
   else if(q.state==='return'){
    const d=Math.hypot(q.nest.x-q.x,q.nest.y-q.y);q.h=Math.max(0,q.h-110*dt);
    if(d<6&&q.h<=0)q.state='guard';else{const s=Math.min(d,280*dt);q.x+=(q.nest.x-q.x)/(d||1)*s;q.y+=(q.nest.y-q.y)/(d||1)*s;}
@@ -437,6 +443,7 @@ function drawQueroAir(L){
   const frame=q.state==='dive'?3:Math.floor(q.flap*(q.state==='warn'?14:9))%2?1:2;
   drawQuero(frame,q.x,q.y-q.h,2.2,q.face<0,q.state==='dive'&&q.travel<q.dist?.3:0);
  }
+ drawSlingAim();
  // tontura depois da bicada
  if(L.stun>0)for(let i=0;i<3;i++){const a=L.time*7+i*2.1;txt('★',G.player.x+Math.cos(a)*22,G.player.y-142+Math.sin(a)*6,14,'#ffd75e');}
 }
@@ -501,7 +508,7 @@ function discardCostelao(){
 }
 function skipLasso(){G.lassoDay=G.day;closeDialog(true);say('Sem bois, o costelão de amanhã fica só com o que sobrou no estoque.');nextDay();}
 function drawLasso(){
- const L=G.lasso;beginWorld();drawCampoBackground();
+ const L=G.lasso;if(!L){if(scene)drawScene();else draw();return;}beginWorld();drawCampoBackground();
  // curral
  const c=CURRAL;rect(c.x,c.y+c.h-8,c.w,10,'#5a3a20');for(let k=0;k<=5;k++){wood(c.x+k*(c.w/5)-4,c.y,9,c.h,true);}for(const y of [c.y+30,c.y+90,c.y+150])wood(c.x,y,c.w,9);txt('CURRAL',c.x+c.w/2,c.y-12,13,'#fff0c3');
  drawQueroGround(L);

@@ -24,6 +24,8 @@ function activeUniqueVisitors(state=G){
  const add=i=>{if(PEOPLE[i]?.unique)taken.add(i);};
  state.shop.forEach(c=>add(c.person));
  state.groups.forEach(g=>g.members?.forEach(add));
+ // Quem está de visita (presente, desafio, capítulo da história) também já está na bodega.
+ if(state.challengeVisit)add(state.challengeVisit.person);
  add(PEOPLE.findIndex(p=>p.id===state.avatarId));
  return taken;
 }

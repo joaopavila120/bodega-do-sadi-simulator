@@ -131,13 +131,15 @@ function settleBocce(winner){
  if(winner===0){const prize=b.wager*2;G.cash=round(G.cash+prize);G.stats.bocceReturns=(G.stats.bocceReturns||0)+prize;b.result=b.wager?'Vitória! '+money(prize)+' voltaram ao caixa.':'Vitória no treino!';AudioEngine.coins();}
  else{b.result=b.wager?'O adversário venceu. Entrada de '+money(b.wager)+' perdida.':'O adversário venceu o treino.';AudioEngine.bad();}
  settleSport('bocha',b,winner===0);syncBocceReport();save();updateBocceUI();
+ // Treino com o Lauro: depois de ver o resultado, a partida fecha sozinha e vem a explicação da cancha.
+ if(b.tutorial&&!b.bracket)setTimeout(()=>{if(G.bocce===b&&!modal)leaveBocce();},2200);
 }
 function syncBocceReport(){if(G.report){G.report.end=G.cash;G.report.bocceStakes=G.stats.bocceStakes||0;G.report.bocceReturns=G.stats.bocceReturns||0;}}
 function leaveBocce(){
  const b=G.bocce;if(!b)return;
  if(!b.settled&&!confirm(b.wager?'Desistir perde a aposta de '+money(b.wager)+'. Sair da partida?':'Encerrar este treino de bocha?'))return;
  if(!b.settled)settleBocce(1);
- G.bocce=null;keys.clear();$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');bocceAccumulator=0;save();refreshHUD();if(b.bracket)showSportBracket();else if(G.atCancha)showCanchaLobby();else if(G.phase==='closed')showReport();else canvas.focus();
+ G.bocce=null;keys.clear();$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');bocceAccumulator=0;save();refreshHUD();if(b.tutorial&&!b.bracket){showBocceTutorialEnd();return;}if(b.bracket)showSportBracket();else if(G.atCancha)showCanchaLobby();else if(G.phase==='closed')showReport();else canvas.focus();
 }
 function toggleBoccePause(value){const b=G.bocce;if(!b)return;b.paused=typeof value==='boolean'?value:!b.paused;keys.clear();save();updateBocceUI();}
 function bocceTick(dt){

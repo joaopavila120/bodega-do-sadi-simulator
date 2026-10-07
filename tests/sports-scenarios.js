@@ -21,7 +21,9 @@
   check(G.bocce.tutorial&&G.bocce.wager===0&&G.bocce.level==='tutorial'&&$('bocceSocial').textContent.includes('bolim'),'aceitar o Lauro inicia lição gratuita, fácil e guiada');
   G.bocce.phase='direction';updateBocceUI();check($('bocceSocial').textContent.includes('A/D'),'tutorial ensina posicionamento e mira');confirmBocce();check($('bocceSocial').textContent.includes('força'),'tutorial avança para força por ação real');settleBocce(0);check(sportState().tutorialDone,'partida do tutorial concluída persiste');
   const lauroIdx=PEOPLE.findIndex(p=>p.id==='lauro');check(hasContact(lauroIdx)&&G.giftQueue[0]?.key==='lauro:tutorial'&&!decorState().lampada,'Lauro vira contato e guarda a lâmpada para entregar em pessoa');
-  G.bocce=null;leaveCancha();check(G.challengeVisit?.kind==='gift'&&G.challengeVisit.person===lauroIdx,'de volta à bodega, o Lauro entra pela porta');for(let n=0;n<600&&!G.challengeVisit.arrived;n++)challengeVisitTick(.05);
+  leaveBocce();check(modal==='bocceTutorialEnd'&&$('dialogContent').textContent.includes('organizar campeonatos')&&!G.bocce,'fim do treino: tela explica a cancha, campeonatos e desafios');
+  closeDialog();check(!G.atCancha&&!modal&&$('bocceScreen').classList.contains('hidden')&&G.challengeVisit?.kind==='gift'&&G.challengeVisit.person===lauroIdx,'de volta à bodega, o Lauro entra pela porta');
+  {const d=G.player;G.player={x:0,y:0};const near=window.nearCanchaDoor;window.nearCanchaDoor=()=>true;enterCancha();window.nearCanchaDoor=near;G.player=d;check(!G.atCancha,'na noite do treino a cancha não reabre');}for(let n=0;n<600&&!G.challengeVisit.arrived;n++)challengeVisitTick(.05);
   check(modal==='giftVisit'&&$('dialogContent').textContent.includes('Lâmpada pendente'),'e entrega a lâmpada');action('giftAccept');check(decorState().lampada===true&&G.giftsGiven['lauro:tutorial'],'a lâmpada vai para o salão');G.challengeVisit=null;
   // truco com o Mano Lima na primeira segunda
   reset();G.day=4;G.phase='closed';prepareAfterHours();const lesson=sportState().challenge;check(lesson?.type==='truco'&&lesson.tutorial&&PEOPLE[lesson.person].id==='manolima','primeira segunda: o Mano Lima vem ensinar truco');

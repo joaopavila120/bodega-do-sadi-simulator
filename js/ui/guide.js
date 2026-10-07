@@ -14,7 +14,7 @@ const UPGRADE_TABS=['Botas','Mate','Cozinha','Balcão','Outros'];
 let upgradeTab='Cozinha';
 function upgradeCategory(u){if(GEAR[u.id])return 'Botas';if(u.id.startsWith('mate'))return 'Mate';if(['bacon','coracao','grill3','coffee'].includes(u.id))return 'Cozinha';if(u.goods||['cigarro_py','placaFiado'].includes(u.id))return 'Balcão';return 'Outros';}
 // Ícone de cada melhoria: sprite do produto que ela libera ou um ícone próprio.
-const UPGRADE_ICONS={trago:'item:cachaca',coffee:'cambona',bootsGaucho:'bota_gaucho',bootsBagual:'bota_bagual',mateCuiudo:'mate:1',mateTopetudo:'mate:2',mateLendario:'mate:3',cigarro_py:'item:cigarro_py',table3:'mesa',table4:'mesa',tray:'bandeja',pepino:'item:pepino',bergamota:'item:bergamota',amendoim:'item:amendoim',salame:'item:salame',pinhao:'item:pinhao',bitter:'item:bitter',capacity:'estoque',bacon:'item:bacon',grill3:'chapa',coracao:'item:coracao',placaFiado:'placa_fiado'};
+const UPGRADE_ICONS={trago:'item:cachaca',coffee:'cambona',bootsGaucho:'bota_gaucho',bootsBagual:'bota_bagual',mateCuiudo:'mate:1',mateTopetudo:'mate:2',mateLendario:'mate:3',cigarro_py:'item:cigarro_py',table3:'mesa',table4:'mesa',tray:'bandeja',pepino:'item:pepino',bergamota:'item:bergamota',amendoim:'item:amendoim',salame:'item:salame',pinhao:'item:pinhao',bitter:'item:bitter',capacity:'estoque',bacon:'item:bacon',grill3:'chapa',coracao:'item:coracao',placaFiado:'placa_fiado',bodoque:'bodoque'};
 function upgradeIconHTML(id){
  const icon=UPGRADE_ICONS[id];if(!icon)return '';const[kind,arg]=icon.split(':');
  if(kind==='item')return `<span class="upgrade-icon">${itemIconHTML(arg)}</span>`;

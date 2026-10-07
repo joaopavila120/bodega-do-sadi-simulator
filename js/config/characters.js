@@ -36,7 +36,9 @@ for (const [file,team,names] of [
  ['inter','inter',['André','Cris','Seu Osvaldo','Vera','Renato','Lucas']]
 ]) for (let i=0;i<6;i++) PEOPLE.push({id:file+'_'+(i+1),name:names[i]+(team==='gremio'?' · gremista':' · colorado'),team,dialogueKey:team,retailFav:i%2?'erva':'cigarro',fav:i%2?'refri':'cerveja',sprite:characterSprite(file,fanCrops[i],file==='gremio2'&&i===0?[[55,42],[75,33],[82,7],[118,2],[159,10],[178,42],[207,65],[214,80],[200,94],[173,102],...fanOutlines[0].slice(5)]:file==='gremio2'&&i===5?[[28,40],[70,25],[86,7],[145,8],[158,31],[182,50],[177,75],[143,88],[144,115],[165,133],[190,160],[206,206],[230,246],[225,285],[201,303],[196,340],[208,370],[199,394],[176,405],[161,410],[162,451],[153,473],[131,484],[111,477],[105,456],[111,421],[110,400],[94,399],[91,437],[83,452],[61,460],[48,454],[47,441],[64,422],[73,391],[54,380],[44,356],[50,296],[27,281],[17,251],[31,202],[47,154],[78,116],[77,90],[50,78],[25,59]]:fanOutlines[i])});
 
-function groupPerson(g, index) { return g.members?.[index] ?? (g.person + index) % 6; }
+// Sem membro definido (saves antigos, vagas extras): usa só fregueses comuns, nunca um especial como o Valter.
+let commonFallback = null;
+function groupPerson(g, index) { const m = g.members?.[index]; if (m !== undefined && m !== null) return m; commonFallback ??= PEOPLE.map((p, i) => i).filter(i => !PEOPLE[i].unique && !PEOPLE[i].team && !isSpecial(i)); return commonFallback[((g.person || 0) + index) % commonFallback.length]; }
 function visitorPool(team = null) { return PEOPLE.map((p,i)=>i).filter(i => !team || PEOPLE[i].team === team); }
 function pickVisitor(extra=[]) {
  let team=['gremio','inter'].includes(G.event.id)?G.event.id:G.event.id==='grenal'?(Math.random()<.5?'gremio':'inter'):null;
