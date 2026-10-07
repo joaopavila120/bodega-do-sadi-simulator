@@ -139,7 +139,7 @@ function leaveBocce(){
  const b=G.bocce;if(!b)return;
  if(!b.settled&&!confirm(b.wager?'Desistir perde a aposta de '+money(b.wager)+'. Sair da partida?':'Encerrar este treino de bocha?'))return;
  if(!b.settled)settleBocce(1);
- G.bocce=null;keys.clear();$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');bocceAccumulator=0;save();refreshHUD();if(b.tutorial&&!b.bracket){showBocceTutorialEnd();return;}if(b.bracket)showSportBracket();else if(G.atCancha)showCanchaLobby();else if(G.phase==='closed')showReport();else canvas.focus();
+ G.bocce=null;keys.clear();$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');bocceAccumulator=0;save();refreshHUD();if(b.tutorial&&!b.bracket){showBocceTutorialEnd();return;}if(b.bracket)showSportBracket();else if(G.atCancha||worldOut?.map==='cancha')showCanchaLobby();else if(G.phase==='closed')showReport();else canvas.focus();
 }
 function toggleBoccePause(value){const b=G.bocce;if(!b)return;b.paused=typeof value==='boolean'?value:!b.paused;keys.clear();save();updateBocceUI();}
 function bocceTick(dt){

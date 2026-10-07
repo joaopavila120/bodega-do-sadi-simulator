@@ -23,10 +23,10 @@ function enterCancha(fromOutside=false){
  if(sportState().bocceTutorialDay===G.day){say('Hoje o Lauro já guardou as bochas. A cancha abre de novo amanhã à noite.');AudioEngine.bad();return;}
  if(phoneOpen)togglePhone(false);G.atCancha=true;G.player.walk=false;keys.clear();pointerHold=false;modal=null;paused=false;$('overlay').classList.add('hidden');showCanchaLobby();save();
 }
+// A cancha agora é um lugar para andar: entra-se nela (ou volta-se de uma partida) com a bocha no meio.
 function showCanchaLobby(){
- $('bocceReputation').textContent=sportStanding('bocha');
- $('bocceScreen').classList.remove('hidden');document.body.classList.add('playing-bocce');
- $('canchaLobby').classList.remove('hidden');$('bocceMatchUI').classList.add('hidden');bocceCanvas.focus();drawCanchaLobby();
+ $('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');G.atCancha=false;
+ if(worldOut?.map!=='cancha')worldOut={map:'cancha',...CANCHA_IN.spawn,dx:0,dy:-1,walk:false};keys.clear();refreshHUD();
 }
 function drawCanchaLobby(){
  const c=bocceContext,cw=bocceCanvas.clientWidth,ch=bocceCanvas.clientHeight,dpr=Math.min(devicePixelRatio||1,2);
@@ -34,7 +34,7 @@ function drawCanchaLobby(){
  c.setTransform(dpr,0,0,dpr,0,0);c.fillStyle='#20180f';c.fillRect(0,0,cw,ch);
  const scale=Math.min(cw/1672,ch/941);c.translate((cw-1672*scale)/2,(ch-941*scale)/2);c.scale(scale,scale);c.drawImage(bocceArt,0,0,1672,941);
 }
-function leaveCancha(toPatio=false){if(G.bocce)return;G.atCancha=false;$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');closeDialog(true);save();refreshHUD();if(!toPatio&&G.phase==='closed'&&G.giftQueue?.length)startGiftVisit();}
+function leaveCancha(toPatio=false){if(G.bocce)return;G.atCancha=false;if(!toPatio)worldOut=null;$('bocceScreen').classList.add('hidden');document.body.classList.remove('playing-bocce');closeDialog(true);save();refreshHUD();if(!toPatio&&G.phase==='closed'&&G.giftQueue?.length)startGiftVisit();}
 function drawCanchaDoor(){
  if(!started||!nearCanchaDoor())return;
  ctx.save();ctx.beginPath();CANCHA_DOOR_SHAPE.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
@@ -47,7 +47,7 @@ function updateContextActions(){
  $('enterCanchaButton').classList.toggle('hidden',!nearCanchaDoor()||!!G.task);
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
- $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();
+ $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();$('canchaExitButton').classList.toggle('hidden',worldOut?.map!=='cancha'||!!modal);
  $('hint').classList.toggle('hidden',worldOut?false:!!(G.lasso||G.bocce||scene)||nearShopDoor()&&!G.task||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||!!scene||(phoneOpen&&!tutorialStockMissing().length)||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';

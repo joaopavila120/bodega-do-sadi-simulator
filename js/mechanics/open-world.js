@@ -1,7 +1,7 @@
-// Mundo aberto: a vila da bodega e as estradas em volta, mapa por mapa.
-// Vila: plantação, fogo de chão do costelão, bodega, cancha e potreiro na estrada de cima; a praça com a capela e o
-// salão da comunidade no meio; o rio Uruguai na lateral esquerda e embaixo, onde fica a fronteira com o Uruguai.
-// Saindo pela direita, a encruzilhada da região central e os outros mapas (open-world-regions.js).
+// Mundo aberto: a Fronteira (mapa 1, onde fica a bodega) e as regiões em volta, mapa por mapa.
+// Fronteira: plantação, fogo de chão do costelão, bodega, cancha e potreiro na estrada de cima; agropecuária e loja do
+// campo no meio; o rio Uruguai na lateral esquerda e embaixo, onde fica a fronteira com o Uruguai.
+// Seguindo a estrada para a direita, a Serra Gaúcha (mapa 2); subindo nela, Santa Catarina (mapa 3) · open-world-regions.js.
 'use strict';
 
 const WORLD_MAPS = {};
@@ -21,7 +21,7 @@ function doorMenu() {
 function goOutside(at) {
   closeDialog(true); if (phoneOpen) togglePhone(false); keys.clear();
   worldOut = { map: 'vila', ...(at || front(VILA.bodega, 70)), dx: 0, dy: 1, walk: false };
-  AudioEngine.doorChime(); if (!at) showBanner('Pátio da bodega', G.phase === 'open' ? 'A bodega segue aberta: fregueses podem chegar e esperar no balcão.' : 'À direita, a estrada da colônia; descendo, a praça e a fronteira.', 'info'); refreshHUD();
+  AudioEngine.doorChime(); if (!at) showBanner('Pátio da bodega', G.phase === 'open' ? 'A bodega segue aberta: fregueses podem chegar e esperar no balcão.' : 'Pela estrada à direita, a Serra Gaúcha; descendo, a fronteira com o Uruguai.', 'info'); refreshHUD();
 }
 function goInside() {
   worldOut = null; keys.clear(); G.player = { x: ENTRY.x, y: ENTRY.y - 40, dx: 0, dy: -1, walk: false }; AudioEngine.doorChime(); refreshHUD();
@@ -30,6 +30,8 @@ function goInside() {
 }
 // Cancha: o botão da cancha leva para o pátio, na frente dela.
 function canchaToPatio() { leaveCancha(true); goOutside(front(VILA.cancha, 40)); }
+// Botão na tela dentro da cancha: a única opção é sair para o pátio.
+function canchaExit() { if (worldOut?.map !== 'cancha') return; switchMap({ map: 'vila', ...front(VILA.cancha, 40), title: 'Pátio da bodega', text: '' }); refreshHUD(); }
 function switchMap(to) { worldOut.map = to.map; worldOut.x = to.x; worldOut.y = to.y; keys.clear(); AudioEngine.swoosh(.04); showBanner(to.title, to.text || '', 'info'); }
 
 function outsideTick(dt) {
@@ -64,7 +66,7 @@ function drawOutside() {
   layers.push({ y: worldOut.y, draw: () => personDraw(avatarSprite(), worldOut.x, worldOut.y, worldOut.walk, true, worldOut.dx) });
   layers.sort((a, b) => a.y - b.y).forEach(l => l.draw());
   const night = G.phase === 'closed' ? .5 : G.phase === 'open' ? clamp((G.elapsed / DAY - .7) * 1.2, 0, .35) : 0;
-  if (night) {
+  if (night && !M.indoor) {
     rect(view.x, view.y, view.w, view.h, `rgba(12,20,52,${night})`);
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (const [x, y] of M.lights?.() || []) if (seen(x, y)) ellipse(x, y, 44, 32, 'rgba(255,190,90,.32)'); ctx.restore();
   }
@@ -104,25 +106,24 @@ function drawWorldTree(x, y, kind) {
   ellipse(x, y - 92, 52, 40, col[0]); ellipse(x - 18, y - 104, 26, 20, col[1]); ellipse(x + 20, y - 86, 24, 18, col[1]);
 }
 
-// =================== VILA (mapa da bodega) ===================
+// =================== MAPA 1 · FRONTEIRA (onde fica a bodega) ===================
+// Bodega, cancha de bocha, a agropecuária (coisas para a horta) e a loja do campo (coisas para o gado).
+// Moram aqui o Valter, o Mano Lima, o Baitaca e o Guri, este na beira da fronteira com o Uruguai.
 const VILA = {
   W: 3600, H: 2700, river: 540, border: 2380, roadY: 690, roadH: 90, roadX: 1580,
   horta: { x: 600, y: 260, w: 250, h: 280 }, fogo: { x: 870, y: 250, w: 400, h: 330 }, bodega: { x: 1300, y: 180, w: 640, h: 420 },
   cancha: { x: 2060, y: 240, w: 460, h: 360 }, potreiro: { x: 2640, y: 200, w: 860, h: 440 },
-  praca: { x: 1260, y: 1500, w: 720, h: 560 }, capela: { x: 2080, y: 1480, w: 300, h: 300 }, salao: { x: 2460, y: 1580, w: 600, h: 260 },
-  houses: [{ id: 'valter', x: 700, y: 1150, w: 260, h: 190, wall: '#c9b58a', roof: '#9a4a32' }, { id: 'lauro', x: 800, y: 1880, w: 260, h: 190, wall: '#a9c0c4', roof: '#6a4a3a' },
-    { id: 'manolima', x: 2700, y: 1900, w: 270, h: 190, wall: '#d8c9a2', roof: '#7a3a2a' }, { id: 'guri', x: 3250, y: 1880, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' }],
-  marco: { x: 1820, y: 2250, w: 40, h: 60 }
+  agro: { x: 1720, y: 1080, w: 440, h: 260 }, gado: { x: 2380, y: 1080, w: 440, h: 260 },
+  houses: [{ id: 'valter', x: 700, y: 1150, w: 260, h: 190, wall: '#c9b58a', roof: '#9a4a32' }, { id: 'manolima', x: 900, y: 1700, w: 270, h: 190, wall: '#d8c9a2', roof: '#7a3a2a' },
+    { id: 'baitaca', x: 2700, y: 1700, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }, { id: 'guri', x: 1900, y: 2110, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' }],
+  marco: { x: 1500, y: 2250, w: 40, h: 60 }
 };
-VILA.coreto = { x: VILA.praca.x + VILA.praca.w / 2 - 90, y: VILA.praca.y + VILA.praca.h / 2 - 90, w: 180, h: 150 };
-const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [2010, 1000, 'a'], [3520, 820, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2400, 2200, 'a'], [1100, 2230, 'a'],
-  [VILA.praca.x + 70, VILA.praca.y + 80, 'ipe'], [VILA.praca.x + VILA.praca.w - 70, VILA.praca.y + 80, 'jaca'], [VILA.praca.x + 70, VILA.praca.y + VILA.praca.h - 60, 'jaca'], [VILA.praca.x + VILA.praca.w - 70, VILA.praca.y + VILA.praca.h - 60, 'ipe']];
-const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [VILA.roadX, VILA.roadY, 80, VILA.praca.y - VILA.roadY], [VILA.river, 1440, VILA.W - VILA.river, 60], [VILA.river, 2120, VILA.W - VILA.river, 60],
-  [VILA.praca.x, VILA.praca.y + VILA.praca.h / 2 - 22, VILA.praca.w, 44], [VILA.roadX, VILA.praca.y, 80, VILA.praca.h], [VILA.roadX, 2180, 80, VILA.border - 2180]];
+const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [3520, 820, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2500, 2200, 'a'], [1100, 2230, 'a'], [3100, 1250, 'a'], [1400, 1250, 'ipe'], [2250, 1650, 'jaca']];
+const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [VILA.roadX, VILA.roadY, 80, VILA.border - VILA.roadY], [VILA.river, 1440, VILA.W - VILA.river, 60]];
 
 WORLD_MAPS.vila = {
-  id: 'vila', name: 'Vila da bodega', W: VILA.W, H: VILA.H,
-  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.capela, V.salao, V.coreto, V.marco, ...V.houses]; },
+  id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
+  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, ...V.houses]; },
   canWalk(x, y) {
     if (y < 130 || x > VILA.W + 20) return false;
     if (y > VILA.border - 20) return false;                          // rio Uruguai embaixo: fronteira com o Uruguai
@@ -130,40 +131,54 @@ WORLD_MAPS.vila = {
     if (x < VILA.river - 20 && !pier) return false;
     return !hitRect(this.obstacles(), x, y);
   },
-  // Pela direita, a encruzilhada da região central (mapa 2).
-  edge(p) { if (p.x > VILA.W - 20) return { map: 'encruzilhada', x: 70, y: ENC.roadY + ENC.roadH / 2, title: 'Encruzilhada · região central', text: '↑ Pomerode · → Erechim e a Serra · ↓ Porto Alegre' }; return null; },
+  // Seguindo a estrada para a direita, passa sozinho para o mapa 2 (Serra Gaúcha).
+  edge(p) { if (p.x > VILA.W - 20) return { map: 'serra', x: 70, y: SERRA.roadY + SERRA.roadH / 2, title: 'Serra Gaúcha', text: 'Vinhedos, a Maria Fumaça e a comunidade. Subindo, Santa Catarina.' }; return null; },
   spots() {
     const V = VILA, herd = G.herd || 0;
     return [
       { id: 'door', ...front(V.bodega), label: 'Entrar na bodega', act: goInside },
-      { id: 'cancha', ...front(V.cancha), label: 'Entrar na cancha de bocha', act: () => { goInside(); enterCancha(true); } },
-      { id: 'horta', ...front(V.horta), label: G.up.bergamota ? 'Horta e pomar de bergamota' : 'Horta e pomar', text: G.up.bergamota ? 'Pomar de bergamota: é dele que sai a bergamota vendida no balcão. Em breve dá para colher na mão.' : 'Horta e pomar da bodega: em breve dá para plantar, regar e colher milho, mandioca e bergamota.' },
+      { id: 'cancha', ...front(V.cancha), label: 'Entrar na cancha de bocha', act: () => { const was = worldOut; worldOut = null; enterCancha(true); if (!worldOut) worldOut = was; } },
+      { id: 'horta', ...front(V.horta), label: G.up.bergamota ? 'Horta e pomar de bergamota' : 'Horta e pomar', text: G.up.bergamota ? 'Pomar de bergamota: é dele que sai a bergamota vendida no balcão. Em breve dá para colher na mão.' : 'Horta e pomar da bodega: em breve dá para plantar, regar e colher. As sementes vêm da agropecuária.' },
       { id: 'fogo', ...front(V.fogo), label: isCampo() ? 'Voltar ao costelão' : 'Fogo de chão do costelão', act: () => { if (isCampo()) goInside(); else say('Fogo de chão: é aqui que sai o costelão de domingo. A carne vem do potreiro, laçada no sábado.'); } },
-      { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } say('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Compre bois no celular → Fornecedor → Campo.'); } },
+      { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } say('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na loja do campo.'); } },
+      { id: 'agro', ...front(V.agro), label: 'Agropecuária', text: 'Agropecuária: sementes, mudas, adubo e ferramentas para a horta. Em breve, a horta da bodega começa por aqui.' },
+      { id: 'gado', ...front(V.gado), label: 'Loja do campo', act: campoShop },
       { id: 'river', x: 470, y: 917, label: 'Trapiche do rio Uruguai', text: 'Rio Uruguai: em breve, pescaria de dourado e jundiá no trapiche.' },
-      { id: 'coreto', ...front(V.coreto, 28), label: 'Coreto da praça', text: 'Praça da comunidade: em breve, feirinha de domingo, roda de chimarrão e encontros com os fregueses.' },
-      { id: 'capela', ...front(V.capela), label: 'Capela da comunidade', text: 'Capela da comunidade: em breve, a missa de domingo e a festa do padroeiro.' },
-      { id: 'salao', ...front(V.salao), label: 'Salão da comunidade', text: 'Salão da comunidade: em breve, baile, jantar de galeto com cuca e campeonato de truco da comunidade.' },
       { id: 'marco', x: V.marco.x + 20, y: V.marco.y - 20, label: 'Marco da fronteira', text: 'Marco da fronteira: do outro lado do rio é o Uruguai. Em breve, a balsa e os fregueses castelhanos.' },
-      { id: 'leste', x: V.W - 120, y: V.roadY + V.roadH / 2, label: 'Estrada para a encruzilhada →', text: 'Siga pela direita: a estrada leva à encruzilhada da região central, de onde se vai a Pomerode, a Erechim e a Porto Alegre.' },
       ...V.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), house: h.id }))
     ];
   },
-  lights() { const V = VILA; return [[V.bodega.x + 100, V.bodega.y + 210], [V.bodega.x + 240, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 220, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 80, V.bodega.y + 210], [V.salao.x + 90, V.salao.y + 150], [V.salao.x + V.salao.w - 90, V.salao.y + 150], [V.capela.x + V.capela.w / 2, V.capela.y + 120], ...V.houses.map(h => [h.x + 50, h.y + 116])]; },
+  lights() { const V = VILA; return [[V.bodega.x + 100, V.bodega.y + 210], [V.bodega.x + 240, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 220, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 80, V.bodega.y + 210], [V.agro.x + 90, V.agro.y + 150], [V.gado.x + 90, V.gado.y + 150], ...V.houses.map(h => [h.x + 50, h.y + 116])]; },
   draw(view, seen, layers) {
     const V = VILA;
     grassField(this, view, seen, '#6f9a45', ['#5f8a3a', '#86ad55'], V.river);
     for (const r of VILA_ROADS) road(...r);
     drawVilaRiver();
-    drawWorldPraca();
     const add = (r, fn) => { if (seen(r.x + r.w / 2, r.y + r.h / 2, Math.max(r.w, r.h))) layers.push({ y: r.y + r.h, draw: fn }); };
-    add(V.bodega, drawWorldBodega); add(V.cancha, drawWorldCancha); add(V.horta, drawWorldHorta); add(V.fogo, drawWorldFogo); add(V.capela, drawWorldCapela); add(V.salao, drawWorldSalao); add(V.coreto, drawWorldCoreto); add(V.marco, drawWorldMarco);
+    add(V.bodega, drawWorldBodega); add(V.cancha, drawWorldCancha); add(V.horta, drawWorldHorta); add(V.fogo, drawWorldFogo); add(V.marco, drawWorldMarco);
+    add(V.agro, () => drawWorldShop(V.agro, 'AGROPECUÁRIA', 'sementes · mudas · adubo', '#4a7a3a', '#e8e0c8', ['semente', 'regador', 'enxada']));
+    add(V.gado, () => drawWorldShop(V.gado, 'LOJA DO CAMPO', 'sal · ração · arreios · bois', '#8a3a24', '#e8d8b8', ['sal', 'racao', 'arreio']));
     drawWorldPotreiro(layers, seen);
     for (const h of V.houses) { add(h, () => worldHouse(h, 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), h)); ownerAtDoor(layers, h, h.id, seen); }
     for (const [x, y, kind] of VILA_TREES) if (seen(x, y)) layers.push({ y, draw: () => drawWorldTree(x, y, kind) });
-    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('ENCRUZILHADA →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
+    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('SERRA GAÚCHA →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
   }
 };
+// Loja de campanha: fachada de tábuas, toldo e mercadoria na calçada.
+function drawWorldShop(s, name, sub, awning, wall, goods) {
+  gable(s.x, s.y - 10, s.w, 80, '#6a5a4a', 16);
+  rect(s.x, s.y + 64, s.w, s.h - 64, wall, 0, '#5a4a32'); for (let x = s.x + 14; x < s.x + s.w; x += 24) rect(x, s.y + 66, 2, s.h - 68, 'rgba(90,70,40,.25)');
+  rect(s.x + 20, s.y + 74, s.w - 40, 34, '#f4ecd8', 4, '#5a3a20'); txt(name, s.x + s.w / 2, s.y + 91, 16, '#5a2a14', 'center', 'Georgia');
+  for (let k = 0; k < 8; k++) poly([[s.x + 10 + k * (s.w - 20) / 8, s.y + 116], [s.x + 10 + (k + 1) * (s.w - 20) / 8, s.y + 116], [s.x + 10 + (k + .5) * (s.w - 20) / 8, s.y + 140]], k % 2 ? awning : '#f4f0e6');
+  for (const x of [s.x + 30, s.x + s.w - 110]) windowPane(x, s.y + 150, 80, 56);
+  rect(s.x + s.w / 2 - 30, s.y + s.h - 80, 60, 80, '#5a3a20', 2, '#2a1a0e');
+  txt(sub, s.x + s.w / 2, s.y + s.h + 14, 12, '#3a2a1a', 'center', 'Arial');
+  goods.forEach((g, i) => { const x = s.x + 30 + i * 52, y = s.y + s.h - 10; if (g === 'semente' || g === 'racao' || g === 'sal') { rect(x - 16, y - 34, 32, 36, g === 'sal' ? '#f0ece0' : g === 'racao' ? '#c8a060' : '#d8c890', 6, '#8a7a5a'); } else if (g === 'regador') { ellipse(x, y - 14, 14, 12, '#5a8ac0'); rect(x + 10, y - 26, 16, 4, '#5a8ac0'); } else if (g === 'enxada') { rect(x - 2, y - 50, 4, 52, '#8a5a32'); rect(x - 12, y - 52, 24, 8, '#7a7a80'); } else if (g === 'arreio') { ctx.strokeStyle = '#6a3a1a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y - 24, 14, 18, 0, 0, Math.PI * 2); ctx.stroke(); } });
+}
+// Loja do campo: aqui se compra boi para a laçada de sábado.
+function campoShop() {
+  openDialog('Loja do campo', `<p>Sal mineral, ração, arreios e gado. Rebanho no potreiro: <b>${G.herd || 0}</b>.</p><div class="game-menu"><button class="primary" data-act="buyBoiShop">Comprar um boi · ${money(BOI_COST)}</button><button data-act="close">Só olhando</button></div>`, 'campoShop');
+}
 
 // Rio Uruguai: corta a lateral esquerda e a parte de baixo da vila (lá embaixo, a margem é do Uruguai).
 function drawVilaRiver() {
@@ -241,44 +256,4 @@ function drawWorldPotreiro(layers, seen) {
     for (const x of [p.x, p.x + p.w]) rect(x - 4, p.y - 30, 8, p.h + 40, '#6a4424');
     signBoard(gate, p.y + p.h + 14, 150, 'POTREIRO', 13);
   } });
-}
-function drawWorldPraca() {
-  const p = VILA.praca;
-  rect(p.x, p.y, p.w, p.h, '#7fae52', 8, '#c9b58a'); rect(p.x + p.w / 2 - 22, p.y, 44, p.h, '#d9c49a'); rect(p.x, p.y + p.h / 2 - 22, p.w, 44, '#d9c49a');
-  for (const [x, y] of [[p.x + 160, p.y + 120], [p.x + p.w - 160, p.y + 120], [p.x + 160, p.y + p.h - 120], [p.x + p.w - 160, p.y + p.h - 120]]) { ellipse(x, y, 60, 26, '#5e8a3a'); for (let k = 0; k < 8; k++) ellipse(x - 40 + k * 11, y - 4 + (k % 2) * 6, 4, 4, ['#e85a7a', '#f0d040', '#ffffff'][k % 3]); }
-  for (const [x, y] of [[p.x + p.w / 2 - 110, p.y + 70], [p.x + p.w / 2 + 50, p.y + 70], [p.x + p.w / 2 - 110, p.y + p.h - 80], [p.x + p.w / 2 + 50, p.y + p.h - 80]]) { rect(x, y, 60, 10, '#8a5a32', 2); rect(x + 4, y + 10, 4, 12, '#4a2e18'); rect(x + 52, y + 10, 4, 12, '#4a2e18'); }
-  flagRS(p.x + 250, p.y + p.h / 2 - 30);
-  signBoard(p.x + p.w / 2, p.y - 46, 220, 'PRAÇA DA COMUNIDADE', 14);
-}
-function drawWorldCoreto() {
-  const c = VILA.coreto, mid = c.x + c.w / 2;
-  ellipse(mid, c.y + c.h - 20, c.w / 2 + 10, 34, '#b8a888');
-  for (const x of [c.x + 14, c.x + 58, c.x + c.w - 72, c.x + c.w - 26]) rect(x, c.y + 50, 10, c.h - 70, '#f0ece0');
-  rect(c.x + 10, c.y + c.h - 50, c.w - 20, 8, '#f0ece0');
-  poly([[c.x - 16, c.y + 56], [mid, c.y - 10], [c.x + c.w + 16, c.y + 56]], '#3a6a5a'); rect(mid - 3, c.y - 30, 6, 22, '#c8a040');
-}
-// Capela do interior: paredes caiadas, frontão, torre com sino e cruz, porta em arco e telhado de barro.
-function drawWorldCapela() {
-  const c = VILA.capela, mid = c.x + c.w / 2;
-  gable(c.x, c.y + 40, c.w, 90, '#a8442a', 16);
-  rect(c.x, c.y + 120, c.w, c.h - 120, '#f2ede0', 0, '#8a8070');
-  poly([[c.x + 10, c.y + 124], [mid, c.y + 50], [c.x + c.w - 10, c.y + 124]], '#f2ede0');
-  rect(mid - 36, c.y - 50, 72, 110, '#f2ede0', 0, '#8a8070'); gable(mid - 36, c.y - 96, 72, 46, '#a8442a', 8);
-  ellipse(mid, c.y - 10, 16, 18, '#3a2a1a'); ellipse(mid, c.y - 4, 9, 11, '#c8a040');
-  rect(mid - 3, c.y - 140, 6, 44, '#5a4a3a'); rect(mid - 16, c.y - 126, 32, 6, '#5a4a3a');
-  ellipse(mid, c.y + 92, 16, 16, '#6a8ab0'); ellipse(mid, c.y + 92, 10, 10, '#c8d8f0');
-  ctx.fillStyle = '#6a4424'; ctx.beginPath(); ctx.moveTo(mid - 34, c.y + c.h); ctx.lineTo(mid - 34, c.y + c.h - 70); ctx.arc(mid, c.y + c.h - 70, 34, Math.PI, 0); ctx.lineTo(mid + 34, c.y + c.h); ctx.closePath(); ctx.fill();
-  for (const x of [c.x + 30, c.x + c.w - 60]) { ctx.fillStyle = '#6a8ab0'; ctx.beginPath(); ctx.moveTo(x, c.y + 230); ctx.lineTo(x, c.y + 175); ctx.arc(x + 15, c.y + 175, 15, Math.PI, 0); ctx.lineTo(x + 30, c.y + 230); ctx.closePath(); ctx.fill(); }
-  rect(mid - 50, c.y + c.h, 100, 14, '#c8c0b0');
-}
-// Salão da comunidade: tijolo à vista, telhado de zinco e a faixa da festa do padroeiro.
-function drawWorldSalao() {
-  const s = VILA.salao;
-  gable(s.x, s.y, s.w, 80, '#7a7a72', 18);
-  rect(s.x, s.y + 70, s.w, s.h - 70, '#b5623a', 0, '#6a3a20'); for (let y = s.y + 82; y < s.y + s.h; y += 14) rect(s.x + 2, y, s.w - 4, 1, 'rgba(90,40,20,.35)');
-  for (const x of [s.x + 50, s.x + 150, s.x + s.w - 230, s.x + s.w - 130]) windowPane(x, s.y + 120, 80, 56);
-  rect(s.x + s.w / 2 - 50, s.y + s.h - 90, 100, 90, '#4a2e18', 3, '#2a1a0e'); rect(s.x + s.w / 2 - 2, s.y + s.h - 90, 4, 90, '#2a1a0e');
-  signBoard(s.x + s.w / 2, s.y + 78, 280, 'SALÃO DA COMUNIDADE', 14);
-  rect(s.x + 40, s.y - 26, s.w - 80, 26, '#f0e0a0', 2, '#a87a2a'); txt('FESTA DO PADROEIRO · GALETO, CUCA E BAILE', s.x + s.w / 2, s.y - 13, 13, '#7a2a14', 'center', 'Georgia');
-  pennants(s.x + 40, s.x + s.w - 40, s.y - 46, ['#d42a2a', '#2a7a3a', '#f0d020']);
 }
