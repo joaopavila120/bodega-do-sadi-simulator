@@ -361,3 +361,10 @@ body.world-out #hands,body.world-out [data-act="drop"],body.world-out .context-b
 #hudLayer .horta-bar button em{font-style:normal;font-size:11px;font-weight:bold}
 #hudLayer .horta-bar button.on{background:#7a5a24;border-color:#ffd96a;box-shadow:0 0 0 2px #ffd96a66}
 @media(max-width:750px){#hudLayer .horta-bar button{min-width:40px;min-height:44px}#hudLayer .horta-bar button span{font-size:18px}}
+/* Inventário, lojas e status da horta */
+.farm-status{margin-left:6px;padding:4px 8px;border:2px solid #d9b25e;border-radius:10px;background:#2b1d12e6;color:#ffe8b8;font-weight:bold;font-size:14px;white-space:nowrap;cursor:pointer}
+.farm-status.hidden{display:none}
+.bag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin:10px 0}
+.bag-item{display:grid;justify-items:center;gap:2px;padding:8px;background:#f4ecd8;border:2px solid #a8884a;border-radius:8px;text-align:center}
+.bag-item small{font-size:12px;line-height:1.2}
+.bag-emoji{font-size:30px;line-height:48px}

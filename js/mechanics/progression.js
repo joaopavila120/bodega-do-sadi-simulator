@@ -105,7 +105,8 @@ function weekPreview(day=G.day){
 
 // ---------- Dia e noite ----------
 // O expediente vai das 14h às 23h; a preparação é à tarde.
-function gameMinutes(){if(G.phase==='prep')return 13*60;if(G.phase==='closed')return 23*60+30;return 14*60+Math.min(G.elapsed/DAY,1)*540;}
+// Manhã das 6h em diante (rural.js); o expediente corre da hora em que a bodega abriu até as 23h.
+function gameMinutes(){if(G.phase==='prep')return morningActive()?morningMinutes():13*60;if(G.phase==='closed')return 23*60+30;const start=G.openAt??14*60;return start+Math.min(G.elapsed/DAY,1)*(23*60-start);}
 function gameTimeText(){const m=Math.floor(gameMinutes());return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 function nightLevel(){return clamp((gameMinutes()-18*60)/120,0,1);}
 let nightCanvas=null;

@@ -58,9 +58,9 @@
   check(orderList(combo).join()==='costela,maionese'&&customerOrderBubbles()[0]?.items.length===2,'domingo: freguês pede costela e maionese juntas');
   weigh();use('service');check(combo.state==='queue'&&combo.pid==='maionese','entregou a costela, falta a maionese');const cash2=G.cash;use('maionese');use('service');check(combo.state==='leave'&&G.cash>cash2,'com a maionese o pedido em dobro é pago');
   // mantas do açougue, mais caras
-  G.stock.costela_crua=2;campoState().mantasUsed=0;G.deliveries=[];const before=G.cash,mantas=G.stock.costela_crua;phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyManta"]'),'fornecedor vende mantas avulsas');phoneOpen=false;
-  buyManta();deliveryTick(8.1);check(G.cash===before-MANTA_BUY_COST&&G.stock.costela_crua===mantas+1&&MANTA_BUY_COST>BOI_COST/MANTAS_PER_BOI*2,'manta do açougue chega sem laçar, bem mais cara');
-  {G.stock.costela_crua=4;campoState().mantasUsed=2;const n=G.deliveries.length,cash=G.cash;buyManta();check(G.deliveries.length===n&&G.cash===cash,'no costelão vai no máximo a carne de um boi: 6 mantas por domingo');campoState().mantasUsed=0;}
+  G.stock.costela_crua=2;campoState().mantasUsed=0;G.deliveries=[];const before=G.cash,mantas=G.stock.costela_crua;G.bag={};storeShop('acougue');check(document.querySelector('#dialogContent [data-id="manta"]:not([disabled])'),'o Açougue da Fronteira vende mantas avulsas');closeDialog(true);
+  storeExtra('manta');depositBag();check(G.cash===before-MANTA_BUY_COST&&G.stock.costela_crua===mantas+1&&!bagQty('costela_crua')&&MANTA_BUY_COST>BOI_COST/MANTAS_PER_BOI*2,'manta do açougue vem no inventário sem laçar, bem mais cara');
+  {G.stock.costela_crua=4;campoState().mantasUsed=2;const cash=G.cash;storeExtra('manta');check(!bagQty('costela_crua')&&G.cash===cash,'no costelão vai no máximo a carne de um boi: 6 mantas por domingo');campoState().mantasUsed=0;}
   // clientes do campo
   check(['costela','maionese','refri'].includes(campoOrder())&&!spawnGroup(),'no campo só chegam fregueses ao balcão: costela, maionese ou refri');
   // tutorial do primeiro costelão
@@ -110,7 +110,7 @@
   check(modal==='planning','depois da laçada aparece a previsão de amanhã');action('chooseEvent','automatic');check(G.day===3&&G.event.id==='costelao','e o dia seguinte é o domingo de costelão');
   reset();G.herd=0;G.day=2;G.phase='closed';nextDay();check(modal==='lassoIntro'&&$('dialogContent').textContent.includes('Comprar bois'),'sem bois o jogo pede compra de bois');
   buyBoi();buyBoi();check(G.herd===2&&G.cash===2000-2*BOI_COST,'compra de bois no celular');closeDialog(true);
-  phoneCat='Campo';phoneTab='supplier';phoneOpen=true;renderPhone();check(document.querySelector('[data-act="buyBoi"]'),'fornecedor tem a categoria Campo com bois');phoneOpen=false;
+  storeShop('gado');check(document.querySelector('#dialogContent [data-id="boi"]'),'a Casa do Campeiro vende bois');closeDialog(true);
   // quero-queros de visita enquanto a costela assa
   sunday();campoBirds=[];G.player={x:525,y:640,dx:1,dy:0};campoState().espetos[0]={heat:[0,0],fire:0,burned:false,cost:1,turns:0};Math.random=()=>.001;campoBirdsTick(.05);Math.random=random;
   check(campoBirds.length===1,'com a costela assando pode chegar um quero-quero');const bird=campoBirds[0];for(let t=0;t<6;t+=.05)campoBirdsTick(.05);check(bird.state==='ground','o quero-quero pousa no campo');

@@ -322,6 +322,8 @@ Object.assign(FURN, {
       for (let x = i.x + 10; x < i.x + i.w - 18; x += 22) {
         const n = (x / 22 + k) % 4 | 0;
         if (i.goods === 'agro') { if (n === 0) rect(x, y + 8, 14, 20, ['#e8c040', '#5aa040', '#c85a3a', '#7a9ad8'][k], 2, '#5a4a2a'); else if (n === 1) { rect(x, y + 4, 16, 24, '#c8a870', 4, '#8a6a3a'); rect(x + 3, y + 12, 10, 4, '#5a8a3a'); } else if (n === 2) { ellipse(x + 8, y + 20, 8, 8, '#5a8ac0'); rect(x + 12, y + 12, 8, 3, '#5a8ac0'); } else rect(x + 2, y + 10, 12, 18, '#e8e0c8', 2, '#8a7a5a'); }
+        else if (i.goods === 'atacado') { if (n === 0) { rect(x + 3, y + 6, 10, 22, ['#3a7a3a', '#8a4a1a', '#c8a030', '#3a5a9a'][k], 3); rect(x + 6, y, 4, 8, '#2a2a2a'); } else if (n === 1) rect(x, y + 10, 18, 18, '#d8b878', 2, '#8a6a3a'); else if (n === 2) rect(x, y + 8, 16, 20, ['#e83a2a', '#f0d040', '#3a8ad0', '#f4ecd8'][k], 2, '#5a4a3a'); else rect(x + 2, y + 14, 14, 14, '#f0e0a0', 2, '#a8883a'); }
+        else if (i.goods === 'acougue') { if (n === 0 || n === 2) { rect(x + 8, y - 4, 2, 10, '#9a9aa0'); ellipse(x + 9, y + 16, 8, 11, n ? '#b83a3a' : '#d86a5a'); ellipse(x + 9, y + 14, 4, 6, '#f0d0c0'); } else if (n === 1) { ellipse(x + 9, y + 20, 9, 7, '#c86a3a'); ellipse(x + 9, y + 18, 5, 4, '#e8a07a'); } else rect(x + 2, y + 12, 14, 16, '#8a3a2a', 7, '#5a2014'); }
         else { if (n === 0) rect(x, y + 12, 18, 16, '#f0ece0', 3, '#a8a090'); else if (n === 1) { ctx.strokeStyle = '#c8a050'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x + 9, y + 18, 9, 8, 0, 0, Math.PI * 2); ctx.stroke(); } else if (n === 2) rect(x, y + 4, 16, 24, '#c8a060', 4, '#8a6a3a'); else { rect(x + 2, y + 6, 8, 22, '#6a3a1a', 2); rect(x + 2, y + 24, 14, 5, '#6a3a1a', 2); } }
       }
     }
@@ -350,29 +352,12 @@ function storeMap(o) {
 // Vendedor atrás do balcão (um morador comum da vila).
 function drawKeeper(def, layers) { const i = PEOPLE.findIndex(p => p.id === def.keeper); if (i < 0) return; const [x, y] = def.keeperSpot; layers.push({ y, draw: () => personDraw(PEOPLE[i].sprite, x, y, false, false, -1) }); }
 
-// Compra no balcão: entra no estoque da bodega na hora.
-function storeBuy(key) {
-  const g = GOODS[key]; if (!g || !unlocked(key)) return;
-  const qty = Math.min(g.pack || 6, stationCapacity(key) - G.stock[key]); if (qty <= 0) { worldSay('O estoque de ' + nameOf(key) + ' já está cheio.'); AudioEngine.bad(); return; }
-  const cost = round(qty * g.cost * STORE_DISCOUNT); if (!hasCash(cost)) { worldSay('Não há dinheiro para este pacote.'); AudioEngine.bad(); return; }
-  spendCash(cost); G.stats.purchases += cost; const units = G.stock[key]; G.avg[key] = (G.avg[key] * units + cost) / (units + qty); G.stock[key] += qty;
-  AudioEngine.coins(); worldSay('Comprado: ' + stockText(key, qty) + ' por ' + money(cost) + '. Já está no estoque da bodega.'); save(); agroShop();
-}
-const AGRO_GOODS = ['erva', 'salada', 'ovo', 'bergamota', 'pinhao', 'amendoim'];
-function agroShop() {
-  const list = AGRO_GOODS.filter(k => GOODS[k] && unlocked(k));
-  const card = k => { const g = GOODS[k], qty = Math.min(g.pack || 6, stationCapacity(k) - G.stock[k]), cost = round(Math.max(qty, 0) * g.cost * STORE_DISCOUNT); return '<div class="supply"><span class="icon">' + itemIconHTML(k) + '</span><div><b>' + nameOf(k) + '</b><p>No estoque: ' + stockText(k, G.stock[k]) + '</p></div><button class="primary" data-act="storeBuy" data-id="' + k + '" ' + (qty > 0 && hasCash(cost) ? '' : 'disabled') + '>' + (qty > 0 ? 'Comprar ' + stockText(k, qty) + ' · ' + money(cost) : 'Estoque cheio') + '</button></div>'; };
-  openDialog('Armazém Querência', '<p>Produtos para agricultura. No balcão sai na hora, e mais barato que pelo celular.</p><div class="store-list">' + list.map(card).join('') + '</div><h3>Para a horta</h3><div class="store-list">' + hortaSeedCards() + '</div>', 'worldStore');
-}
-const CAMPEIRO_GEAR = ['bodoque', 'bootsGaucho', 'bootsBagual'];
-function campeiroShop() {
-  const gear = CAMPEIRO_GEAR.map(id => UPGRADES.find(u => u.id === id)).filter(Boolean);
-  const card = u => { const owned = !!G.up[u.id], needs = u.requires && !G.up[u.requires], low = bodegaLevel() < (u.level || 1); const label = owned ? 'Já é seu' : needs ? 'Antes: ' + UPGRADES.find(x => x.id === u.requires).name : low ? 'Bodega nível ' + u.level : 'Comprar · ' + money(u.cost); return '<div class="supply"><span class="icon">' + upgradeIconHTML(u.id) + '</span><div><b>' + u.name + '</b><p>' + u.desc + '</p></div><button class="primary" data-act="campeiroBuy" data-id="' + u.id + '" ' + (owned || needs || low || !hasCash(u.cost) ? 'disabled' : '') + '>' + label + '</button></div>'; };
-  const boi = '<div class="supply"><span class="icon">🐂</span><div><b>Boi</b><p>Para a laçada de sábado e o costelão de domingo.</p></div><button class="primary" data-act="campeiroBuy" data-id="boi" ' + (hasCash(BOI_COST) ? '' : 'disabled') + '>Comprar · ' + money(BOI_COST) + '</button></div>';
-  openDialog('Casa do Campeiro', '<p>Produtos para pecuária. Rebanho no potreiro: <b>' + (G.herd || 0) + '</b>.</p><div class="store-list">' + boi + gear.map(card).join('') + '</div>', 'worldStore');
-}
-function campeiroBuy(id) { if (id === 'boi') buyBoi(); else buyUpgrade(id); save(); campeiroShop(); }
-WORLD_MAPS.agro = storeMap({ id: 'agro', name: 'Armazém Querência', goods: 'agro', floor: 'wood', wallColor: '#d8c89a', keeper: 'anselmo', shop: agroShop, items: [
+WORLD_MAPS.agro = storeMap({ id: 'agro', name: 'Armazém Querência', goods: 'agro', floor: 'wood', wallColor: '#d8c89a', keeper: 'anselmo', shop: () => storeShop('agro'), items: [
   { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#c8a870', tag: 'ADUBO' }, { kind: 'tools', x: 860, y: 520, w: 150, h: 20 }, { kind: 'plant', x: 1180, y: 520, w: 44, h: 40 }, { kind: 'plant', x: 1120, y: 520, w: 44, h: 40 }] });
-WORLD_MAPS.gado = storeMap({ id: 'gado', name: 'Casa do Campeiro', goods: 'gado', floor: 'stone', wallColor: '#c8a878', keeper: 'arlindo', shop: campeiroShop, items: [
+WORLD_MAPS.gado = storeMap({ id: 'gado', name: 'Casa do Campeiro', goods: 'gado', floor: 'stone', wallColor: '#c8a878', keeper: 'arlindo', shop: () => storeShop('gado'), items: [
   { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#c89a60', tag: 'RAÇÃO' }, { kind: 'hay', x: 760, y: 520, w: 110, h: 50 }, { kind: 'arreio', x: 900, y: 540, w: 100, h: 50, label: 'Arreio de exposição', text: 'Arreio novo, com prata lavrada: não está à venda, é o orgulho da loja.' }] });
+// Atacado da Fronteira (bebidas e balcão) e Açougue (carnes): o resto do que a bodega vende.
+WORLD_MAPS.atacado = storeMap({ id: 'atacado', name: 'Atacado da Fronteira', goods: 'atacado', floor: 'stone', wallColor: '#d8d0b8', keeper: 'lucia', shop: () => storeShop('atacado'), items: [
+  { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#e8d8a8', tag: 'FARINHA' }, { kind: 'hay', x: 760, y: 520, w: 110, h: 50, label: 'Engradados de cerveja', text: 'Engradados de casco retornável empilhados até o teto: sábado de bocha esvazia tudo.' }] });
+WORLD_MAPS.acougue = storeMap({ id: 'acougue', name: 'Açougue da Fronteira', goods: 'acougue', floor: 'stone', wallColor: '#e8e4dc', keeper: 'rosa', shop: () => storeShop('acougue'), items: [
+  { kind: 'plant', x: 1180, y: 520, w: 44, h: 40 }, { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#f0ece0', tag: 'SAL GROSSO' }] });

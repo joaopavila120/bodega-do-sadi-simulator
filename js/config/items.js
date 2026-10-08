@@ -27,7 +27,7 @@ const UPGRADES=[
  {id:'bodoque',name:'Bodoque',cost:60,rep:0,desc:'Forquilha de goiabeira com borracha de câmara. No campo, segure F (ou o botão) e solte quando o círculo sobre o quero-quero ficar verde: ele leva um susto e vai embora.'},
  {id:'placaFiado',name:'Placa “Fiado só amanhã”',cost:70,rep:0,desc:'Pendurada ao lado do balcão: bem menos fregueses pedem fiado (de 18% para 4%). Quem já tem conta continua pagando normalmente.'},
  {id:'tray',name:'Bandeja de dois lugares',cost:80,rep:60,desc:'Carregue dois itens. Selecione o espaço com 1 e 2.'},
- {id:'pepino',goods:'pepino',name:'Conserva de pepino',cost:45,rep:62,desc:'Libera a venda e inclui 4 potes para começar.'},
+ {id:'pepino',goods:'pepino',shop:'conserva',name:'Conserva de pepino',cost:45,rep:62,desc:'Libera a venda e inclui 4 potes para começar.'},
  {id:'bergamota',goods:'bergamota',name:'Bergamota do pomar',cost:45,rep:63,desc:'Libera venda por peso e inclui 12 kg de bergamota.'},
  {id:'amendoim',goods:'amendoim',name:'Amendoim torrado',cost:55,rep:64,desc:'Libera o petisco e inclui 4 porções.'},
  {id:'salame',level:2,goods:'salame',name:'Salame de colônia',cost:85,rep:66,desc:'Libera salame e torradas. Coloque pão + salame diretamente na prensa. Inclui 4 porções.'},

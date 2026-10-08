@@ -71,7 +71,7 @@
   // Ícones das melhorias e placa do fiado
   check(UPGRADES.every(u=>upgradeIconHTML(u.id).includes('upgrade-icon')),'toda melhoria tem ícone');
   reset();check(fiadoChance()===.18,'sem placa, 18% pedem fiado');G.xp=99999;G.levelSeen=7;G.cash=500;buyUpgrade('placaFiado');check(G.up.placaFiado&&fiadoChance()===.04,'placa Fiado só amanhã derruba os pedidos de fiado');
-  phoneOpen=true;phoneTab='upgrades';let icons=0,upText='';for(const tab of UPGRADE_TABS){upgradeTab=tab;renderPhone();icons+=document.querySelectorAll('#phoneContent .upgrade-category .upgrade-icon').length;upText+=$('phoneContent').textContent;}upgradeTab='Cozinha';check(icons>=UPGRADES.length&&upText.includes('Fiado só amanhã'),'aba Melhorias mostra ícones e a placa');phoneOpen=false;
+  phoneOpen=true;phoneTab='upgrades';let icons=0,upText='';for(const tab of UPGRADE_TABS){upgradeTab=tab;renderPhone();icons+=document.querySelectorAll('#phoneContent .upgrade-category .upgrade-icon').length;upText+=$('phoneContent').textContent;}upgradeTab='Cozinha';check(icons>=UPGRADES.filter(u=>!(u.shop&&physicalShopping())).length&&upText.includes('Fiado só amanhã'),'aba Melhorias mostra ícones e a placa');phoneOpen=false;
   // Calendário e eventos
   check(calendar(1).name==='Sexta'&&fixedEventFor(2)==='normal'&&fixedEventFor(3)==='costelao'&&fixedEventFor(6)==='grenal'&&!EVENTS.truco&&!EVENTS.motos&&!EVENTS.rodeio&&fixedEventFor(10)==='costelao'&&!EVENTS.farroupilha&&!EVENTS.junina&&nameOf('cachaca')==='Dose de cachaça','calendário tem Gre-Nal, truco e rodeio; sem Farroupilha, junina ou quentão');
   // Modo de testes escolhe o evento

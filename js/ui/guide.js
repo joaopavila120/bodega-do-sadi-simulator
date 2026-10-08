@@ -18,13 +18,14 @@ const UPGRADE_ICONS={trago:'item:cachaca',coffee:'cambona',bootsGaucho:'bota_gau
 function upgradeIconHTML(id){
  const icon=UPGRADE_ICONS[id];if(!icon)return '';const[kind,arg]=icon.split(':');
  if(kind==='item')return `<span class="upgrade-icon">${itemIconHTML(arg)}</span>`;
+ if(kind==='emoji')return `<span class="upgrade-icon"><span class="bag-emoji">${arg}</span></span>`;
  if(kind==='mate')return `<span class="upgrade-icon">${itemIconHTML('mate')}<b class="upgrade-stars">${'★'.repeat(Number(arg))}</b></span>`;
  return `<span class="upgrade-icon"><img src="assets/images/icons/${icon}.png" alt="" draggable="false"></span>`;
 }
 function upgradeCatalog(){
  // Na etapa do tutorial, abre direto na aba da Mesa de tragos.
  const tab=tutorialActive()&&tutorialStep().id==='upgrade'?upgradeCategory(UPGRADES.find(u=>u.id==='trago')):upgradeTab;
- return `<div class="phone-cat upgrade-cats">${UPGRADE_TABS.map(c=>`<button class="${tab===c?'active':''}" data-act="upgradeTab" data-id="${c}">${c}</button>`).join('')}</div>`+({Botas:bootsPanel(),Mate:matePanel(),Outros:tablePanel()}[tab]||'')+[tab].map(category=>`<div class="upgrade-category">${UPGRADES.filter(u=>upgradeCategory(u)===category).map(u=>{
+ return `<div class="phone-cat upgrade-cats">${UPGRADE_TABS.map(c=>`<button class="${tab===c?'active':''}" data-act="upgradeTab" data-id="${c}">${c}</button>`).join('')}</div>`+({Botas:bootsPanel(),Mate:matePanel(),Outros:tablePanel()}[tab]||'')+[tab].map(category=>`<div class="upgrade-category">${UPGRADES.filter(u=>upgradeCategory(u)===category&&!(u.shop&&physicalShopping())).map(u=>{
   const missing=[];if(!tutorialUpgradeAllowed(u.id))missing.push('concluir a etapa do tutorial');if(bodegaLevel()<(u.level||1))missing.push('nível '+u.level);if(G.rep<u.rep)missing.push('reputação '+u.rep);if(!hasCash(u.cost))missing.push(money(u.cost));if(u.requires&&!G.up[u.requires])missing.push(UPGRADES.find(v=>v.id===u.requires).name);
   return `<div class="upgrade"><h3>${upgradeIconHTML(u.id)}${u.name}</h3><p>${u.desc}</p><p>${u.level>1?'Nível '+u.level+' · ':''}Reputação ${u.rep} · ${money(u.cost)}${u.requires?' · requer '+UPGRADES.find(v=>v.id===u.requires).name:''}</p><button class="primary" data-act="upgrade" data-id="${u.id}" ${G.up[u.id]||missing.length?'disabled':''}>${G.up[u.id]?'Já é da casa':missing.length?'Falta: '+missing.join(' + '):u.cost===0?'Instalar grátis':'Comprar melhoria'}</button></div>`;
  }).join('')}</div>`).join('');
