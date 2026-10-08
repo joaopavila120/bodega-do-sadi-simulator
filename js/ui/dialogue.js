@@ -57,6 +57,8 @@ function finishRpgTyping(prefix){
 }
 function rpgTyping(prefix){return !!rpgBoxes[prefix]?.timer;}
 // Avança a caixa: completa a fala em digitação ou passa para a próxima parte. Falso quando acabou.
+// Espaço: completa a fala que está sendo digitada; no toque seguinte, mostra a próxima fala já completa.
+function rpgSpace(prefix){if(rpgTyping(prefix)){finishRpgTyping(prefix);return true;}const s=rpgBoxes[prefix];if(s&&s.part<s.parts.length-1){showRpgPart(prefix,s.part+1);finishRpgTyping(prefix);return true;}return false;}
 function rpgAdvance(prefix){const s=rpgBoxes[prefix];if(!s)return false;if(rpgTyping(prefix)){finishRpgTyping(prefix);return true;}if(s.part<s.parts.length-1){showRpgPart(prefix,s.part+1);return true;}return false;}
 function updateDialogue(){const d=G.dialogue;showRpgBox('dialogue',d&&{person:Number.isInteger(d.person)?d.person:PEOPLE.findIndex(p=>p.name===d.name),name:d.name,player:d.player,reply:d.reply});}
 // Clique na caixa: completa a fala; com a fala inteira, fecha.

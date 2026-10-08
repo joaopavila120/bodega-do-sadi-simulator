@@ -44,7 +44,7 @@ function personDraw(index,x,y,walking=false,chef=false,dx=1,seated=false,mood=0)
  }else if(walking){
   // Caminhada: as pernas balançam no quadril com os pés no chão, o corpo sobe de leve a cada passo
   // e o tronco inclina para o lado em que anda (na tela, não no desenho, para nunca inclinar para trás).
-  const ph=frameClock*(chef&&G.boost>0?19:13)+seed,swing=Math.sin(ph),bob=Math.abs(Math.cos(ph))*1.6,hip=-height*.3,legLen=height*.3,flip=t.a<0?-1:1,lean=.05*Math.sign(dx||0)*flip;
+  const ph=frameClock*(chef&&G.boost>0?19:13)+(custom?3:index)*1.7,swing=Math.sin(ph),bob=Math.abs(Math.cos(ph))*1.6,hip=-height*.3,legLen=height*.3,flip=t.a<0?-1:1,lean=.05*Math.sign(dx||0)*flip;
   for(let leg=0;leg<2;leg++){const a=swing*(leg?1:-1)*.3;ctx.save();ctx.translate(-dw/4+leg*dw/2,hip+legLen*(1-Math.cos(a)));ctx.rotate(a);part(leg*.5,.7,.5,.3,-dw/4,0,dw/2,height*.3);ctx.restore();}
   // O tronco vai até um pouco abaixo do quadril e cobre a junta com as pernas (o avental não se parte).
   ctx.save();ctx.translate(0,hip-bob);ctx.rotate(lean+swing*.02);part(0,0,1,.78,-dw/2,-height*.7,dw,height*.78);ctx.restore();
