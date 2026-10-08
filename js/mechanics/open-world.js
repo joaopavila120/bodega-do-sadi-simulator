@@ -46,7 +46,7 @@ function enterInterior(id) { const M = WORLD_MAPS[id]; if (!M) return false; wor
 // ---------- Avisos: os da bodega ficam na bodega ----------
 // Fora da bodega, say() e showBanner() da bodega ficam em silêncio; o mundo aberto usa worldSay/worldBanner.
 let worldAway = null;
-function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world; }
+function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world && modal !== 'worldStore'; }
 function worldSay(text) { say(text, { world: true }); }
 function worldBanner(title, text) { showBanner(title, text, 'info', { world: true }); }
 
@@ -216,8 +216,8 @@ WORLD_MAPS.vila = {
       { id: 'horta', ...front(V.horta), label: G.up.bergamota ? 'Horta e pomar de bergamota' : 'Horta e pomar', text: G.up.bergamota ? 'Pomar de bergamota: é dele que sai a bergamota vendida no balcão. Em breve dá para colher na mão.' : 'Horta e pomar da bodega: em breve dá para plantar, regar e colher. As sementes vêm da agropecuária.' },
       { id: 'fogo', ...front(V.fogo), label: isCampo() ? 'Voltar ao costelão' : 'Fogo de chão do costelão', act: () => { if (isCampo()) goInside(); else worldSay('Fogo de chão: é aqui que sai o costelão de domingo. A carne vem do potreiro, laçada no sábado.'); } },
       { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } worldSay('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na Casa do Campeiro.'); } },
-      { id: 'agro', ...front(V.agro), label: 'Armazém Querência · produtos para agricultura', text: 'Armazém Querência: sementes, mudas, adubo e ferramentas para a horta. Em breve, a horta da bodega começa por aqui.' },
-      { id: 'gado', ...front(V.gado), label: 'Casa do Campeiro · produtos para pecuária', act: campoShop },
+      { id: 'agro', ...front(V.agro), label: 'Entrar no Armazém Querência', act: () => enterInterior('agro') },
+      { id: 'gado', ...front(V.gado), label: 'Entrar na Casa do Campeiro', act: () => enterInterior('gado') },
       { id: 'missoes', x: V.missoes.x + V.missoes.w / 2, y: V.missoes.y + V.missoes.h + 26, label: 'Ruínas das Missões', info: true, text: 'Missões: entre os séculos XVII e XVIII, padres jesuítas e indígenas guaranis ergueram os Sete Povos das Missões no noroeste do Rio Grande. As ruínas de São Miguel Arcanjo são Patrimônio Mundial da UNESCO.' },
       { id: 'pouso', ...front(V.pouso, 24), label: 'Pouso de tropeiros', info: true, text: 'Tropeirismo: nos séculos XVIII e XIX, os tropeiros levavam tropas de mulas e gado do Rio Grande até Sorocaba, em São Paulo. Nos pousos a tropa descansava; pelo caminho nasceram vilas e se espalharam o charque e o chimarrão.' },
       { id: 'river', x: 470, y: 917, label: 'Trapiche do rio Uruguai', text: 'Rio Uruguai: em breve, pescaria de dourado e jundiá no trapiche.' },
@@ -278,10 +278,6 @@ function drawWorldShop(s, name, sub, awning, wall, goods) {
   rect(s.x + s.w / 2 - 30, s.y + s.h - 80, 60, 80, '#5a3a20', 2, '#2a1a0e');
   txt(sub, s.x + s.w / 2, s.y + s.h + 14, 12, '#3a2a1a', 'center', 'Arial');
   goods.forEach((g, i) => { const x = s.x + 30 + i * 52, y = s.y + s.h - 10; if (g === 'semente' || g === 'racao' || g === 'sal') { rect(x - 16, y - 34, 32, 36, g === 'sal' ? '#f0ece0' : g === 'racao' ? '#c8a060' : '#d8c890', 6, '#8a7a5a'); } else if (g === 'regador') { ellipse(x, y - 14, 14, 12, '#5a8ac0'); rect(x + 10, y - 26, 16, 4, '#5a8ac0'); } else if (g === 'enxada') { rect(x - 2, y - 50, 4, 52, '#8a5a32'); rect(x - 12, y - 52, 24, 8, '#7a7a80'); } else if (g === 'arreio') { ctx.strokeStyle = '#6a3a1a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y - 24, 14, 18, 0, 0, Math.PI * 2); ctx.stroke(); } });
-}
-// Casa do Campeiro (produtos para pecuária): aqui se compra boi para a laçada de sábado.
-function campoShop() {
-  openDialog('Casa do Campeiro', `<p>Produtos para pecuária: sal mineral, ração, arreios e gado. Rebanho no potreiro: <b>${G.herd || 0}</b>.</p><div class="game-menu"><button class="primary" data-act="buyBoiShop">Comprar um boi · ${money(BOI_COST)}</button><button data-act="close">Só olhando</button></div>`, 'campoShop');
 }
 
 // Rio Uruguai: corta a lateral esquerda e a parte de baixo da vila (lá embaixo, a margem é do Uruguai).

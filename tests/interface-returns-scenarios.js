@@ -56,6 +56,9 @@
    worldOut.x=420;worldOut.y=470;keys.add('w');simulate(.05);keys.clear();finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('bauzona'),'no quarto, a cama bauzona');skipWorldTalk();
    check(WORLD_MAPS.casona.spots().some(s=>s.id==='home:marcio'),'os gêmeos estão em casa');window.walkingToday=realWalk;}
   {G.phase='prep';const day=WORLD_MAPS.serra.residents.concat(WORLD_MAPS.vila.residents,WORLD_MAPS.sc.residents).map(id=>PEOPLE.findIndex(p=>p.id===id)).filter(walkingToday).length;G.phase='closed';const night=WORLD_MAPS.serra.residents.concat(WORLD_MAPS.vila.residents,WORLD_MAPS.sc.residents).map(id=>PEOPLE.findIndex(p=>p.id===id)).filter(walkingToday).length;check(night<day,'de noite os personagens ficam mais em casa');G.phase='prep';}
+  {worldOut.map='vila';const ag=WORLD_MAPS.vila.spots().find(s=>s.id==='agro');worldOut.x=ag.x;worldOut.y=ag.y;interact();check(worldOut.map==='agro','entra no Armazém Querência');const cx=WORLD_MAPS.agro.spots().find(s=>s.id.startsWith('item:caixa'));worldOut.x=cx.x;worldOut.y=cx.y;interact();check(modal==='worldStore','no caixa abre a compra');
+   G.cash=500;G.stock.erva=0;const c0=G.cash;storeBuy('erva');check(G.stock.erva>0&&G.cash<c0&&G.cash>c0-GOODS.erva.cost*GOODS.erva.pack,'compra no balcão entra na hora no estoque, mais barata');closeDialog(true);
+   worldOut.map='gado';const h=G.herd||0;campeiroBuy('boi');check(G.herd===h+1&&modal==='worldStore','na Casa do Campeiro se compra boi');closeDialog(true);worldOut.map='vila';}
   goInside();G.phase='open';}
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);

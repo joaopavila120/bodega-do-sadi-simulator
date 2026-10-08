@@ -124,7 +124,7 @@ function interiorMap(def) {
     },
     spots() {
       const people = (def.residents || []).filter(atHome).map((id, k) => { const i = PEOPLE.findIndex(p => p.id === id), [x, y] = def.homeSpots[k]; return { id: 'home:' + id, x, y, label: 'Prosear com ' + PEOPLE[i].name, act: () => worldTalk({ person: i, x, y, wait: 0, dx: 1 }) }; });
-      const things = (def.items || []).filter(i => i.text).map(i => ({ id: 'item:' + i.kind + i.x, x: i.x + i.w / 2, y: i.spotY ?? i.y + i.h + 22, label: i.label, act: () => i.info ? showInfo(i.label, i.text) : showItem(i.label, i.text, def.residents?.[0]) }));
+      const things = (def.items || []).filter(i => i.text || i.act).map(i => ({ id: 'item:' + i.kind + i.x, x: i.x + i.w / 2, y: i.spotY ?? i.y + i.h + 22, label: i.label, act: i.act || (() => i.info ? showInfo(i.label, i.text) : showItem(i.label, i.text, def.residents?.[0])) }));
       return [...people, ...things];
     },
     // Ao entrar num cômodo com fala, ela dispara uma vez por visita.
@@ -141,6 +141,7 @@ function interiorMap(def) {
       if (!def.open) { rect(b.x - 20, b.y - 124, 20, b.h + 150, '#3a2414'); rect(b.x + b.w, b.y - 124, 20, b.h + 150, '#3a2414'); }
       for (const w of walls) layers.push({ y: w.y + w.h, draw: () => { if (w.w > w.h) { rect(w.x, w.y - 56, w.w, 56, def.wallColor || '#c8a878'); rect(w.x, w.y - 60, w.w, 6, '#3a2414'); rect(w.x, w.y, w.w, w.h, '#5a3a22'); } else rect(w.x, w.y - 60, w.w, w.h + 60, '#3a2414'); } });
       for (const i of def.items || []) if (!i.wall) layers.push({ y: i.layerY ?? (i.flat ? i.y - 400 : i.y + i.h), draw: () => FURN[i.kind](i) });
+      if (def.keeper) drawKeeper(def, layers);
       (def.residents || []).filter(atHome).forEach((id, k) => { const i = PEOPLE.findIndex(p => p.id === id), [x, y] = def.homeSpots[k], dir = k % 2 ? -1 : 1; layers.push({ y, draw: () => { personDraw(PEOPLE[i].sprite, x, y, false, false, dir); if (def.cuia) drawCuia(x + dir * 26, y - 58); } }); });
       if (!def.open) layers.push({ y: b.y + b.h + 60, draw: () => { rect(b.x - 20, b.y + b.h, door - half - (b.x - 20), 26, '#3a2414'); rect(door + half, b.y + b.h, b.x + b.w + 20 - door - half, 26, '#3a2414'); rect(door - half, b.y + b.h + 16, half * 2, 10, '#6a4424', 3); } });
     }
@@ -307,3 +308,71 @@ WORLD_MAPS.salao = interiorMap({
     { kind: 'barrel', x: 1660, y: 760, w: 60, h: 60 }
   ]
 });
+
+// ---------- Lojas da Fronteira ----------
+// Armazém Querência (produtos para agricultura) e Casa do Campeiro (produtos para pecuária): prateleiras e o caixa.
+// No balcão, a compra sai na hora (sem esperar a entrega) e um pouco mais barata que pelo celular.
+const STORE_DISCOUNT = .9;
+Object.assign(FURN, {
+  // Prateleira de loja, com a mercadoria de cada uma.
+  storeShelf(i) {
+    rect(i.x, i.y - 130, i.w, i.h + 130, '#7a4a2a', 3, '#2a1a0e');
+    for (let k = 0; k < 4; k++) {
+      const y = i.y - 122 + k * 34; rect(i.x + 4, y + 28, i.w - 8, 5, '#4a2a14');
+      for (let x = i.x + 10; x < i.x + i.w - 18; x += 22) {
+        const n = (x / 22 + k) % 4 | 0;
+        if (i.goods === 'agro') { if (n === 0) rect(x, y + 8, 14, 20, ['#e8c040', '#5aa040', '#c85a3a', '#7a9ad8'][k], 2, '#5a4a2a'); else if (n === 1) { rect(x, y + 4, 16, 24, '#c8a870', 4, '#8a6a3a'); rect(x + 3, y + 12, 10, 4, '#5a8a3a'); } else if (n === 2) { ellipse(x + 8, y + 20, 8, 8, '#5a8ac0'); rect(x + 12, y + 12, 8, 3, '#5a8ac0'); } else rect(x + 2, y + 10, 12, 18, '#e8e0c8', 2, '#8a7a5a'); }
+        else { if (n === 0) rect(x, y + 12, 18, 16, '#f0ece0', 3, '#a8a090'); else if (n === 1) { ctx.strokeStyle = '#c8a050'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(x + 9, y + 18, 9, 8, 0, 0, Math.PI * 2); ctx.stroke(); } else if (n === 2) rect(x, y + 4, 16, 24, '#c8a060', 4, '#8a6a3a'); else { rect(x + 2, y + 6, 8, 22, '#6a3a1a', 2); rect(x + 2, y + 24, 14, 5, '#6a3a1a', 2); } }
+      }
+    }
+  },
+  // Pilha de sacos (adubo, ração).
+  sacks(i) { for (let k = 0; k < 5; k++) { const x = i.x + (k % 3) * (i.w / 3) + (k > 2 ? i.w / 6 : 0), y = i.y + i.h - 30 - (k > 2 ? 26 : 0); rect(x, y - 10, i.w / 3 - 6, 40, i.color || '#c8a870', 10, '#8a6a3a'); } txt(i.tag || '', i.x + i.w / 2, i.y + i.h - 8, 10, '#5a3a1a', 'center', 'Arial'); },
+  // Ferramentas da horta penduradas: enxada, rastelo e pá.
+  tools(i) { rect(i.x, i.y - 110, i.w, 12, '#6a4024'); for (let k = 0; k < 3; k++) { const x = i.x + 20 + k * (i.w - 40) / 2; rect(x - 2, i.y - 100, 4, 100, '#8a5a32'); if (k === 0) rect(x - 12, i.y - 4, 24, 8, '#7a7a80'); else if (k === 1) { rect(x - 14, i.y - 4, 28, 4, '#7a7a80'); for (let t = 0; t < 5; t++) rect(x - 13 + t * 6, i.y, 2, 8, '#7a7a80'); } else ellipse(x, i.y + 2, 10, 12, '#7a7a80'); } },
+  hay(i) { rect(i.x, i.y - 30, i.w, i.h + 30, '#d8b860', 6, '#a88a3a'); for (let y = i.y - 24; y < i.y + i.h; y += 10) rect(i.x + 4, y, i.w - 8, 2, '#c0a048'); rect(i.x + i.w * .3, i.y - 30, 3, i.h + 30, '#8a6a2a'); rect(i.x + i.w * .7, i.y - 30, 3, i.h + 30, '#8a6a2a'); },
+  // Caixa: balcão de madeira com a registradora.
+  caixa(i) { rect(i.x, i.y - 40, i.w, i.h + 40, '#8a5a32', 4, '#3a2414'); rect(i.x, i.y - 40, i.w, 12, '#a8744a'); rect(i.x + 20, i.y - 76, 70, 40, '#3a3a3a', 4, '#1a1a1a'); rect(i.x + 28, i.y - 70, 54, 14, '#9ac87a', 2); for (let k = 0; k < 6; k++) rect(i.x + 26 + (k % 3) * 20, i.y - 52 + Math.floor(k / 3) * 8, 14, 5, '#c8c8c8', 1); rect(i.x + i.w - 70, i.y - 50, 50, 10, '#f4ecd8', 2); }
+});
+function storeMap(o) {
+  return interiorMap({
+    id: o.id, name: o.name, W: 1400, H: 900, bounds: { x: 150, y: 250, w: 1100, h: 550 }, door: 700, floor: o.floor, wallColor: o.wallColor, windows: [200, 1130],
+    decor(b) { signBoard(b.x + b.w / 2, b.y - 104, 320, o.name.toUpperCase(), 14); },
+    items: [
+      { kind: 'storeShelf', x: 300, y: 270, w: 300, h: 40, goods: o.goods }, { kind: 'storeShelf', x: 800, y: 270, w: 300, h: 40, goods: o.goods },
+      { kind: 'storeShelf', x: 220, y: 500, w: 240, h: 40, goods: o.goods }, { kind: 'storeShelf', x: 520, y: 500, w: 240, h: 40, goods: o.goods },
+      ...o.items,
+      { kind: 'caixa', x: 940, y: 640, w: 260, h: 60, label: 'Caixa · comprar', act: o.shop }
+    ],
+    keeper: o.keeper, keeperSpot: [1070, 610]
+  });
+}
+// Vendedor atrás do balcão (um morador comum da vila).
+function drawKeeper(def, layers) { const i = PEOPLE.findIndex(p => p.id === def.keeper); if (i < 0) return; const [x, y] = def.keeperSpot; layers.push({ y, draw: () => personDraw(PEOPLE[i].sprite, x, y, false, false, -1) }); }
+
+// Compra no balcão: entra no estoque da bodega na hora.
+function storeBuy(key) {
+  const g = GOODS[key]; if (!g || !unlocked(key)) return;
+  const qty = Math.min(g.pack || 6, stationCapacity(key) - G.stock[key]); if (qty <= 0) { worldSay('O estoque de ' + nameOf(key) + ' já está cheio.'); AudioEngine.bad(); return; }
+  const cost = round(qty * g.cost * STORE_DISCOUNT); if (!hasCash(cost)) { worldSay('Não há dinheiro para este pacote.'); AudioEngine.bad(); return; }
+  spendCash(cost); G.stats.purchases += cost; const units = G.stock[key]; G.avg[key] = (G.avg[key] * units + cost) / (units + qty); G.stock[key] += qty;
+  AudioEngine.coins(); worldSay('Comprado: ' + stockText(key, qty) + ' por ' + money(cost) + '. Já está no estoque da bodega.'); save(); agroShop();
+}
+const AGRO_GOODS = ['erva', 'salada', 'ovo', 'bergamota', 'pinhao', 'amendoim'];
+function agroShop() {
+  const list = AGRO_GOODS.filter(k => GOODS[k] && unlocked(k));
+  const card = k => { const g = GOODS[k], qty = Math.min(g.pack || 6, stationCapacity(k) - G.stock[k]), cost = round(Math.max(qty, 0) * g.cost * STORE_DISCOUNT); return '<div class="supply"><span class="icon">' + itemIconHTML(k) + '</span><div><b>' + nameOf(k) + '</b><p>No estoque: ' + stockText(k, G.stock[k]) + '</p></div><button class="primary" data-act="storeBuy" data-id="' + k + '" ' + (qty > 0 && hasCash(cost) ? '' : 'disabled') + '>' + (qty > 0 ? 'Comprar ' + stockText(k, qty) + ' · ' + money(cost) : 'Estoque cheio') + '</button></div>'; };
+  openDialog('Armazém Querência', '<p>Produtos para agricultura. No balcão sai na hora, e mais barato que pelo celular.</p><div class="store-list">' + list.map(card).join('') + '</div><p class="small-note">Sementes e mudas para a horta: em breve.</p>', 'worldStore');
+}
+const CAMPEIRO_GEAR = ['bodoque', 'bootsGaucho', 'bootsBagual'];
+function campeiroShop() {
+  const gear = CAMPEIRO_GEAR.map(id => UPGRADES.find(u => u.id === id)).filter(Boolean);
+  const card = u => { const owned = !!G.up[u.id], needs = u.requires && !G.up[u.requires], low = bodegaLevel() < (u.level || 1); const label = owned ? 'Já é seu' : needs ? 'Antes: ' + UPGRADES.find(x => x.id === u.requires).name : low ? 'Bodega nível ' + u.level : 'Comprar · ' + money(u.cost); return '<div class="supply"><span class="icon">' + upgradeIconHTML(u.id) + '</span><div><b>' + u.name + '</b><p>' + u.desc + '</p></div><button class="primary" data-act="campeiroBuy" data-id="' + u.id + '" ' + (owned || needs || low || !hasCash(u.cost) ? 'disabled' : '') + '>' + label + '</button></div>'; };
+  const boi = '<div class="supply"><span class="icon">🐂</span><div><b>Boi</b><p>Para a laçada de sábado e o costelão de domingo.</p></div><button class="primary" data-act="campeiroBuy" data-id="boi" ' + (hasCash(BOI_COST) ? '' : 'disabled') + '>Comprar · ' + money(BOI_COST) + '</button></div>';
+  openDialog('Casa do Campeiro', '<p>Produtos para pecuária. Rebanho no potreiro: <b>' + (G.herd || 0) + '</b>.</p><div class="store-list">' + boi + gear.map(card).join('') + '</div>', 'worldStore');
+}
+function campeiroBuy(id) { if (id === 'boi') buyBoi(); else buyUpgrade(id); save(); campeiroShop(); }
+WORLD_MAPS.agro = storeMap({ id: 'agro', name: 'Armazém Querência', goods: 'agro', floor: 'wood', wallColor: '#d8c89a', keeper: 'anselmo', shop: agroShop, items: [
+  { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#c8a870', tag: 'ADUBO' }, { kind: 'tools', x: 860, y: 520, w: 150, h: 20 }, { kind: 'plant', x: 1180, y: 520, w: 44, h: 40 }, { kind: 'plant', x: 1120, y: 520, w: 44, h: 40 }] });
+WORLD_MAPS.gado = storeMap({ id: 'gado', name: 'Casa do Campeiro', goods: 'gado', floor: 'stone', wallColor: '#c8a878', keeper: 'arlindo', shop: campeiroShop, items: [
+  { kind: 'sacks', x: 220, y: 700, w: 200, h: 60, color: '#c89a60', tag: 'RAÇÃO' }, { kind: 'hay', x: 760, y: 520, w: 110, h: 50 }, { kind: 'arreio', x: 900, y: 540, w: 100, h: 50, label: 'Arreio de exposição', text: 'Arreio novo, com prata lavrada: não está à venda, é o orgulho da loja.' }] });
