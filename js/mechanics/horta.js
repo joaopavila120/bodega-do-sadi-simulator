@@ -10,24 +10,27 @@ const CROPS = {
   alface: { name: 'Alface', seed: 'Semente de alface', pack: 5, seedCost: 4, kind: 'bed', days: 2, good: 'salada', yield: 2, icon: '🥬' },
   trigo: { name: 'Trigo', seed: 'Semente de trigo', pack: 5, seedCost: 4, kind: 'bed', days: 3, good: 'pao_xis', yield: 3, icon: '🌾' },
   bergamota: { name: 'Bergamoteira', seed: 'Muda de bergamoteira', pack: 1, seedCost: 18, kind: 'tree', days: 5, every: 2, good: 'bergamota', yield: 3000, icon: '🍊' },
-  araucaria: { name: 'Araucária', seed: 'Muda de araucária', pack: 1, seedCost: 24, kind: 'tree', days: 6, every: 3, good: 'pinhao', yield: 2000, icon: '🌲' }
+  araucaria: { name: 'Araucária', seed: 'Muda de araucária', pack: 1, seedCost: 24, kind: 'tree', days: 6, every: 3, good: 'pinhao', yield: 2000, icon: '🌲' },
+  // Pé de erva-mate (Ilex paraguariensis): a erveira dá folha para a erva do chimarrão, cancheada e moída.
+  erva: { name: 'Erveira', seed: 'Muda de erva-mate (Ilex paraguariensis)', pack: 1, seedCost: 20, kind: 'tree', days: 6, every: 3, good: 'erva', yield: 2000, icon: '🧉' }
 };
 const ADUBO_PACK = 3, ADUBO_COST = 6, CAN_MAX = 12;
 const HORTA_TOOLS = [
   { id: 'mao', name: 'Mão', icon: '✋' }, { id: 'regador', name: 'Regador', icon: '🚿' },
   { id: 'alface', name: 'Alface', icon: '🥬' }, { id: 'trigo', name: 'Trigo', icon: '🌾' },
   { id: 'bergamota', name: 'Bergamoteira', icon: '🍊' }, { id: 'araucaria', name: 'Araucária', icon: '🌲' },
-  { id: 'adubo', name: 'Adubo', icon: '🧪' }
+  { id: 'erva', name: 'Erveira', icon: '🧉' }, { id: 'adubo', name: 'Adubo', icon: '🧪' }
 ];
-// Tela da horta: 8 × 4 canteiros, três covas para árvore, o poço e o galpãozinho.
+// Tela da horta: 8 × 4 canteiros, quatro covas para árvore, o poço e o galpãozinho.
 const GARDEN = { W: 1600, H: 1000, gx: 300, gy: 250, ts: 90, cols: 8, rows: 4, gate: 800,
-  pits: [{ x: 380, y: 770 }, { x: 600, y: 770 }, { x: 820, y: 770 }], well: { x: 1170, y: 250, w: 110, h: 90 }, shed: { x: 1170, y: 560, w: 230, h: 150 } };
+  pits: [{ x: 360, y: 770 }, { x: 560, y: 770 }, { x: 760, y: 770 }, { x: 960, y: 770 }], well: { x: 1170, y: 250, w: 110, h: 90 }, shed: { x: 1170, y: 560, w: 230, h: 150 } };
 
 function hortaState(g = G) {
   g.horta ??= {};
   const h = g.horta;
   if (!Array.isArray(h.tiles)) h.tiles = Array.from({ length: GARDEN.cols * GARDEN.rows }, () => ({ crop: null }));
-  if (!Array.isArray(h.trees)) h.trees = GARDEN.pits.map(() => ({ crop: null }));
+  if (!Array.isArray(h.trees)) h.trees = [];
+  while (h.trees.length < GARDEN.pits.length) h.trees.push({ crop: null });
   h.seeds ??= {}; for (const k of [...Object.keys(CROPS), 'adubo']) h.seeds[k] ??= 0;
   h.can ??= CAN_MAX; h.tool ??= 'mao'; delete h.plots;
   return h;
@@ -71,7 +74,7 @@ function hortaUse() {
   if (tool === 'mao') {
     if (!cell.crop && cell.dead) { cell.dead = null; worldSay('Limpou o que secou.'); }
     else if (cell.crop) worldSay(CROPS[cell.crop].name + ': ainda não está pronta.');
-    else worldSay('Escolha uma semente (3 a 6) para plantar.');
+    else worldSay('Escolha uma semente ou muda (3 a 7) para plantar.');
   } else if (tool === 'regador') {
     if (!cell.crop) worldSay('Não há nada plantado aqui.');
     else if (cell.water === G.day) worldSay('Já foi regada hoje.');
@@ -105,7 +108,7 @@ function hortaSelectTool(n) { const t = HORTA_TOOLS[n]; if (!t) return; hortaSta
 function hortaToolCount(id, h = hortaState()) { return id === 'mao' ? '' : id === 'regador' ? h.can + '/' + CAN_MAX : String(h.seeds[id] || 0); }
 function hortaHint() {
   const h = hortaState(), t = hortaTarget(), tool = HORTA_TOOLS.find(x => x.id === h.tool);
-  if (!t) return tool.icon + ' ' + tool.name + ' · 1–7 troca a ferramenta · E usa na terra à frente';
+  if (!t) return tool.icon + ' ' + tool.name + ' · 1–8 troca a ferramenta · E usa na terra à frente';
   if (t.type === 'well') return '<strong>E</strong> encher o regador no poço';
   const c = targetCell(t, h);
   if (cellReady(c)) return '<strong>E</strong> colher ' + CROPS[c.crop].name.toLowerCase();
@@ -173,7 +176,8 @@ function drawTileCrop(cell, x, y) {
 function drawTreeCrop(cell, x, base) {
   const crop = CROPS[cell.crop], k = Math.min(1, cell.growth / crop.days), hgt = 40 + k * 150, w = 18 + k * 60, sway = Math.sin(frameClock * 1.3 + x) * 2;
   ellipse(x, base, 30 + k * 30, 9, '#1c140c44'); rect(x - 4 - k * 3, base - hgt * .5, 8 + k * 6, hgt * .5, '#5a3a20');
-  if (cell.crop === 'bergamota') { ellipse(x + sway, base - hgt * .62, w, w * .8, '#2f6a2a'); ellipse(x - w * .3 + sway, base - hgt * .7, w * .5, w * .4, '#3f7a36'); if (cellReady(cell)) for (let n = 0; n < 10; n++) ellipse(x - w * .7 + (n * 19) % (w * 1.4) + sway, base - hgt * .75 + (n * 13) % (w * .9), 5, 5, '#f09a2a'); }
+  if (cell.crop === 'erva') { for (const [dx, dy, f] of [[0, .62, 1], [-.45, .5, .7], [.45, .52, .7], [0, .82, .6]]) { ellipse(x + w * dx + sway, base - hgt * dy, w * f, w * f * .7, '#1f5a2a'); ellipse(x + w * dx + sway - 3, base - hgt * dy - 4, w * f * .6, w * f * .4, cellReady(cell) ? '#6ab84a' : '#2f7a3a'); } if (cellReady(cell)) for (let n = 0; n < 8; n++) ellipse(x - w * .6 + (n * 23) % (w * 1.2) + sway, base - hgt * .7 + (n * 11) % (w * .7), 3, 3, '#a8243a'); }
+  else if (cell.crop === 'bergamota') { ellipse(x + sway, base - hgt * .62, w, w * .8, '#2f6a2a'); ellipse(x - w * .3 + sway, base - hgt * .7, w * .5, w * .4, '#3f7a36'); if (cellReady(cell)) for (let n = 0; n < 10; n++) ellipse(x - w * .7 + (n * 19) % (w * 1.4) + sway, base - hgt * .75 + (n * 13) % (w * .9), 5, 5, '#f09a2a'); }
   else { for (const [dy, f] of [[.45, 1], [.68, .78], [.88, .55], [1, .3]]) { ctx.fillStyle = '#2f5a2a'; ctx.beginPath(); ctx.ellipse(x + sway * f, base - hgt * dy, w * f, 6 + k * 7, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = '#3f7a36'; ctx.beginPath(); ctx.ellipse(x + sway * f, base - hgt * dy - 3, w * f * .8, 3 + k * 4, 0, 0, Math.PI * 2); ctx.fill(); } if (cellReady(cell)) for (let n = 0; n < 4; n++) ellipse(x - 36 + n * 24 + sway, base - hgt * .5, 8, 9, '#8a5a2a'); }
   if (cellThirsty(cell)) drawDrop(x + 40, base - 30 + Math.sin(frameClock * 4) * 2, 8);
 }
@@ -187,7 +191,7 @@ function drawHortaLayers(layers, seen) {
   layers.push({ y: hz.y + hz.h, draw: () => {
     rect(hz.x, hz.y, hz.w, hz.h, '#7a5634', 4, '#5a3a20'); for (let x = hz.x; x <= hz.x + hz.w; x += 20) rect(x, hz.y - 8, 4, 12, '#6a4424');
     for (let r = 0; r < 4; r++) { const y = hz.y + 34 + r * 52; rect(hz.x + 14, y, hz.w * .58, 26, '#5e4428', 6); for (let c = 0; c < 4; c++) { const cell = h.tiles[r * GARDEN.cols + c * 2]; if (cell?.crop) ellipse(hz.x + 30 + c * 34, y + 10, 8, 7, cell.crop === 'trigo' ? (cellReady(cell) ? '#d8b040' : '#8ab040') : '#3f8a2a'); } }
-    h.trees.forEach((cell, i) => { if (!cell.crop) return; const x = hz.x + hz.w * .82, y = hz.y + 60 + i * 80, k = Math.min(1, cell.growth / CROPS[cell.crop].days); rect(x - 3, y, 6, 22, '#5a3a20'); ellipse(x, y - 6, 12 + k * 18, 10 + k * 14, '#2f6a2a'); if (cellReady(cell)) ellipse(x, y - 8, 5, 5, cell.crop === 'bergamota' ? '#f09a2a' : '#8a5a2a'); });
+    h.trees.forEach((cell, i) => { if (!cell.crop) return; const x = hz.x + hz.w * .82, y = hz.y + 50 + i * 60, k = Math.min(1, cell.growth / CROPS[cell.crop].days); rect(x - 3, y, 6, 22, '#5a3a20'); ellipse(x, y - 6, 12 + k * 18, 10 + k * 14, '#2f6a2a'); if (cellReady(cell)) ellipse(x, y - 8, 5, 5, cell.crop === 'bergamota' ? '#f09a2a' : cell.crop === 'erva' ? '#a8243a' : '#8a5a2a'); });
     signBoard(hz.x + hz.w / 2, hz.y + hz.h - 30, 120, 'HORTA', 13);
     // aviso de que tem planta com sede ou pronta para colher
     const thirsty = hortaCells(h).some(cellThirsty), ready = hortaCells(h).some(cellReady);

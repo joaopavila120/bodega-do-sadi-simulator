@@ -60,15 +60,16 @@
    G.cash=500;G.stock.erva=0;const c0=G.cash;storeBuy('erva');check(G.stock.erva>0&&G.cash<c0&&G.cash>c0-GOODS.erva.cost*GOODS.erva.pack,'compra no balcão entra na hora no estoque, mais barata');closeDialog(true);
    worldOut.map='gado';const h=G.herd||0;campeiroBuy('boi');check(G.herd===h+1&&modal==='worldStore','na Casa do Campeiro se compra boi');closeDialog(true);worldOut.map='vila';}
   {G.horta=null;G.cash=500;hortaDo('seed:alface');hortaDo('seed:adubo');const h=hortaState();check(h.seeds.alface===5&&h.seeds.adubo===3,'sementes e adubo comprados no Armazém');
-   worldOut.map='vila';const hs=hortaSpots()[0];worldOut.x=hs.x;worldOut.y=hs.y;interact();check(worldOut.map==='horta','entra na tela da horta');refreshHUD();check(!$('hortaBar').classList.contains('hidden')&&$('hortaBar').querySelectorAll('button').length===7,'barra com as ferramentas da horta');
+   worldOut.map='vila';const hs=hortaSpots()[0];worldOut.x=hs.x;worldOut.y=hs.y;interact();check(worldOut.map==='horta','entra na tela da horta');refreshHUD();check(!$('hortaBar').classList.contains('hidden')&&$('hortaBar').querySelectorAll('button').length===8,'barra com as ferramentas da horta');
    const at=(c,r)=>{worldOut.x=GARDEN.gx+c*GARDEN.ts+GARDEN.ts/2;worldOut.y=GARDEN.gy+(r+1)*GARDEN.ts+30;worldOut.dx=0;worldOut.dy=-1;};
    document.dispatchEvent(new KeyboardEvent('keydown',{key:'3'}));check(h.tool==='alface','a tecla 3 escolhe a semente de alface');at(0,0);check(hortaTarget()?.i===0,'mira o canteiro à frente');interact();const t=h.tiles[0];check(t.crop==='alface'&&h.seeds.alface===4,'planta na mão, no canteiro escolhido');
    hortaSelectTool(1);h.can=1;interact();check(t.water===G.day&&h.can===0,'rega com o regador');at(1,0);interact();check(!h.tiles[1].crop,'só rega onde tem planta');hortaSelectTool(2);interact();hortaSelectTool(1);interact();check(h.tiles[1].water!==G.day,'regador vazio não rega');
    worldOut.x=GARDEN.well.x+55;worldOut.y=GARDEN.well.y+GARDEN.well.h+30;interact();check(h.can===CAN_MAX,'enche o regador no poço');
-   at(0,0);hortaSelectTool(6);interact();check(t.fert&&h.seeds.adubo===2,'aduba');const d=G.day;G.day++;hortaNewDay(d);check(cellReady(t),'regada e adubada: cresce o dobro e fica pronta');
+   at(0,0);hortaSelectTool(7);interact();check(t.fert&&h.seeds.adubo===2,'aduba');const d=G.day;G.day++;hortaNewDay(d);check(cellReady(t),'regada e adubada: cresce o dobro e fica pronta');
    G.stock.salada=0;interact();check(G.stock.salada===2&&!t.crop,'colhe com qualquer ferramenta: vira salada no estoque');
    const t1=h.tiles[1];hortaNewDay(G.day);hortaNewDay(G.day+1);check(!t1.crop&&t1.dead==='Alface','dois dias sem água: o canteiro seca');
-   worldOut.x=GARDEN.gate;worldOut.y=GARDEN.H-75;keys.add('s');simulate(.05);keys.clear();check(worldOut.map==='vila','sai pelo portão');check(hortaSeedCards().includes('Libere'),'mudas de árvore pedem a melhoria liberada');}
+   worldOut.x=GARDEN.gate;worldOut.y=GARDEN.H-75;keys.add('s');simulate(.05);keys.clear();check(worldOut.map==='vila','sai pelo portão');check(hortaSeedCards().includes('Libere'),'mudas de árvore pedem a melhoria liberada');
+   {G.cash=500;hortaDo('seed:erva');const e=hortaState().trees[3];worldOut.map='horta';worldOut.x=GARDEN.pits[3].x;worldOut.y=GARDEN.pits[3].y+60;worldOut.dx=0;worldOut.dy=-1;hortaSelectTool(6);interact();check(e.crop==='erva','planta o pé de erva-mate na cova');e.growth=CROPS.erva.days;G.stock.erva=0;interact();check(G.stock.erva===2000&&e.crop==='erva','a erveira dá 2 kg de erva e continua no pé');worldOut.map='vila';}}
   goInside();G.phase='open';}
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);
