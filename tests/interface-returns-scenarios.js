@@ -59,13 +59,16 @@
   {worldOut.map='vila';const ag=WORLD_MAPS.vila.spots().find(s=>s.id==='agro');worldOut.x=ag.x;worldOut.y=ag.y;interact();check(worldOut.map==='agro','entra no Armazém Querência');const cx=WORLD_MAPS.agro.spots().find(s=>s.id.startsWith('item:caixa'));worldOut.x=cx.x;worldOut.y=cx.y;interact();check(modal==='worldStore','no caixa abre a compra');
    G.cash=500;G.stock.erva=0;const c0=G.cash;storeBuy('erva');check(G.stock.erva>0&&G.cash<c0&&G.cash>c0-GOODS.erva.cost*GOODS.erva.pack,'compra no balcão entra na hora no estoque, mais barata');closeDialog(true);
    worldOut.map='gado';const h=G.herd||0;campeiroBuy('boi');check(G.herd===h+1&&modal==='worldStore','na Casa do Campeiro se compra boi');closeDialog(true);worldOut.map='vila';}
-  {G.horta=null;G.cash=500;hortaDo('seed:alface');hortaDo('seed:adubo');check(hortaState().seeds.alface===1&&hortaState().seeds.adubo===1,'sementes e adubo comprados no Armazém');
-   worldOut.map='vila';const sp=hortaSpots()[0];worldOut.x=sp.x;worldOut.y=sp.y;interact();check(modal==='horta','o canteiro abre o menu da horta');hortaDo('plant:0:alface');const pl=hortaState().plots[0];check(pl.crop==='alface'&&hortaState().seeds.alface===0,'planta alface no canteiro');
-   hortaDo('water:0');const d=G.day;G.day++;hortaNewDay(d);check(pl.growth===1,'regada, cresce um dia');hortaNewDay(G.day);check(pl.growth===1&&pl.dry===1,'sem água não cresce');
-   hortaDo('fert:0');hortaDo('water:0');const d2=G.day;G.day++;hortaNewDay(d2);check(plotReady(pl),'com adubo cresce o dobro e fica pronta');
-   G.stock.salada=0;hortaDo('harvest:0');check(G.stock.salada===6&&!pl.crop,'a colheita da alface vira salada no estoque');
-   hortaState().seeds.trigo=1;hortaDo('plant:1:trigo');const t=hortaState().plots[1];hortaNewDay(G.day-5);hortaNewDay(G.day-4);check(!t.crop&&t.dead==='Trigo','dois dias sem água: o canteiro seca');
-   check(hortaSeedCards().includes('Libere'),'mudas de árvore pedem a melhoria liberada');closeDialog(true);}
+  {G.horta=null;G.cash=500;hortaDo('seed:alface');hortaDo('seed:adubo');const h=hortaState();check(h.seeds.alface===5&&h.seeds.adubo===3,'sementes e adubo comprados no Armazém');
+   worldOut.map='vila';const hs=hortaSpots()[0];worldOut.x=hs.x;worldOut.y=hs.y;interact();check(worldOut.map==='horta','entra na tela da horta');refreshHUD();check(!$('hortaBar').classList.contains('hidden')&&$('hortaBar').querySelectorAll('button').length===7,'barra com as ferramentas da horta');
+   const at=(c,r)=>{worldOut.x=GARDEN.gx+c*GARDEN.ts+GARDEN.ts/2;worldOut.y=GARDEN.gy+(r+1)*GARDEN.ts+30;worldOut.dx=0;worldOut.dy=-1;};
+   document.dispatchEvent(new KeyboardEvent('keydown',{key:'3'}));check(h.tool==='alface','a tecla 3 escolhe a semente de alface');at(0,0);check(hortaTarget()?.i===0,'mira o canteiro à frente');interact();const t=h.tiles[0];check(t.crop==='alface'&&h.seeds.alface===4,'planta na mão, no canteiro escolhido');
+   hortaSelectTool(1);h.can=1;interact();check(t.water===G.day&&h.can===0,'rega com o regador');at(1,0);interact();check(!h.tiles[1].crop,'só rega onde tem planta');hortaSelectTool(2);interact();hortaSelectTool(1);interact();check(h.tiles[1].water!==G.day,'regador vazio não rega');
+   worldOut.x=GARDEN.well.x+55;worldOut.y=GARDEN.well.y+GARDEN.well.h+30;interact();check(h.can===CAN_MAX,'enche o regador no poço');
+   at(0,0);hortaSelectTool(6);interact();check(t.fert&&h.seeds.adubo===2,'aduba');const d=G.day;G.day++;hortaNewDay(d);check(cellReady(t),'regada e adubada: cresce o dobro e fica pronta');
+   G.stock.salada=0;interact();check(G.stock.salada===2&&!t.crop,'colhe com qualquer ferramenta: vira salada no estoque');
+   const t1=h.tiles[1];hortaNewDay(G.day);hortaNewDay(G.day+1);check(!t1.crop&&t1.dead==='Alface','dois dias sem água: o canteiro seca');
+   worldOut.x=GARDEN.gate;worldOut.y=GARDEN.H-75;keys.add('s');simulate(.05);keys.clear();check(worldOut.map==='vila','sai pelo portão');check(hortaSeedCards().includes('Libere'),'mudas de árvore pedem a melhoria liberada');}
   goInside();G.phase='open';}
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);

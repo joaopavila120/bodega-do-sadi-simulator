@@ -46,7 +46,7 @@ function enterInterior(id) { const M = WORLD_MAPS[id]; if (!M) return false; wor
 // ---------- Avisos: os da bodega ficam na bodega ----------
 // Fora da bodega, say() e showBanner() da bodega ficam em silêncio; o mundo aberto usa worldSay/worldBanner.
 let worldAway = null;
-function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world && !['worldStore', 'horta'].includes(modal); }
+function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world && modal !== 'worldStore'; }
 function worldSay(text) { say(text, { world: true }); }
 function worldBanner(title, text) { showBanner(title, text, 'info', { world: true }); }
 
@@ -109,12 +109,13 @@ function outsideTick(dt) {
 }
 function outsideInteract() {
   if (worldTalkOpen()) { worldTalkNext(); return; }
+  if (worldMap().interact?.()) return;
   const s = worldNearest(); if (!s) { effect('Chegue mais perto', worldOut.x, worldOut.y - 52); return; }
   if (s.act) s.act(); else if (s.house) houseVisit(s.house); else if (s.info) showInfo(s.label, s.text); else worldSay(s.text);
 }
 // A casa só se revela de perto; o morador, se não estiver na bodega, anda pela estrada.
 function houseVisit(id) { if (enterInterior('casa:' + id)) return; const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; worldSay(activeUniqueVisitors().has(i) ? PEOPLE[i].name + ' não está em casa: tá lá na bodega.' : worldWalkers.some(w => w.person === i) ? PEOPLE[i].name + ' não está em casa: deve estar andando pela estrada.' : 'Casa de ' + PEOPLE[i].name + ': ninguém atendeu. Em breve dá pra bater na porta e levar presente.'); }
-function outsideHint() { const s = worldNearest(); return s ? '<strong>E</strong> ' + s.label : worldMap().name + ' · WASD anda'; }
+function outsideHint() { const m = worldMap().hint?.(); if (m) return m; const s = worldNearest(); return s ? '<strong>E</strong> ' + s.label : worldMap().name + ' · WASD anda'; }
 
 // ---------- Desenho comum ----------
 function beginOutside(M) {
@@ -197,7 +198,7 @@ WORLD_MAPS.vila = {
   id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
   residents: ['valter', 'manolima', 'baitaca', 'guri', 'jayme'],
   walkLines: [[[620, 735], [1620, 735], [2600, 735], [3500, 735]], [[1620, 800], [1620, 1470], [1620, 2300]], [[620, 1470], [1620, 1470], [2700, 1470], [3500, 1470]]],
-  obstacles() { const V = VILA; return [V.bodega, V.cancha, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
+  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
   canWalk(x, y) {
     if (y < 130 || x > VILA.W + 20) return false;
     if (y > VILA.border - 20) return false;                          // rio Uruguai embaixo: fronteira com o Uruguai

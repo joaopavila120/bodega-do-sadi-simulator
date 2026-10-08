@@ -47,7 +47,7 @@ function updateContextActions(){
  $('enterCanchaButton').classList.toggle('hidden',!nearCanchaDoor()||!!G.task);
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
- $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();document.body.classList.toggle('world-out',!!worldOut);$('canchaExitButton').classList.toggle('hidden',worldOut?.map!=='cancha'||!!modal);
+ $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();updateHortaBar();document.body.classList.toggle('world-out',!!worldOut);$('canchaExitButton').classList.toggle('hidden',worldOut?.map!=='cancha'||!!modal);
  $('hint').classList.toggle('hidden',worldOut?false:!!(G.lasso||G.bocce||scene)||nearShopDoor()&&!G.task||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||!!scene||(phoneOpen&&!tutorialStockMissing().length)||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';

@@ -353,3 +353,11 @@ body.intro-playing .hud,body.intro-playing .game-sidebar,body.intro-playing .ban
 body.world-out #hands,body.world-out [data-act="drop"],body.world-out .context-button{display:none!important}
 .lamp-portrait{width:104px;height:104px;display:grid;place-items:center;font-size:64px;line-height:1;background:radial-gradient(circle at 50% 40%,#fff3b0,#e8b840 55%,#8a5a12);border-radius:4px}
 .store-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin:12px 0}.store-list .supply{margin:0}.store-list .supply .icon{font-size:32px;line-height:48px;text-align:center}
+/* Barra de ferramentas da horta */
+#hudLayer .horta-bar{position:absolute;left:50%;bottom:52px;transform:translateX(-50%);display:flex;gap:6px;padding:6px;background:#2b1d12e6;border:2px solid #d9b25e;border-radius:12px;box-shadow:0 6px 16px #0008}
+#hudLayer .horta-bar button{position:relative;min-width:58px;min-height:58px;padding:4px;display:grid;place-items:center;background:#4a3420;border:2px solid #7a5a32;border-radius:8px;color:#ffe8b8}
+#hudLayer .horta-bar button span{font-size:26px;line-height:1}
+#hudLayer .horta-bar button small{position:absolute;left:4px;top:2px;font-size:11px;color:#ffd96a}
+#hudLayer .horta-bar button em{font-style:normal;font-size:11px;font-weight:bold}
+#hudLayer .horta-bar button.on{background:#7a5a24;border-color:#ffd96a;box-shadow:0 0 0 2px #ffd96a66}
+@media(max-width:750px){#hudLayer .horta-bar button{min-width:40px;min-height:44px}#hudLayer .horta-bar button span{font-size:18px}}
