@@ -11,7 +11,7 @@ function refreshHUD(){
  setHTML($('hint'),hintText(nearest())??'');updateDialogue();updateFightUI();updateContextActions();
 }
 
-function say(text){const e=document.createElement('div');e.className='toast';e.textContent=text;e.title=text;$('toasts').replaceChildren(e);setTimeout(()=>e.remove(),5000);}
+function say(text,opts){if(bodegaNoticeMuted(opts))return;const e=document.createElement('div');e.className='toast';e.textContent=text;e.title=text;$('toasts').replaceChildren(e);setTimeout(()=>e.remove(),5000);}
 
 function effect(text,x,y,color='#fce59e'){sparks.push({text,x,y,life:2.2,color});}
 

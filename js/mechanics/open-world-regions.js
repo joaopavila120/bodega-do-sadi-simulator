@@ -121,6 +121,13 @@ function drawCampinho(c) {
   rect(c.x, c.y, c.w, c.h, '#5aa040', 2, '#f4f4f4'); ctx.strokeStyle = '#f4f4f4'; ctx.lineWidth = 4; ctx.strokeRect(c.x + 10, c.y + 10, c.w - 20, c.h - 20); ctx.beginPath(); ctx.moveTo(c.x + c.w / 2, c.y + 10); ctx.lineTo(c.x + c.w / 2, c.y + c.h - 10); ctx.stroke(); ctx.beginPath(); ctx.arc(c.x + c.w / 2, c.y + c.h / 2, 50, 0, Math.PI * 2); ctx.stroke();
   for (const gx of [c.x + 4, c.x + c.w - 16]) rect(gx, c.y + c.h / 2 - 50, 12, 100, 'rgba(255,255,255,.5)', 2, '#f4f4f4'); ellipse(c.x + c.w / 2 + Math.sin(frameClock * 2) * 120, c.y + c.h / 2 + Math.cos(frameClock * 1.3) * 60, 9, 9, '#f8f8f8'); signBoard(c.x + c.w / 2, c.y - 50, 220, 'SHOW DE BOLA', 13);
 }
+// Monumento: pedestal de pedra, figuras de bronze e a placa com a data.
+function drawMonument(m, plaque, stone, figures) {
+  const cx = m.x + m.w / 2, base = m.y + m.h, b = '#6a5a3a';
+  ellipse(cx, base - 4, m.w / 2 + 16, 14, 'rgba(40,30,20,.3)'); rect(m.x, base - 50, m.w, 50, stone, 3, '#4a4038'); rect(m.x + 10, base - 70, m.w - 20, 24, stone, 2, '#4a4038');
+  for (let k = 0; k < figures; k++) { const x = cx + (k - (figures - 1) / 2) * 26, h = k === 2 ? 34 : 54; rect(x - 8, base - 70 - h, 16, h, b); ellipse(x, base - 78 - h, 8, 9, b); }
+  rect(m.x + 14, base - 40, m.w - 28, 18, '#c8a860', 2); txt(plaque, cx, base + 14, 11, '#3a2a1a', 'center', 'Georgia');
+}
 function forestEdge(M, roadX, roadW) { rect(0, 0, M.W, 110, '#2f5a2a'); for (let x = 0; x < M.W; x += 70) ellipse(x + 35, 110, 50, 30, '#3a6a32'); poly([[roadX - 10, 110], [roadX + roadW + 10, 110], [roadX + roadW / 2 + 16, 0], [roadX + roadW / 2 - 16, 0]], '#b08a58'); }
 // Mapa de região: tamanho, obstáculos, lugares para o E, desenho e as saídas.
 function regionMap(def) { return { ...def, canWalk(x, y) { if (x < -30 || y < -30 || x > def.W + 30 || y > def.H + 30) return false; if (def.blocked?.(x, y)) return false; return !hitRect(def.obstacles, x, y); } }; }
@@ -133,12 +140,15 @@ const SERRA = { W: 3600, H: 2600, roadY: 940, roadH: 90, roadX: 1760, roadW: 80,
   vines: [{ x: 120, y: 500, w: 340, h: 340 }, { x: 900, y: 520, w: 440, h: 300 }, { x: 160, y: 2100, w: 600, h: 320 }, { x: 2500, y: 2150, w: 520, h: 300 }],
   estacao: { x: 300, y: 1140, w: 300, h: 150 }, igreja: { x: 700, y: 1260, w: 300, h: 360 }, praca: { x: 1080, y: 1250, w: 560, h: 420 }, salao: { x: 1900, y: 1320, w: 560, h: 240 },
   campinho: { x: 2560, y: 1180, w: 400, h: 260 }, vinicola: { x: 2500, y: 1640, w: 380, h: 220 }, galeteria: { x: 3080, y: 1660, w: 340, h: 210 },
-  capiteis: [{ x: 1420, y: 600, w: 70, h: 90 }, { x: 3300, y: 940 - 120, w: 70, h: 90 }], enx: { x: 1900, y: 190, w: 230, h: 170 }
+  capiteis: [{ x: 1420, y: 600, w: 70, h: 90 }, { x: 3300, y: 940 - 120, w: 70, h: 90 }], enx: { x: 1900, y: 190, w: 230, h: 170 },
+  italianos: { x: 2620, y: 640, w: 110, h: 130 }, alemaes: { x: 1420, y: 2160, w: 110, h: 130 }
 };
 SERRA.coreto = { x: SERRA.praca.x + SERRA.praca.w / 2 - 80, y: SERRA.praca.y + SERRA.praca.h / 2 - 80, w: 160, h: 140 };
-SERRA.obstacles = [SERRA.badin, SERRA.casona, SERRA.gaudencio, SERRA.mito, SERRA.dianho, ...SERRA.vines, SERRA.estacao, SERRA.igreja, SERRA.coreto, SERRA.salao, SERRA.vinicola, SERRA.galeteria, ...SERRA.capiteis, SERRA.enx];
+SERRA.obstacles = [SERRA.badin, SERRA.casona, SERRA.gaudencio, SERRA.mito, SERRA.dianho, ...SERRA.vines, SERRA.estacao, SERRA.igreja, SERRA.coreto, SERRA.salao, SERRA.vinicola, SERRA.galeteria, ...SERRA.capiteis, SERRA.enx, SERRA.italianos, SERRA.alemaes];
 WORLD_MAPS.serra = regionMap({
   id: 'serra', name: 'Serra Gaúcha', W: SERRA.W, H: SERRA.H, obstacles: SERRA.obstacles,
+  residents: ['badin', 'marcio', 'marcelo', 'gaudencio', 'mitodosul', 'dianho'],
+  walkLines: [[[80, 985], [900, 985], [1800, 985], [2700, 985], [3520, 985]], [[1800, 150], [1800, 985], [1800, 1700], [1800, 2450]]],
   blocked(x, y) { const S = SERRA, cx = S.roadX + S.roadW / 2; if (y < 110 && Math.abs(x - cx) > 36) return true; return y > S.arroio - 10 && y < S.arroio + 64 && Math.abs(x - cx) > 60; },
   // Pela esquerda volta à Fronteira; subindo pela estrada, Santa Catarina.
   edge(p) {
@@ -147,11 +157,14 @@ WORLD_MAPS.serra = regionMap({
     return null;
   },
   spots() { const S = SERRA; return [
-    { id: 'house:badin', ...front(S.badin), label: 'Casa de pedra do Badin', house: 'badin' },
-    { id: 'house:marcio', ...front(S.casona), label: 'Casona · Márcio e Marcelo', house: 'marcio' },
-    { id: 'house:gaudencio', ...front(S.gaudencio), label: 'Rancho do Gaudêncio', house: 'gaudencio' },
-    { id: 'house:mitodosul', ...front(S.mito), label: 'Casa do Mito do Sul', house: 'mitodosul' },
-    { id: 'house:dianho', ...front(S.dianho), label: 'Casa do Dianho', house: 'dianho' },
+    { id: 'house:badin', ...front(S.badin), label: 'Casa de pedra de Badin', house: 'badin' },
+    { id: 'italianos', ...front(S.italianos, 24), label: 'Monumento ao imigrante italiano', text: 'Imigração italiana: a partir de 1875, famílias vindas principalmente do Vêneto subiram a Serra Gaúcha. Abriram picadas no mato, plantaram parreirais e fundaram as colônias que viraram Caxias do Sul, Bento Gonçalves e Garibaldi.' },
+    { id: 'alemaes', ...front(S.alemaes, 24), label: 'Monumento ao imigrante alemão', text: 'Imigração alemã: em 25 de julho de 1824, as primeiras famílias alemãs chegaram às margens do rio dos Sinos e fundaram São Leopoldo. Depois vieram outras colônias de pequenas propriedades, como Santa Cruz do Sul.' },
+    { id: 'farroupilha', x: S.praca.x + 66, y: S.praca.y + S.praca.h / 2 + 10, label: 'Bandeira do Rio Grande', text: 'Revolução Farroupilha (1835–1845): os farrapos enfrentaram o Império por dez anos, e a bandeira tricolor do Rio Grande nasceu nessa luta. Todo 20 de setembro o gaúcho comemora a data.' },
+    { id: 'house:marcio', ...front(S.casona), label: 'Casona de Márcio e Marcelo', house: 'marcio' },
+    { id: 'house:gaudencio', ...front(S.gaudencio), label: 'Rancho de Gaudêncio', house: 'gaudencio' },
+    { id: 'house:mitodosul', ...front(S.mito), label: 'Casa de Mito do Sul', house: 'mitodosul' },
+    { id: 'house:dianho', ...front(S.dianho), label: 'Casa de Dianho', house: 'dianho' },
     { id: 'campinho', x: S.campinho.x + S.campinho.w / 2, y: S.campinho.y + S.campinho.h + 24, label: 'Campinho · show de bola', text: 'O campinho dos gêmeos: aqui é show de bola. Em breve, um racha no domingo à tarde.' },
     { id: 'estacao', ...front(S.estacao), label: 'Estação da Maria Fumaça', text: 'Maria Fumaça: o trem a vapor que corre entre os vinhedos, com apito, vinho e música italiana.' },
     { id: 'igreja', ...front(S.igreja), label: 'Igreja da comunidade', text: 'Igreja da comunidade, com o campanário: em breve, a missa de domingo e a festa do padroeiro.' },
@@ -171,12 +184,14 @@ WORLD_MAPS.serra = regionMap({
     drawArroio(this, S.arroio, cx);
     for (const v of S.vines) add(v, () => drawVineyard(v));
     for (const c of S.capiteis) add(c, () => drawCapitel(c));
-    add(S.badin, () => drawStoneHouse(S.badin, 'Casa de pedra do Badin')); ownerAtDoor(layers, S.badin, 'badin', seen);
-    add(S.casona, () => drawCasona(S.casona, 'Casona · Márcio e Marcelo')); ownerAtDoor(layers, S.casona, 'marcio', seen); ownerAtDoor(layers, { ...S.casona, x: S.casona.x + 70 }, 'marcelo', seen);
-    add(S.gaudencio, () => worldHouse(S.gaudencio, 'Rancho do Gaudêncio', S.gaudencio)); ownerAtDoor(layers, S.gaudencio, 'gaudencio', seen);
-    add(S.mito, () => worldHouse(S.mito, 'Casa do Mito do Sul', S.mito)); ownerAtDoor(layers, S.mito, 'mitodosul', seen);
-    add(S.dianho, () => drawEnxaimel(S.dianho, 'Casa do Dianho')); ownerAtDoor(layers, S.dianho, 'dianho', seen);
+    add(S.badin, () => drawStoneHouse(S.badin, null));
+    add(S.casona, () => drawCasona(S.casona, 'CASONA'));
+    add(S.gaudencio, () => worldHouse(S.gaudencio, null, S.gaudencio));
+    add(S.mito, () => worldHouse(S.mito, null, S.mito));
+    add(S.dianho, () => drawEnxaimel(S.dianho, null));
     add(S.enx, () => drawEnxaimel(S.enx));
+    add(S.italianos, () => drawMonument(S.italianos, 'IMIGRANTE ITALIANO · 1875', '#8a7a5a', 2));
+    add(S.alemaes, () => drawMonument(S.alemaes, 'IMIGRANTE ALEMÃO · 1824', '#7a7a70', 3));
     layers.push({ y: S.campinho.y, draw: () => drawCampinho(S.campinho) });
     add(S.estacao, () => { const s = S.estacao; gable(s.x, s.y + 10, s.w, 50, '#7a3a24', 16); rect(s.x, s.y + 56, s.w, s.h - 56, '#f0d8a8', 0, '#6a5a3a'); for (const x of [s.x + 20, s.x + s.w - 70]) windowPane(x, s.y + 74, 50, 40); rect(s.x + s.w / 2 - 20, s.y + s.h - 60, 40, 60, '#6a4424'); signBoard(s.x + s.w / 2, s.y + 20, 220, 'ESTAÇÃO · MARIA FUMAÇA', 12); });
     add(S.igreja, () => drawIgreja(S.igreja));
@@ -191,16 +206,18 @@ WORLD_MAPS.serra = regionMap({
 
 // =================== MAPA 3 · SANTA CATARINA (Vale Europeu) ===================
 const SC = { W: 3000, H: 2000, roadX: 1460, roadW: 80, streetY: 960, streetH: 80,
-  houses: [{ id: 'lauro', x: 300, y: 1150, w: 280, h: 200, label: 'Casa do Lauro' }, { id: 'indavirus', x: 700, y: 640, w: 280, h: 210, label: 'Casa do Indavírus' },
-    { id: 'peixinhonabrasa', x: 1700, y: 1180, w: 270, h: 200, label: 'Casa do Peixinho na Brasa' }, { id: 'loligebien', x: 2100, y: 1160, w: 280, h: 210, label: 'Casa do Loli Gebien' },
-    { id: 'jayme', x: 2060, y: 640, w: 270, h: 200, label: 'Casa do Jayme Caetano Braun', rancho: true }],
+  houses: [{ id: 'lauro', x: 300, y: 1150, w: 280, h: 200, label: 'Casa de Lauro' }, { id: 'indavirus', x: 700, y: 640, w: 280, h: 210, label: 'Casa de Indavírus' },
+    { id: 'peixinhonabrasa', x: 1700, y: 1180, w: 270, h: 200, label: 'Casa de Peixinho na Brasa' }, { id: 'loligebien', x: 2100, y: 1160, w: 280, h: 210, label: 'Casa de Loli Gebien' },
+    { id: 'jayme', x: 2060, y: 640, w: 270, h: 200, label: 'Casa de Jayme Caetano Braun', rancho: true }],
   enx: [{ x: 300, y: 640, w: 240, h: 200 }, { x: 1700, y: 640, w: 240, h: 200 }],
   cafe: { x: 2420, y: 640, w: 320, h: 220 }, luterana: { x: 1100, y: 320, w: 260, h: 300 }, bolao: { x: 2450, y: 1220, w: 420, h: 150 },
-  festa: { x: 660, y: 1200, w: 380, h: 170 }, ostern: { x: 1100, y: 1160, w: 260, h: 260 }, canchaLauro: { x: 300, y: 1450, w: 280, h: 110 }, grelha: { x: 1990, y: 1300, w: 70, h: 60 }
+  festa: { x: 660, y: 1200, w: 380, h: 170 }, ostern: { x: 1100, y: 1160, w: 260, h: 260 }, canchaLauro: { x: 300, y: 1450, w: 280, h: 110 }, grelha: { x: 1990, y: 1300, w: 70, h: 60 }, marco: { x: 1600, y: 1600, w: 110, h: 130 }
 };
-SC.obstacles = [...SC.houses, ...SC.enx, SC.cafe, SC.luterana, SC.bolao, SC.festa, { x: SC.ostern.x + 100, y: SC.ostern.y + 100, w: 60, h: 60 }, SC.canchaLauro, SC.grelha];
+SC.obstacles = [...SC.houses, ...SC.enx, SC.cafe, SC.luterana, SC.bolao, SC.festa, { x: SC.ostern.x + 100, y: SC.ostern.y + 100, w: 60, h: 60 }, SC.canchaLauro, SC.grelha, SC.marco];
 WORLD_MAPS.sc = regionMap({
   id: 'sc', name: 'Santa Catarina · Vale Europeu', W: SC.W, H: SC.H, obstacles: SC.obstacles,
+  residents: ['lauro', 'indavirus', 'peixinhonabrasa', 'loligebien', 'jayme'],
+  walkLines: [[[240, 1000], [900, 1000], [1500, 1000], [2100, 1000], [2760, 1000]], [[1500, 1060], [1500, 1500], [1500, 1880]]],
   edge(p) { if (p.y > SC.H - 10) return { map: 'serra', x: SERRA.roadX + SERRA.roadW / 2, y: 70, title: 'Serra Gaúcha', text: 'De volta ao Rio Grande.' }; return null; },
   spots() { const P = SC; return [
     ...P.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: h.label, house: h.id })),
@@ -210,6 +227,7 @@ WORLD_MAPS.sc = regionMap({
     { id: 'festa', ...front(P.festa), label: 'Festa Pomerana', text: 'Festa Pomerana: chope, bandinha, marreco recheado e baile, como na Kerb dos colonos.' },
     { id: 'ostern', ...front(P.ostern, 0), label: 'Osterbaum', text: 'Osterbaum: a árvore de Páscoa enfeitada com casquinhas de ovo pintadas, orgulho de Pomerode.' },
     { id: 'canchaLauro', ...front(P.canchaLauro, 20), label: 'Cancha do Lauro', text: 'A canchinha do Lauro Boleador: é aqui que ele treina o jogo de bocha que te ensinou.' },
+    { id: 'marco', ...front(P.marco, 24), label: 'Marco do Vale Europeu', text: 'Vale Europeu: Blumenau foi fundada em 1850 por Hermann Blumenau, e dela nasceram cidades como Pomerode e Indaial. Muitos colonos vieram da Pomerânia, que deu nome a Pomerode.' },
     { id: 'grelha', ...front(P.grelha, 20), label: 'Brasa do Peixinho', text: 'A brasa do Peixinho: peixe na grelha e uma Kaiser gelada na mão.' }
   ]; },
   lights() { return [...SC.houses.map(h => [h.x + 44, h.y + 100]), [SC.cafe.x + 60, SC.cafe.y + 100], [SC.festa.x + SC.festa.w / 2, SC.festa.y + 90]]; },
@@ -219,7 +237,8 @@ WORLD_MAPS.sc = regionMap({
     rect(0, 0, P.W, 200, '#2f5a2a'); for (let x = 0; x < P.W; x += 80) { ellipse(x + 40, 200, 56, 34, '#3a6a32'); ellipse(x + 10, 150, 40, 70, '#2a5028'); }
     road(P.roadX, P.streetY, P.roadW, P.H - P.streetY, '#a8a49a', '#8a8680'); road(200, P.streetY, P.W - 400, P.streetH, '#a8a49a', '#8a8680');
     for (let x = 210; x < P.W - 200; x += 30) rect(x, P.streetY + P.streetH / 2 - 2, 16, 4, '#d8d4c8');
-    for (const h of P.houses) { add(h, () => h.rancho ? worldHouse(h, h.label, { wall: '#efe6d2', roof: '#b89a58' }) : drawEnxaimel(h, h.label)); ownerAtDoor(layers, h, h.id, seen); }
+    for (const h of P.houses) add(h, () => h.rancho ? worldHouse(h, null, { wall: '#efe6d2', roof: '#b89a58' }) : drawEnxaimel(h, null));
+    add(P.marco, () => drawMonument(P.marco, 'VALE EUROPEU · 1850', '#7a7a70', 1));
     for (const h of P.enx) add(h, () => drawEnxaimel(h));
     add(P.cafe, () => { drawEnxaimel(P.cafe); rect(P.cafe.x + 30, P.cafe.y + 20, P.cafe.w - 60, 28, '#f4ecd8', 3, '#3a2414'); txt('CAFÉ COLONIAL · CUCA E CHIMIA', P.cafe.x + P.cafe.w / 2, P.cafe.y + 34, 12, '#5a2a14', 'center', 'Georgia'); });
     add(P.luterana, () => drawLuterana(P.luterana)); add(P.bolao, () => drawBolao(P.bolao));

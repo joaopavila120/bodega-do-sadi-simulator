@@ -4,7 +4,8 @@
 
 // ---------- Avisos em destaque ----------
 let bannerQueue=[],bannerTimer=null;
-function showBanner(title,subtitle='',kind='info'){
+function showBanner(title,subtitle='',kind='info',opts){
+ if(bodegaNoticeMuted(opts))return;
  bannerQueue.push({title,subtitle,kind});if(!bannerTimer)nextBanner();
 }
 function nextBanner(){

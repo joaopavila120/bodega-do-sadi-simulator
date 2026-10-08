@@ -9,7 +9,7 @@ let worldOut = null, worldTufts = {};
 function worldTestOn() { return true; }
 function worldMap() { return WORLD_MAPS[worldOut?.map || 'vila']; }
 function worldCanWalk(x, y) { return worldMap().canWalk(x, y); }
-function worldNearest() { const p = worldOut; if (!p) return null; let best = null, bd = 90; for (const s of worldMap().spots()) { const d = Math.hypot(s.x - p.x, s.y - p.y); if (d < bd) { bd = d; best = s; } } return best; }
+function worldNearest() { const p = worldOut; if (!p) return null; let best = null, bd = 90; for (const s of [...walkerSpots(), ...worldMap().spots()]) { const d = Math.hypot(s.x - p.x, s.y - p.y); if (d < bd) { bd = d; best = s; } } return best; }
 const front = (r, dy = 30) => ({ x: r.x + r.w / 2, y: r.y + r.h + dy });
 const hitRect = (rects, x, y) => rects.some(r => x + 12 > r.x && x - 12 < r.x + r.w && y > r.y && y - 10 < r.y + r.h);
 
@@ -20,11 +20,14 @@ function doorMenu() {
 }
 function goOutside(at) {
   closeDialog(true); if (phoneOpen) togglePhone(false); keys.clear();
-  worldOut = { map: 'vila', ...(at || front(VILA.bodega, 70)), dx: 0, dy: 1, walk: false };
-  AudioEngine.doorChime(); if (!at) showBanner('Pátio da bodega', G.phase === 'open' ? 'A bodega segue aberta: fregueses podem chegar e esperar no balcão.' : 'Pela estrada à direita, a Serra Gaúcha; descendo, a fronteira com o Uruguai.', 'info'); refreshHUD();
+  worldOut = { map: 'vila', ...(at || front(VILA.bodega, 70)), dx: 0, dy: 1, walk: false }; worldAway = { lost: G.stats.lost || 0 };
+  AudioEngine.doorChime(); if (!at) worldBanner('Pátio da bodega', 'Pela estrada à direita, a Serra Gaúcha; descendo, a fronteira com o Uruguai.'); refreshHUD();
 }
 function goInside() {
-  worldOut = null; keys.clear(); G.player = { x: ENTRY.x, y: ENTRY.y - 40, dx: 0, dy: -1, walk: false }; AudioEngine.doorChime(); refreshHUD();
+  worldOut = null; showRpgBox('worldTalk', null); keys.clear(); G.player = { x: ENTRY.x, y: ENTRY.y - 40, dx: 0, dy: -1, walk: false }; AudioEngine.doorChime(); refreshHUD();
+  // O que aconteceu na bodega enquanto o peão estava fora vira um resumo só na volta.
+  const lost = (G.stats.lost || 0) - (worldAway?.lost ?? G.stats.lost ?? 0); worldAway = null;
+  if (lost > 0) say('Enquanto você estava fora, ' + lost + (lost > 1 ? ' fregueses foram embora' : ' freguês foi embora') + ' sem atendimento.');
   // Presentes que chegaram enquanto o peão estava fora são entregues quando ele volta.
   if (G.phase === 'closed' && G.giftQueue?.length && !G.challengeVisit) startGiftVisit();
 }
@@ -32,20 +35,74 @@ function goInside() {
 function canchaToPatio() { leaveCancha(true); goOutside(front(VILA.cancha, 40)); }
 // Botão na tela dentro da cancha: a única opção é sair para o pátio.
 function canchaExit() { if (worldOut?.map !== 'cancha') return; switchMap({ map: 'vila', ...front(VILA.cancha, 40), title: 'Pátio da bodega', text: '' }); refreshHUD(); }
-function switchMap(to) { worldOut.map = to.map; worldOut.x = to.x; worldOut.y = to.y; keys.clear(); AudioEngine.swoosh(.04); showBanner(to.title, to.text || '', 'info'); }
+function switchMap(to) { worldOut.map = to.map; worldOut.x = to.x; worldOut.y = to.y; keys.clear(); showRpgBox('worldTalk', null); AudioEngine.swoosh(.04); worldBanner(to.title, to.text || ''); }
+
+// ---------- Avisos: os da bodega ficam na bodega ----------
+// Fora da bodega, say() e showBanner() da bodega ficam em silêncio; o mundo aberto usa worldSay/worldBanner.
+let worldAway = null;
+function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world; }
+function worldSay(text) { say(text, { world: true }); }
+function worldBanner(title, text) { showBanner(title, text, 'info', { world: true }); }
+
+// ---------- Gente na estrada ----------
+// Cada mapa tem seus moradores, que andam pelas ruas quando não estão na bodega. E puxa uma prosa.
+let worldWalkers = [], worldWalkersKey = '';
+function walkerPos(w) { const a = w.line[w.seg], b = w.line[w.seg + 1]; return { a, b }; }
+function spawnWalkers(M) {
+  worldWalkersKey = M.id + ':' + G.day; worldWalkers = [];
+  const free = (M.residents || []).map(id => PEOPLE.findIndex(p => p.id === id)).filter(i => i >= 0 && !activeUniqueVisitors().has(i));
+  const count = Math.min(free.length, 2 + Math.floor(Math.random() * 2));
+  for (const i of free.sort(() => Math.random() - .5).slice(0, count)) {
+    const line = pick(M.walkLines), seg = Math.floor(Math.random() * (line.length - 1)), k = Math.random(), a = line[seg], b = line[seg + 1];
+    worldWalkers.push({ person: i, line, seg, dir: 1, x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k, wait: Math.random() * 3, dx: 1, walk: false });
+  }
+}
+function walkersTick(dt) {
+  const M = worldMap(); if (!M.walkLines) { worldWalkers = []; return; }
+  if (worldWalkersKey !== M.id + ':' + G.day) spawnWalkers(M);
+  worldWalkers = worldWalkers.filter(w => !activeUniqueVisitors().has(w.person));
+  for (const w of worldWalkers) {
+    const near = Math.hypot(w.x - worldOut.x, w.y - worldOut.y) < 120 && worldTalkOpen();
+    if (w.wait > 0 || near) { w.wait = Math.max(0, w.wait - dt); w.walk = false; if (near) w.dx = worldOut.x > w.x ? 1 : -1; continue; }
+    const target = w.line[w.seg + (w.dir > 0 ? 1 : 0)], d = Math.hypot(target[0] - w.x, target[1] - w.y), step = 70 * dt;
+    if (d <= step) { w.x = target[0]; w.y = target[1]; w.seg += w.dir; if (w.seg < 0 || w.seg >= w.line.length - 1) { w.dir = -w.dir; w.seg = clamp(w.seg, 0, w.line.length - 2); } if (Math.random() < .4) w.wait = 1 + Math.random() * 3; w.walk = false; continue; }
+    w.dx = target[0] > w.x ? 1 : target[0] < w.x ? -1 : w.dx; w.x += (target[0] - w.x) / d * step; w.y += (target[1] - w.y) / d * step; w.walk = true;
+  }
+}
+function walkerSpots() { return worldWalkers.map(w => ({ id: 'walker:' + w.person, x: w.x, y: w.y, label: 'Prosear com ' + PEOPLE[w.person].name, act: () => worldTalk(w) })); }
+
+// Prosa na estrada: primeiro a fala do Sadi, depois a resposta. Até 3 por dia com cada um; cada uma aumenta a amizade.
+const WORLD_TALKS_PER_DAY = 3;
+function worldTalkOpen() { return !$('worldTalkUI')?.classList.contains('hidden'); }
+function worldTalk(w) {
+  const i = w.person, id = PEOPLE[i].id, name = PEOPLE[i].name;
+  if (G.worldTalks?.day !== G.day) G.worldTalks = { day: G.day, count: {} };
+  const n = G.worldTalks.count[id] || 0, lines = WORLD_TALK[id] || [];
+  w.wait = 4; w.dx = worldOut.x > w.x ? 1 : -1;
+  if (n >= WORLD_TALKS_PER_DAY || !lines.length) { showRpgBox('worldTalk', { person: i, name, reply: pick(WORLD_TALK_TIRED) }); return; }
+  G.worldTalks.count[id] = n + 1;
+  const line = lines[(n + G.day * 2) % lines.length];
+  showRpgBox('worldTalk', { person: i, name, player: line.player, reply: line.reply });
+  addFriendship(i, 2); effect('♥ amizade', w.x, w.y - 160, '#ffb3c8'); AudioEngine.tick(); save();
+}
+function worldTalkNext() { if (!rpgAdvance('worldTalk')) showRpgBox('worldTalk', null); }
 
 function outsideTick(dt) {
-  const p = worldOut; let dx = (keys.has('d') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('a') || keys.has('ArrowLeft') ? 1 : 0), dy = (keys.has('s') || keys.has('ArrowDown') ? 1 : 0) - (keys.has('w') || keys.has('ArrowUp') ? 1 : 0);
+  const p = worldOut; walkersTick(dt);
+  if (worldTalkOpen() && worldWalkers.every(w => Math.hypot(w.x - p.x, w.y - p.y) > 220)) showRpgBox('worldTalk', null);
+  let dx = (keys.has('d') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('a') || keys.has('ArrowLeft') ? 1 : 0), dy = (keys.has('s') || keys.has('ArrowDown') ? 1 : 0) - (keys.has('w') || keys.has('ArrowUp') ? 1 : 0);
   const len = Math.hypot(dx, dy); p.walk = !!len; if (!len) return;
   dx /= len; dy /= len; p.dx = dx; p.dy = dy; const step = BASE_SPEED * 1.4 * (1 + movementBonus()) * dt;
   for (let n = 0; n < 4; n++) { const x = p.x + dx * step / 4, y = p.y + dy * step / 4; if (worldCanWalk(x, p.y)) p.x = x; if (worldCanWalk(p.x, y)) p.y = y; }
   const to = worldMap().edge?.(p); if (to) switchMap(to);
 }
 function outsideInteract() {
+  if (worldTalkOpen()) { worldTalkNext(); return; }
   const s = worldNearest(); if (!s) { effect('Chegue mais perto', worldOut.x, worldOut.y - 52); return; }
-  if (s.act) s.act(); else if (s.house) houseVisit(s.house); else say(s.text);
+  if (s.act) s.act(); else if (s.house) houseVisit(s.house); else worldSay(s.text);
 }
-function houseVisit(id) { const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; say(activeUniqueVisitors().has(i) ? PEOPLE[i].name + ' não está em casa: tá lá na bodega.' : 'Casa do ' + PEOPLE[i].name + ': em breve dá pra bater na porta, prosear e levar presente.'); }
+// A casa só se revela de perto; o morador, se não estiver na bodega, anda pela estrada.
+function houseVisit(id) { const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; worldSay(activeUniqueVisitors().has(i) ? PEOPLE[i].name + ' não está em casa: tá lá na bodega.' : worldWalkers.some(w => w.person === i) ? PEOPLE[i].name + ' não está em casa: deve estar andando pela estrada.' : 'Casa de ' + PEOPLE[i].name + ': ninguém atendeu. Em breve dá pra bater na porta e levar presente.'); }
 function outsideHint() { const s = worldNearest(); return s ? '<strong>E</strong> ' + s.label : worldMap().name + ' · WASD anda'; }
 
 // ---------- Desenho comum ----------
@@ -63,6 +120,7 @@ function drawOutside() {
   const M = worldMap(), view = beginOutside(M), seen = (x, y, m = 300) => x > view.x - m && x < view.x + view.w + m && y > view.y - m && y < view.y + view.h + m;
   const layers = [];
   M.draw(view, seen, layers);
+  for (const w of worldWalkers) if (seen(w.x, w.y)) layers.push({ y: w.y, draw: () => personDraw(PEOPLE[w.person].sprite, w.x, w.y, w.walk, false, w.dx) });
   layers.push({ y: worldOut.y, draw: () => personDraw(avatarSprite(), worldOut.x, worldOut.y, worldOut.walk, true, worldOut.dx) });
   layers.sort((a, b) => a.y - b.y).forEach(l => l.draw());
   const night = G.phase === 'closed' ? .5 : G.phase === 'open' ? clamp((G.elapsed / DAY - .7) * 1.2, 0, .35) : 0;
@@ -97,7 +155,6 @@ function worldHouse(h, name, style = {}) {
   for (const x of [h.x + 26, h.x + h.w - 76]) windowPane(x, h.y + 96, 50, 40);
   if (name) signBoard(h.x + h.w / 2, h.y + h.h + 6, Math.max(160, h.w - 40), name, 13);
 }
-function ownerAtDoor(layers, h, id, seen) { const i = PEOPLE.findIndex(p => p.id === id); if (i >= 0 && !activeUniqueVisitors().has(i) && seen(h.x, h.y)) layers.push({ y: h.y + h.h + 70, draw: () => personDraw(PEOPLE[i].sprite, h.x + h.w + 40, h.y + h.h + 70, false, false, -1) }); }
 // Araucária, ipê-amarelo, jacarandá e árvore comum.
 function drawWorldTree(x, y, kind) {
   ellipse(x, y + 4, 40, 10, '#1c140c44');
@@ -107,7 +164,8 @@ function drawWorldTree(x, y, kind) {
 }
 
 // =================== MAPA 1 · FRONTEIRA (onde fica a bodega) ===================
-// Bodega, cancha de bocha, a agropecuária (coisas para a horta) e a loja do campo (coisas para o gado).
+// Bodega, cancha de bocha, o Armazém Querência (produtos para agricultura) e a Casa do Campeiro (produtos para pecuária),
+// as ruínas das Missões e um pouso de tropeiros.
 // Moram aqui o Valter, o Mano Lima, o Baitaca e o Guri, este na beira da fronteira com o Uruguai.
 const VILA = {
   W: 3600, H: 2700, river: 540, border: 2380, roadY: 690, roadH: 90, roadX: 1580,
@@ -116,14 +174,17 @@ const VILA = {
   agro: { x: 1720, y: 1080, w: 440, h: 260 }, gado: { x: 2380, y: 1080, w: 440, h: 260 },
   houses: [{ id: 'valter', x: 700, y: 1150, w: 260, h: 190, wall: '#c9b58a', roof: '#9a4a32' }, { id: 'manolima', x: 900, y: 1700, w: 270, h: 190, wall: '#d8c9a2', roof: '#7a3a2a' },
     { id: 'baitaca', x: 2700, y: 1700, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }, { id: 'guri', x: 1900, y: 2110, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' }],
-  marco: { x: 1500, y: 2250, w: 40, h: 60 }
+  marco: { x: 1500, y: 2250, w: 40, h: 60 },
+  missoes: { x: 2940, y: 980, w: 440, h: 300 }, pouso: { x: 2160, y: 1620, w: 340, h: 190 }
 };
-const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [3520, 820, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2500, 2200, 'a'], [1100, 2230, 'a'], [3100, 1250, 'a'], [1400, 1250, 'ipe'], [2250, 1650, 'jaca']];
+const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [3520, 820, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2500, 2200, 'a'], [1100, 2230, 'a'], [3100, 1250, 'a'], [1400, 1250, 'ipe'], [2600, 1560, 'jaca']];
 const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [VILA.roadX, VILA.roadY, 80, VILA.border - VILA.roadY], [VILA.river, 1440, VILA.W - VILA.river, 60]];
 
 WORLD_MAPS.vila = {
   id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
-  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, ...V.houses]; },
+  residents: ['valter', 'manolima', 'baitaca', 'guri'],
+  walkLines: [[[620, 735], [1620, 735], [2600, 735], [3500, 735]], [[1620, 800], [1620, 1470], [1620, 2300]], [[620, 1470], [1620, 1470], [2700, 1470], [3500, 1470]]],
+  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, ...V.houses]; },
   canWalk(x, y) {
     if (y < 130 || x > VILA.W + 20) return false;
     if (y > VILA.border - 20) return false;                          // rio Uruguai embaixo: fronteira com o Uruguai
@@ -139,13 +200,15 @@ WORLD_MAPS.vila = {
       { id: 'door', ...front(V.bodega), label: 'Entrar na bodega', act: goInside },
       { id: 'cancha', ...front(V.cancha), label: 'Entrar na cancha de bocha', act: () => { const was = worldOut; worldOut = null; enterCancha(true); if (!worldOut) worldOut = was; } },
       { id: 'horta', ...front(V.horta), label: G.up.bergamota ? 'Horta e pomar de bergamota' : 'Horta e pomar', text: G.up.bergamota ? 'Pomar de bergamota: é dele que sai a bergamota vendida no balcão. Em breve dá para colher na mão.' : 'Horta e pomar da bodega: em breve dá para plantar, regar e colher. As sementes vêm da agropecuária.' },
-      { id: 'fogo', ...front(V.fogo), label: isCampo() ? 'Voltar ao costelão' : 'Fogo de chão do costelão', act: () => { if (isCampo()) goInside(); else say('Fogo de chão: é aqui que sai o costelão de domingo. A carne vem do potreiro, laçada no sábado.'); } },
-      { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } say('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na loja do campo.'); } },
-      { id: 'agro', ...front(V.agro), label: 'Agropecuária', text: 'Agropecuária: sementes, mudas, adubo e ferramentas para a horta. Em breve, a horta da bodega começa por aqui.' },
-      { id: 'gado', ...front(V.gado), label: 'Loja do campo', act: campoShop },
+      { id: 'fogo', ...front(V.fogo), label: isCampo() ? 'Voltar ao costelão' : 'Fogo de chão do costelão', act: () => { if (isCampo()) goInside(); else worldSay('Fogo de chão: é aqui que sai o costelão de domingo. A carne vem do potreiro, laçada no sábado.'); } },
+      { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } worldSay('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na Casa do Campeiro.'); } },
+      { id: 'agro', ...front(V.agro), label: 'Armazém Querência · produtos para agricultura', text: 'Armazém Querência: sementes, mudas, adubo e ferramentas para a horta. Em breve, a horta da bodega começa por aqui.' },
+      { id: 'gado', ...front(V.gado), label: 'Casa do Campeiro · produtos para pecuária', act: campoShop },
+      { id: 'missoes', x: V.missoes.x + V.missoes.w / 2, y: V.missoes.y + V.missoes.h + 26, label: 'Ruínas das Missões', text: 'Missões: entre os séculos XVII e XVIII, padres jesuítas e indígenas guaranis ergueram os Sete Povos das Missões no noroeste do Rio Grande. As ruínas de São Miguel Arcanjo são Patrimônio Mundial da UNESCO.' },
+      { id: 'pouso', ...front(V.pouso, 24), label: 'Pouso de tropeiros', text: 'Tropeirismo: nos séculos XVIII e XIX, os tropeiros levavam tropas de mulas e gado do Rio Grande até Sorocaba, em São Paulo. Nos pousos a tropa descansava; pelo caminho nasceram vilas e se espalharam o charque e o chimarrão.' },
       { id: 'river', x: 470, y: 917, label: 'Trapiche do rio Uruguai', text: 'Rio Uruguai: em breve, pescaria de dourado e jundiá no trapiche.' },
       { id: 'marco', x: V.marco.x + 20, y: V.marco.y - 20, label: 'Marco da fronteira', text: 'Marco da fronteira: do outro lado do rio é o Uruguai. Em breve, a balsa e os fregueses castelhanos.' },
-      ...V.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), house: h.id }))
+      ...V.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: 'Casa de ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), house: h.id }))
     ];
   },
   lights() { const V = VILA; return [[V.bodega.x + 100, V.bodega.y + 210], [V.bodega.x + 240, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 220, V.bodega.y + 210], [V.bodega.x + V.bodega.w - 80, V.bodega.y + 210], [V.agro.x + 90, V.agro.y + 150], [V.gado.x + 90, V.gado.y + 150], ...V.houses.map(h => [h.x + 50, h.y + 116])]; },
@@ -156,14 +219,37 @@ WORLD_MAPS.vila = {
     drawVilaRiver();
     const add = (r, fn) => { if (seen(r.x + r.w / 2, r.y + r.h / 2, Math.max(r.w, r.h))) layers.push({ y: r.y + r.h, draw: fn }); };
     add(V.bodega, drawWorldBodega); add(V.cancha, drawWorldCancha); add(V.horta, drawWorldHorta); add(V.fogo, drawWorldFogo); add(V.marco, drawWorldMarco);
-    add(V.agro, () => drawWorldShop(V.agro, 'AGROPECUÁRIA', 'sementes · mudas · adubo', '#4a7a3a', '#e8e0c8', ['semente', 'regador', 'enxada']));
-    add(V.gado, () => drawWorldShop(V.gado, 'LOJA DO CAMPO', 'sal · ração · arreios · bois', '#8a3a24', '#e8d8b8', ['sal', 'racao', 'arreio']));
+    add(V.agro, () => drawWorldShop(V.agro, 'ARMAZÉM QUERÊNCIA', 'produtos para agricultura', '#4a7a3a', '#e8e0c8', ['semente', 'regador', 'enxada']));
+    add(V.gado, () => drawWorldShop(V.gado, 'CASA DO CAMPEIRO', 'produtos para pecuária', '#8a3a24', '#e8d8b8', ['sal', 'racao', 'arreio']));
+    add({ ...V.missoes, h: V.missoes.h + 20 }, drawMissoes); add(V.pouso, drawPouso);
     drawWorldPotreiro(layers, seen);
-    for (const h of V.houses) { add(h, () => worldHouse(h, 'Casa do ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), h)); ownerAtDoor(layers, h, h.id, seen); }
+    for (const h of V.houses) add(h, () => worldHouse(h, null, h));
     for (const [x, y, kind] of VILA_TREES) if (seen(x, y)) layers.push({ y, draw: () => drawWorldTree(x, y, kind) });
     if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('SERRA GAÚCHA →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
   }
 };
+// Ruínas das Missões: a fachada de pedra vermelha de São Miguel Arcanjo, com os arcos e a torre.
+function drawMissoes() {
+  const m = VILA.missoes, base = m.y + m.h, stone = '#b8684a', dark = '#8a4a34';
+  ellipse(m.x + m.w / 2, base - 6, m.w / 2 + 20, 24, '#9a8a6a');
+  rect(m.x + 20, m.y + 90, m.w - 140, m.h - 90, stone, 0, dark); poly([[m.x + 20, m.y + 90], [m.x + 150, m.y + 20], [m.x + 230, m.y + 60], [m.x + m.w - 120, m.y + 90]], stone);
+  for (let k = 0; k < 4; k++) { const x = m.x + 44 + k * 66; ctx.fillStyle = '#5a7a4a'; ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x, m.y + 170); ctx.arc(x + 22, m.y + 170, 22, Math.PI, 0); ctx.lineTo(x + 44, base); ctx.closePath(); ctx.fill(); }
+  for (let y = m.y + 100; y < base; y += 18) for (let x = m.x + 24 + ((y / 18) % 2) * 14; x < m.x + m.w - 124; x += 28) rect(x, y, 24, 2, 'rgba(90,40,24,.35)');
+  rect(m.x + m.w - 110, m.y - 10, 90, m.h + 10, stone, 0, dark); rect(m.x + m.w - 92, m.y + 20, 54, 70, '#5a7a4a'); poly([[m.x + m.w - 110, m.y - 10], [m.x + m.w - 70, m.y - 40], [m.x + m.w - 20, m.y - 10]], dark);
+  for (const [dx, dy] of [[30, 40], [180, 70], [300, 110]]) ellipse(m.x + dx, m.y + dy, 18, 10, '#5a8a3a');
+  signBoard(m.x + m.w / 2, base + 4, 200, 'RUÍNAS DAS MISSÕES', 12);
+}
+// Pouso de tropeiros: mangueira de pedra, cocho, a cruz do caminho e as mulas descansando.
+function drawPouso() {
+  const p = VILA.pouso;
+  for (let x = p.x; x < p.x + p.w; x += 22) { ellipse(x + 10, p.y + 12, 13, 10, '#9a9488'); ellipse(x + 10, p.y + p.h - 10, 13, 10, '#9a9488'); }
+  for (let y = p.y; y < p.y + p.h; y += 20) { ellipse(p.x + 8, y + 10, 11, 10, '#8e887e'); if (y < p.y + p.h / 2 - 30 || y > p.y + p.h / 2 + 20) ellipse(p.x + p.w - 8, y + 10, 11, 10, '#8e887e'); }
+  rect(p.x + 40, p.y + 60, 90, 22, '#7a5a34', 4); rect(p.x + 44, p.y + 64, 82, 10, '#5aa0c0', 3);
+  for (const [dx, dy] of [[170, 70], [240, 120]]) { const x = p.x + dx, y = p.y + dy; ellipse(x, y + 4, 30, 7, '#1c140c44'); rect(x - 24, y - 34, 48, 26, '#6a4a34', 10); rect(x + 18, y - 48, 14, 24, '#6a4a34', 6); rect(x + 20, y - 62, 4, 16, '#5a3a24'); rect(x + 26, y - 62, 4, 16, '#5a3a24'); for (const lx of [x - 18, x - 8, x + 8, x + 18]) rect(lx, y - 10, 5, 14, '#4a3424'); }
+  rect(p.x + p.w + 20, p.y + 20, 6, 70, '#5a3a20'); rect(p.x + p.w + 6, p.y + 36, 34, 6, '#5a3a20');
+  signBoard(p.x + p.w / 2, p.y + p.h + 4, 190, 'POUSO DE TROPEIROS', 12);
+}
+
 // Loja de campanha: fachada de tábuas, toldo e mercadoria na calçada.
 function drawWorldShop(s, name, sub, awning, wall, goods) {
   gable(s.x, s.y - 10, s.w, 80, '#6a5a4a', 16);
@@ -175,9 +261,9 @@ function drawWorldShop(s, name, sub, awning, wall, goods) {
   txt(sub, s.x + s.w / 2, s.y + s.h + 14, 12, '#3a2a1a', 'center', 'Arial');
   goods.forEach((g, i) => { const x = s.x + 30 + i * 52, y = s.y + s.h - 10; if (g === 'semente' || g === 'racao' || g === 'sal') { rect(x - 16, y - 34, 32, 36, g === 'sal' ? '#f0ece0' : g === 'racao' ? '#c8a060' : '#d8c890', 6, '#8a7a5a'); } else if (g === 'regador') { ellipse(x, y - 14, 14, 12, '#5a8ac0'); rect(x + 10, y - 26, 16, 4, '#5a8ac0'); } else if (g === 'enxada') { rect(x - 2, y - 50, 4, 52, '#8a5a32'); rect(x - 12, y - 52, 24, 8, '#7a7a80'); } else if (g === 'arreio') { ctx.strokeStyle = '#6a3a1a'; ctx.lineWidth = 4; ctx.beginPath(); ctx.ellipse(x, y - 24, 14, 18, 0, 0, Math.PI * 2); ctx.stroke(); } });
 }
-// Loja do campo: aqui se compra boi para a laçada de sábado.
+// Casa do Campeiro (produtos para pecuária): aqui se compra boi para a laçada de sábado.
 function campoShop() {
-  openDialog('Loja do campo', `<p>Sal mineral, ração, arreios e gado. Rebanho no potreiro: <b>${G.herd || 0}</b>.</p><div class="game-menu"><button class="primary" data-act="buyBoiShop">Comprar um boi · ${money(BOI_COST)}</button><button data-act="close">Só olhando</button></div>`, 'campoShop');
+  openDialog('Casa do Campeiro', `<p>Produtos para pecuária: sal mineral, ração, arreios e gado. Rebanho no potreiro: <b>${G.herd || 0}</b>.</p><div class="game-menu"><button class="primary" data-act="buyBoiShop">Comprar um boi · ${money(BOI_COST)}</button><button data-act="close">Só olhando</button></div>`, 'campoShop');
 }
 
 // Rio Uruguai: corta a lateral esquerda e a parte de baixo da vila (lá embaixo, a margem é do Uruguai).

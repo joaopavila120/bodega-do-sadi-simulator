@@ -47,13 +47,15 @@ function updateContextActions(){
  $('enterCanchaButton').classList.toggle('hidden',!nearCanchaDoor()||!!G.task);
  $('playTrucoButton').classList.toggle('hidden',!table||!!G.task);
  $('playTrucoButton').disabled=!!table?.fight;
- $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();$('canchaExitButton').classList.toggle('hidden',worldOut?.map!=='cancha'||!!modal);
+ $('refuseFiadoButton').classList.toggle('hidden',!fiadoFirst()||!!G.task);$('dismissButton').classList.toggle('hidden',fiadoFirst()||!!G.task||!counterCustomer()||tutorialActive());updateSlingButton();document.body.classList.toggle('world-out',!!worldOut);$('canchaExitButton').classList.toggle('hidden',worldOut?.map!=='cancha'||!!modal);
  $('hint').classList.toggle('hidden',worldOut?false:!!(G.lasso||G.bocce||scene)||nearShopDoor()&&!G.task||!G.task&&!n&&!nearCanchaDoor()&&!nearShopDoor()&&G.day>1);
  const toast=G.toastLesson&&!G.toastLesson.done&&G.toastLesson.actor&&G.day>=G.toastLesson.day;
  $('tutorialHint').classList.toggle('hidden',!toast&&(G.day!==1||!!scene||(phoneOpen&&!tutorialStockMissing().length)||!!G.task||!!G.dialogue));if(toast)$('tutorialHint').textContent='Torrada: pegue um pão de xis e coloque na chapa junto do salame. Use o mesmo espaço, aguarde 6 s, retire e sirva com E.';
  if(G.day===1)setHTML($('tutorialHint'),tutorialHint());
  if((costelaoTutorialActive()||costelaoPrepFirst())&&!scene){$('tutorialHint').classList.remove('hidden');$('tutorialHint').innerHTML=costelaoTutorialHint();}
  else if(!toast&&doorReminder()){$('tutorialHint').classList.remove('hidden');setHTML($('tutorialHint'),doorReminder());}
+ // Os avisos da bodega (porta, tutorial, costelão) ficam só dentro dela.
+ if(worldOut)$('tutorialHint').classList.add('hidden');
  $('gameSidebar').classList.toggle('lasso-mode',!!G.lasso);
  $('gameSidebar').classList.toggle('focused-task',['weigh','pour'].includes(G.task?.type)||G.fightTarget!==null);
 }
@@ -72,7 +74,7 @@ function showTelevisionAward(){
 
 // Bodega ou costelão ainda fechados (ou o dia já encerrado): um aviso no alto da tela lembra de ir até a porta.
 function doorReminder(){
- if(!started||scene||G.lasso||G.bocce||G.atCancha||G.game||G.task||G.dialogue||tutorialActive()||costelaoPrepFirst()||!['prep','closed'].includes(G.phase))return '';
+ if(!started||worldOut||scene||G.lasso||G.bocce||G.atCancha||G.game||G.task||G.dialogue||tutorialActive()||costelaoPrepFirst()||!['prep','closed'].includes(G.phase))return '';
  if(G.phase==='closed')return '<b>Expediente encerrado</b><p>Vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span> para seguir para o próximo dia.</p>';
  const campo=isCampo();return '<b>'+(campo?'O costelão está fechado':'A bodega está fechada')+'</b><p>Quando estiver pronto, vá até a <b>porta</b>, embaixo, e aperte <span class="keycap">E</span> para abrir'+(campo?' o domingo':'')+'.</p>';
 }
