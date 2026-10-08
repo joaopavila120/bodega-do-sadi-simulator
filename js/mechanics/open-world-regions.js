@@ -202,7 +202,7 @@ WORLD_MAPS.serra = regionMap({
     add(S.galeteria, () => { drawStoneHouse(S.galeteria, null); rect(S.galeteria.x + 20, S.galeteria.y + 70, S.galeteria.w - 40, 26, '#f4ecd8', 3, '#5a3a20'); txt('GALETERIA · GALETO E POLENTA', S.galeteria.x + S.galeteria.w / 2, S.galeteria.y + 83, 12, '#6a1a2a', 'center', 'Georgia'); pennants(S.galeteria.x + 10, S.galeteria.x + S.galeteria.w - 10, S.galeteria.y + 50, ['#2a8a3a', '#f4f4f4', '#d42a2a']); });
     layers.push({ y: S.rail + 20, draw: () => drawTrain(trainX(0, S.W, 120, 900), S.rail + 10) });
     // O trilho some no túnel da serra, rumo a Bento Gonçalves; a estrada termina antes do morro.
-    layers.push({ y: S.rail + 40, draw: () => { const t = S.tunnel; ellipse(t.x + 170, t.y + 150, 230, 170, '#4f7a36'); ellipse(t.x + 200, t.y + 90, 170, 120, '#5f8a42'); rect(t.x + 30, S.rail - 70, 70, 100, '#2a2420', 30); rect(t.x + 22, S.rail - 78, 86, 14, '#8a8a80', 4); rect(t.x + 60, S.rail + 30, t.w, 60, '#4f7a36'); signBoard(t.x + 170, t.y - 100, 200, 'BENTO GONÇALVES →', 12); } });
+    layers.push({ y: S.rail + 40, draw: () => { const t = S.tunnel; ellipse(t.x + 170, t.y + 150, 230, 170, '#4f7a36'); ellipse(t.x + 200, t.y + 90, 170, 120, '#5f8a42'); rect(t.x + 30, S.rail - 70, 70, 100, '#2a2420', 30); rect(t.x + 22, S.rail - 78, 86, 14, '#8a8a80', 4); rect(t.x + 60, S.rail + 30, t.w, 60, '#4f7a36'); } });
     layers.push({ y: S.roadY - 10, draw: () => { rect(110, S.roadY - 120, 8, 120, '#5a3a20'); poly([[250, S.roadY - 120], [70, S.roadY - 120], [40, S.roadY - 98], [70, S.roadY - 76], [250, S.roadY - 76]], '#e8d6a8'); txt('← FRONTEIRA', 150, S.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
     layers.push({ y: 240, draw: () => { signBoard(cx + 170, 150, 200, 'SANTA CATARINA ↑', 13); } });
   }
@@ -211,23 +211,21 @@ WORLD_MAPS.serra = regionMap({
 // =================== MAPA 3 · SANTA CATARINA (Vale Europeu) ===================
 const SC = { W: 3000, H: 2000, roadX: 1460, roadW: 80, streetY: 960, streetH: 80,
   houses: [{ id: 'lauro', x: 300, y: 1150, w: 280, h: 200, label: 'Casa de Lauro' }, { id: 'indavirus', x: 700, y: 640, w: 280, h: 210, label: 'Casa de Indavírus' },
-    { id: 'peixinhonabrasa', x: 1700, y: 1180, w: 270, h: 200, label: 'Casa de Peixinho na Brasa' }, { id: 'loligebien', x: 2100, y: 1160, w: 280, h: 210, label: 'Casa de Loli Gebien' },
-    { id: 'jayme', x: 2060, y: 640, w: 270, h: 200, label: 'Casa de Jayme Caetano Braun', rancho: true }],
+    { id: 'peixinhonabrasa', x: 1700, y: 1180, w: 270, h: 200, label: 'Casa de Peixinho na Brasa' }, { id: 'loligebien', x: 2100, y: 1160, w: 280, h: 210, label: 'Casa de Loli Gebien' }],
   enx: [{ x: 300, y: 640, w: 240, h: 200 }, { x: 1700, y: 640, w: 240, h: 200 }],
-  cafe: { x: 2420, y: 640, w: 320, h: 220 }, luterana: { x: 1100, y: 320, w: 260, h: 300 }, bolao: { x: 2450, y: 1220, w: 420, h: 150 },
+  cafe: { x: 2420, y: 640, w: 320, h: 220 }, bolao: { x: 2450, y: 1220, w: 420, h: 150 },
   festa: { x: 660, y: 1200, w: 380, h: 170 }, ostern: { x: 1100, y: 1160, w: 260, h: 260 }, canchaLauro: { x: 300, y: 1450, w: 280, h: 110 }, grelha: { x: 1990, y: 1300, w: 70, h: 60 }, marco: { x: 1600, y: 1600, w: 110, h: 130 }
 };
-SC.obstacles = [...SC.houses, ...SC.enx, SC.cafe, SC.luterana, SC.bolao, SC.festa, { x: SC.ostern.x + 100, y: SC.ostern.y + 100, w: 60, h: 60 }, SC.canchaLauro, SC.grelha, SC.marco];
+SC.obstacles = [...SC.houses, ...SC.enx, SC.cafe, SC.bolao, SC.festa, { x: SC.ostern.x + 100, y: SC.ostern.y + 100, w: 60, h: 60 }, SC.canchaLauro, SC.grelha, SC.marco];
 WORLD_MAPS.sc = regionMap({
   id: 'sc', name: 'Santa Catarina · Vale Europeu', W: SC.W, H: SC.H, obstacles: SC.obstacles,
-  residents: ['lauro', 'indavirus', 'peixinhonabrasa', 'loligebien', 'jayme'],
+  residents: ['lauro', 'indavirus', 'peixinhonabrasa', 'loligebien'],
   walkLines: [[[240, 1000], [900, 1000], [1500, 1000], [2100, 1000], [2760, 1000]], [[1500, 1060], [1500, 1500], [1500, 1880]]],
   blocked(x, y) { return y > SC.H - 40 && Math.abs(x - (SC.roadX + SC.roadW / 2)) > 50; },
   edge(p) { if (p.y > SC.H - 10) return { map: 'serra', x: SERRA.roadX + SERRA.roadW / 2, y: 70, title: 'Serra Gaúcha', text: 'De volta ao Rio Grande.' }; return null; },
   spots() { const P = SC; return [
     ...P.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: h.label, house: h.id })),
     { id: 'cafe', ...front(P.cafe), label: 'Café colonial', text: 'Café colonial: cuca, chimia, schmier, linguiça e pão caseiro. Em breve, encomendas para a bodega.' },
-    { id: 'luterana', ...front(P.luterana), label: 'Igreja luterana', text: 'Igreja luterana: o culto de domingo e o coral da comunidade.' },
     { id: 'bolao', ...front(P.bolao), label: 'Cancha de bolão', text: 'Cancha de bolão: o boliche dos colonos alemães. Em breve, partidas valendo chope.' },
     { id: 'festa', ...front(P.festa), label: 'Festa Pomerana', text: 'Festa Pomerana: chope, bandinha, marreco recheado e baile, como na Kerb dos colonos.' },
     { id: 'ostern', ...front(P.ostern, 0), label: 'Osterbaum', info: true, text: 'Osterbaum: a árvore de Páscoa enfeitada com casquinhas de ovo pintadas, orgulho de Pomerode.' },
@@ -246,7 +244,7 @@ WORLD_MAPS.sc = regionMap({
     add(P.marco, () => drawMonument(P.marco, 'VALE EUROPEU · 1850', '#7a7a70', 1));
     for (const h of P.enx) add(h, () => drawEnxaimel(h));
     add(P.cafe, () => { drawEnxaimel(P.cafe); rect(P.cafe.x + 30, P.cafe.y + 20, P.cafe.w - 60, 28, '#f4ecd8', 3, '#3a2414'); txt('CAFÉ COLONIAL · CUCA E CHIMIA', P.cafe.x + P.cafe.w / 2, P.cafe.y + 34, 12, '#5a2a14', 'center', 'Georgia'); });
-    add(P.luterana, () => drawLuterana(P.luterana)); add(P.bolao, () => drawBolao(P.bolao));
+    add(P.bolao, () => drawBolao(P.bolao));
     add(P.festa, () => drawPavilion(P.festa, 'FESTA POMERANA · CHOPE E BANDINHA', ['#e8304a', '#f0c040', '#2a7a3a', '#3a6ac8']));
     add({ ...P.ostern, h: P.ostern.h - 100 }, () => { const o = P.ostern, x = o.x + o.w / 2, y = o.y + 160; rect(o.x, o.y + 40, o.w, o.h - 60, '#7fae52', 8, '#c9b58a'); rect(x - 8, y - 140, 16, 150, '#5a3a20'); ellipse(x, y - 170, 90, 70, '#3f7a36'); for (let k = 0; k < 26; k++) ellipse(x - 70 + (k * 37) % 140, y - 220 + (k * 23) % 100, 6, 8, ['#e8304a', '#f0c040', '#3a6ac8', '#e87ad0', '#5ac87a'][k % 5]); });
     add(P.canchaLauro, () => { const c = P.canchaLauro; rect(c.x, c.y, c.w, c.h, '#c0603a', 3, '#7a3a1e'); rect(c.x, c.y, c.w, 10, '#8a5a32'); for (const [x, col] of [[c.x + 60, '#3a6ad0'], [c.x + 150, '#d03a3a'], [c.x + 110, '#f0e8c0']]) ellipse(x, c.y + 60, 7, 6, col); });

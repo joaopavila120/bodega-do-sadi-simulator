@@ -177,14 +177,15 @@ function drawWorldTree(x, y, kind) {
 // =================== MAPA 1 · FRONTEIRA (onde fica a bodega) ===================
 // Bodega, cancha de bocha, o Armazém Querência (produtos para agricultura) e a Casa do Campeiro (produtos para pecuária),
 // as ruínas das Missões e um pouso de tropeiros.
-// Moram aqui o Valter, o Mano Lima, o Baitaca e o Guri, este na beira da fronteira com o Uruguai.
+// Moram aqui o Valter, o Mano Lima, o Baitaca, o Jayme Caetano Braun e o Guri, este na beira da fronteira com o Uruguai.
 const VILA = {
   W: 3600, H: 2700, river: 540, border: 2380, roadY: 690, roadH: 90, roadX: 1580,
   horta: { x: 600, y: 260, w: 250, h: 280 }, fogo: { x: 870, y: 250, w: 400, h: 330 }, bodega: { x: 1300, y: 180, w: 640, h: 420 },
   cancha: { x: 2060, y: 240, w: 460, h: 360 }, potreiro: { x: 2640, y: 200, w: 860, h: 380 },
   agro: { x: 1720, y: 1080, w: 440, h: 260 }, gado: { x: 2380, y: 1080, w: 440, h: 260 },
   houses: [{ id: 'valter', x: 700, y: 1150, w: 260, h: 190, wall: '#c9b58a', roof: '#9a4a32' }, { id: 'manolima', x: 900, y: 1700, w: 270, h: 190, wall: '#d8c9a2', roof: '#7a3a2a' },
-    { id: 'baitaca', x: 2700, y: 1700, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }, { id: 'guri', x: 1900, y: 2110, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' }],
+    { id: 'baitaca', x: 2700, y: 1700, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }, { id: 'guri', x: 1900, y: 2110, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' },
+    { id: 'jayme', x: 3080, y: 1900, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }],
   marco: { x: 1500, y: 2250, w: 40, h: 60 },
   missoes: { x: 2940, y: 980, w: 440, h: 300 }, pouso: { x: 2160, y: 1620, w: 340, h: 190 }, estacao: { x: 1720, y: 870, w: 260, h: 130 }
 };
@@ -194,7 +195,7 @@ const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [
 
 WORLD_MAPS.vila = {
   id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
-  residents: ['valter', 'manolima', 'baitaca', 'guri'],
+  residents: ['valter', 'manolima', 'baitaca', 'guri', 'jayme'],
   walkLines: [[[620, 735], [1620, 735], [2600, 735], [3500, 735]], [[1620, 800], [1620, 1470], [1620, 2300]], [[620, 1470], [1620, 1470], [2700, 1470], [3500, 1470]]],
   obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
   canWalk(x, y) {

@@ -36,7 +36,7 @@ const FURN = {
   sofa(i) { rect(i.x, i.y - 34, i.w, i.h + 34, i.color || '#7a3a2a', 12, '#3a1a10'); rect(i.x + 12, i.y - 8, i.w - 24, i.h - 6, 'rgba(255,255,255,.14)', 8); rect(i.x - 6, i.y - 20, 18, i.h + 20, i.color || '#7a3a2a', 6, '#3a1a10'); rect(i.x + i.w - 12, i.y - 20, 18, i.h + 20, i.color || '#7a3a2a', 6, '#3a1a10'); },
   tv(i) { rect(i.x, i.y, i.w, i.h, '#5a3a20', 3, '#2a1a0e'); rect(i.x + i.w / 2 - 54, i.y - 76, 108, 70, '#1a1a1a', 6, '#3a3a3a'); rect(i.x + i.w / 2 - 46, i.y - 68, 92, 54, i.on === false ? '#2a3a44' : `hsl(${120 + Math.sin(frameClock) * 30},40%,40%)`, 2); },
   rug(i) { rect(i.x, i.y, i.w, i.h, i.color || '#8a2a2a', 10); rect(i.x + 12, i.y + 12, i.w - 24, i.h - 24, 'rgba(255,230,180,.22)', 8); },
-  stove(i) { rect(i.x, i.y - 34, i.w, i.h + 34, '#2a2a2a', 4, '#111'); rect(i.x + 6, i.y - 30, i.w - 12, 10, '#4a4a4a'); ellipse(i.x + 30, i.y - 26, 14, 4, '#666'); rect(i.x + i.w - 30, i.y - 110, 14, 80, '#3a3a3a'); rect(i.x + 12, i.y + 8, 34, 24, '#e8702a', 3); rect(i.x + 12, i.y + 8, 34, 24, `rgba(255,210,90,${.3 + .2 * Math.sin(frameClock * 6)})`, 3); },
+  stove(i) { rect(i.x, i.y - 34, i.w, i.h + 34, '#2a2a2a', 4, '#111'); rect(i.x + 6, i.y - 30, i.w - 12, 10, '#4a4a4a'); ellipse(i.x + 30, i.y - 26, 14, 4, '#666'); if (!i.noPipe) rect(i.x + i.w - 30, i.y - 110, 14, 80, '#3a3a3a'); rect(i.x + 12, i.y + 8, 34, 24, '#e8702a', 3); rect(i.x + 12, i.y + 8, 34, 24, `rgba(255,210,90,${.3 + .2 * Math.sin(frameClock * 6)})`, 3); },
   counter(i) { rect(i.x, i.y - 34, i.w, i.h + 34, '#e8e0d0', 3, '#8a8070'); rect(i.x, i.y - 34, i.w, 12, '#9a9488'); if (i.sink) { rect(i.x + i.w / 2 - 30, i.y - 30, 60, 18, '#b8c0c8', 4); rect(i.x + i.w / 2 - 2, i.y - 50, 4, 20, '#8a8a90'); } },
   fridge(i) { rect(i.x, i.y - 100, i.w, i.h + 100, '#e8ecef', 6, '#8a9096'); rect(i.x, i.y - 44, i.w, 3, '#8a9096'); rect(i.x + i.w - 12, i.y - 90, 4, 34, '#8a9096'); if (i.refri) for (let k = 0; k < 3; k++) rect(i.x + 10 + k * 18, i.y - 30, 12, 22, '#c83a2a', 3); },
   toilet(i) { rect(i.x + 6, i.y - 24, i.w - 12, 30, '#f4f4f4', 4, '#b8b8b8'); ellipse(i.x + i.w / 2, i.y + i.h * .55, i.w / 2, i.h * .45, '#fafafa'); ellipse(i.x + i.w / 2, i.y + i.h * .55, i.w / 3, i.h * .28, '#dcecf4'); },
@@ -61,6 +61,19 @@ const FURN = {
   plant(i) { rect(i.x + 8, i.y, i.w - 16, i.h, '#a8603a', 4); for (let k = 0; k < 6; k++) ellipse(i.x + i.w / 2 + Math.cos(k) * 16, i.y - 16 - (k % 3) * 10, 14, 8, '#3f7a36'); },
   shoes(i) { for (const dx of [0, 26]) { rect(i.x + dx, i.y, 22, i.h, '#c8964a', 8, '#6a4a24'); rect(i.x + dx + 4, i.y + 4, 14, 10, '#8a2a2a', 4); } },
   bochas(i) { for (const [dx, dy, c] of [[10, 10, '#3a6ad0'], [34, 4, '#d03a3a'], [56, 14, '#3a6ad0'], [30, 22, '#f4f0e0']]) { ellipse(i.x + dx, i.y + dy, c === '#f4f0e0' ? 5 : 11, c === '#f4f0e0' ? 5 : 10, c); } },
+  // Estante com a miniatura da camionete da Brigada Militar, com o giroflex piscando.
+  miniatura(i) {
+    rect(i.x, i.y - 50, i.w, i.h + 50, '#6a4024', 3, '#2a1a0e'); const x = i.x + 20, y = i.y - 46, w = i.w - 40;
+    rect(x, y + 10, w * .55, 22, '#f0f0ec', 3, '#5a5a5a'); rect(x + w * .1, y + 2, w * .35, 14, '#f0f0ec', 3, '#5a5a5a'); rect(x + w * .14, y + 5, w * .26, 8, '#3a4a5a', 2);
+    rect(x + w * .55, y + 16, w * .45, 16, '#f0f0ec', 3, '#5a5a5a'); rect(x, y + 20, w, 4, '#2a6a3a'); rect(x + w * .2, y - 2, 18, 5, frameClock % .6 < .3 ? '#e83a3a' : '#3a6ae8', 2);
+    for (const wx of [x + w * .2, x + w * .8]) ellipse(wx, y + 32, 7, 7, '#1a1a1a');
+  },
+  // Sonzão: duas caixas de som com os alto-falantes pulsando e as luzinhas.
+  som(i) {
+    const beat = 1 + .08 * Math.abs(Math.sin(frameClock * 8));
+    for (const dx of [0, i.w / 2 + 2]) { const x = i.x + dx, w = i.w / 2 - 2; rect(x, i.y - 70, w, i.h + 70, '#1a1a1a', 4, '#3a3a3a'); ellipse(x + w / 2, i.y - 40, 16 * beat, 16 * beat, '#3a3a3a'); ellipse(x + w / 2, i.y - 40, 7, 7, '#5a5a5a'); ellipse(x + w / 2, i.y + 4, 9 * beat, 9 * beat, '#3a3a3a'); }
+    for (let k = 0; k < 6; k++) rect(i.x + 8 + k * (i.w - 16) / 6, i.y - 80, 6, 6, `hsl(${(frameClock * 120 + k * 60) % 360},90%,60%)`, 2);
+  },
   pillar(i) { rect(i.x, i.y - 200, i.w, i.h + 200, '#d8d0c0', 0, '#8a8070'); },
   grill(i) { rect(i.x, i.y - 60, i.w, i.h + 60, '#b5623a', 4, '#6a3a20'); for (let y = i.y - 54; y < i.y + i.h; y += 12) rect(i.x + 2, y, i.w - 4, 1, 'rgba(90,40,20,.4)'); rect(i.x + 16, i.y - 40, i.w - 32, 24, '#2a2a2a', 3); for (let k = 0; k < 4; k++) rect(i.x + 22 + k * (i.w - 44) / 4, i.y - 36, (i.w - 44) / 4 - 6, 16, '#8a2a1a', 4); rect(i.x + i.w / 2 - 22, i.y - 190, 44, 130, '#a85a3a', 0, '#6a3a20'); },
   stairs(i) { for (let k = 0; k < 10; k++) { const y = i.y + k * i.h / 10; rect(i.x, y, i.w, i.h / 10 - 2, k % 2 ? '#8a5a32' : '#9a6a3a', 2); } rect(i.x - 6, i.y, 6, i.h, '#5a3a20'); },
@@ -86,6 +99,9 @@ const FURN = {
   window(i) { windowPane(i.x, i.y, i.w, i.h); }
 };
 
+// Cuia de chimarrão na mão, com a bomba.
+function drawCuia(x, y) { ellipse(x, y + 4, 11, 13, '#6a8a3a'); ellipse(x, y - 2, 9, 4, '#3f5a24'); rect(x - 7, y + 10, 14, 4, '#c8a040', 2); ctx.strokeStyle = '#c8c8c8'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(x + 2, y); ctx.lineTo(x + 8, y - 18); ctx.stroke(); }
+
 // ---------- Mapa de interior ----------
 function interiorMap(def) {
   const b = def.bounds, door = def.door ?? b.x + b.w / 2, half = def.doorHalf ?? 44;
@@ -106,7 +122,7 @@ function interiorMap(def) {
     },
     spots() {
       const people = (def.residents || []).filter(atHome).map((id, k) => { const i = PEOPLE.findIndex(p => p.id === id), [x, y] = def.homeSpots[k]; return { id: 'home:' + id, x, y, label: 'Prosear com ' + PEOPLE[i].name, act: () => worldTalk({ person: i, x, y, wait: 0, dx: 1 }) }; });
-      const things = (def.items || []).filter(i => i.text).map(i => ({ id: 'item:' + i.kind + i.x, x: i.x + i.w / 2, y: i.spotY ?? i.y + i.h + 22, label: i.label, text: i.text, info: i.info }));
+      const things = (def.items || []).filter(i => i.text).map(i => ({ id: 'item:' + i.kind + i.x, x: i.x + i.w / 2, y: i.spotY ?? i.y + i.h + 22, label: i.label, act: () => i.info ? showInfo(i.label, i.text) : showItem(i.label, i.text, def.residents?.[0]) }));
       return [...people, ...things];
     },
     // Ao entrar num cômodo com fala, ela dispara uma vez por visita.
@@ -123,7 +139,7 @@ function interiorMap(def) {
       if (!def.open) { rect(b.x - 20, b.y - 124, 20, b.h + 150, '#3a2414'); rect(b.x + b.w, b.y - 124, 20, b.h + 150, '#3a2414'); }
       for (const w of walls) layers.push({ y: w.y + w.h, draw: () => { if (w.w > w.h) { rect(w.x, w.y - 56, w.w, 56, def.wallColor || '#c8a878'); rect(w.x, w.y - 60, w.w, 6, '#3a2414'); rect(w.x, w.y, w.w, w.h, '#5a3a22'); } else rect(w.x, w.y - 60, w.w, w.h + 60, '#3a2414'); } });
       for (const i of def.items || []) if (!i.wall) layers.push({ y: i.layerY ?? (i.flat ? i.y - 400 : i.y + i.h), draw: () => FURN[i.kind](i) });
-      (def.residents || []).filter(atHome).forEach((id, k) => { const i = PEOPLE.findIndex(p => p.id === id), [x, y] = def.homeSpots[k]; layers.push({ y, draw: () => personDraw(PEOPLE[i].sprite, x, y, false, false, k % 2 ? -1 : 1) }); });
+      (def.residents || []).filter(atHome).forEach((id, k) => { const i = PEOPLE.findIndex(p => p.id === id), [x, y] = def.homeSpots[k], dir = k % 2 ? -1 : 1; layers.push({ y, draw: () => { personDraw(PEOPLE[i].sprite, x, y, false, false, dir); if (def.cuia) drawCuia(x + dir * 26, y - 58); } }); });
       if (!def.open) layers.push({ y: b.y + b.h + 60, draw: () => { rect(b.x - 20, b.y + b.h, door - half - (b.x - 20), 26, '#3a2414'); rect(door + half, b.y + b.h, b.x + b.w + 20 - door - half, 26, '#3a2414'); rect(door - half, b.y + b.h + 16, half * 2, 10, '#6a4424', 3); } });
     }
   };
@@ -147,7 +163,7 @@ function casaPadrao(o) {
       { kind: 'rug', x: 420, y: 540, w: 360, h: 150, solid: false, color: o.rug, flat: true },
       ...(o.items || [])
     ],
-    residents: o.residents, homeSpots: o.homeSpots || [[640, 620], [740, 620]]
+    residents: o.residents, homeSpots: o.homeSpots || [[640, 620], [740, 620]], cuia: o.cuia
   });
 }
 // Rancho: um cômodo só, chão batido, fogão a lenha e o catre.
@@ -155,22 +171,22 @@ function rancho(o) {
   return interiorMap({
     id: o.id, name: o.name, W: 1200, H: 860, bounds: { x: 150, y: 240, w: 900, h: 500 }, door: 600, floor: o.floor || 'dirt', wallColor: o.wallColor || '#b89868', windows: [260, 860],
     items: [{ kind: 'bed', x: 180, y: 270, w: 160, h: 140, color: o.bedColor || '#6a7a3a' }, { kind: 'stove', x: 880, y: 280, w: 110, h: 60 }, { kind: 'table', x: 520, y: 340, w: 160, h: 50, mate: true }, { kind: 'wood', x: 1000, y: 400, w: 40, h: 60 }, ...(o.items || [])],
-    residents: o.residents, homeSpots: [[600, 560]]
+    residents: o.residents, homeSpots: [[600, 560]], cuia: o.cuia
   });
 }
 const HOUSE_INTERIORS = [
   // Fronteira
-  casaPadrao({ id: 'casa:valter', name: 'Casa de Valter', residents: ['valter'], rug: '#7a3a2a', items: [
+  casaPadrao({ id: 'casa:valter', name: 'Casa de Valter', residents: ['valter'], cuia: true, rug: '#7a3a2a', items: [
     { kind: 'sofa', x: 140, y: 660, w: 220, h: 60, color: '#6a3a2a' }, { kind: 'tv', x: 860, y: 520, w: 200, h: 40, label: 'TV de tubo', text: 'A TV de tubo do Valter: só pega o canal do Inter e a previsão do tempo.' },
     { kind: 'flag', wall: true, x: 400, y: 130, w: 90, h: 58, colors: ['#d42a2a', '#f4f4f4', '#d42a2a'] }, { kind: 'plant', x: 1040, y: 700, w: 44, h: 40 }] }),
-  casaPadrao({ id: 'casa:manolima', name: 'Casa de Mano Lima', residents: ['manolima'], items: [
+  casaPadrao({ id: 'casa:manolima', name: 'Casa de Mano Lima', residents: ['manolima'], cuia: true, items: [
     { kind: 'table', x: 830, y: 560, w: 170, h: 60, cards: true, label: 'Mesa de truco', text: 'A mesa de truco do Mano Lima: baralho espanhol gasto de tanta partida.' },
     { kind: 'gaita', x: 170, y: 540, w: 70, h: 30, label: 'Gaita', text: 'A gaita do Mano Lima: oito baixos, afinada pra vanera e pra milonga.' },
     { kind: 'sofa', x: 160, y: 680, w: 220, h: 60, color: '#4a5a3a' }, { kind: 'flag', wall: true, x: 400, y: 128, w: 96, h: 62, rs: true }] }),
-  rancho({ id: 'casa:baitaca', name: 'Rancho de Baitaca', residents: ['baitaca'], items: [
+  rancho({ id: 'casa:baitaca', name: 'Rancho de Baitaca', residents: ['baitaca'], cuia: true, items: [
     { kind: 'viola', x: 290, y: 560, w: 50, h: 30, label: 'Viola', text: 'A viola do Baitaca: companheira dos bailes e das madrugadas de rancho.' },
     { kind: 'arreio', x: 860, y: 560, w: 100, h: 50 }, { kind: 'flag', wall: true, x: 540, y: 140, w: 96, h: 62, rs: true }] }),
-  casaPadrao({ id: 'casa:guri', name: 'Casa de Guri', residents: ['guri'], rug: '#3a5a7a', items: [
+  casaPadrao({ id: 'casa:guri', name: 'Casa de Guri', residents: ['guri'], cuia: true, rug: '#3a5a7a', items: [
     { kind: 'table', x: 840, y: 560, w: 150, h: 60, mate: true, label: 'Mate de fronteira', text: 'Erva comprada do lado de lá da fronteira: mais forte e mais barata, jura o Guri.' },
     { kind: 'sofa', x: 150, y: 660, w: 220, h: 60, color: '#3a5a7a' },
     { kind: 'flag', wall: true, x: 340, y: 128, w: 96, h: 62, colors: ['#f4f4f4', '#3a6ac8', '#f4f4f4', '#3a6ac8', '#f4f4f4'], sun: true }, { kind: 'flag', wall: true, x: 460, y: 128, w: 96, h: 62, rs: true }] }),
@@ -202,7 +218,8 @@ const HOUSE_INTERIORS = [
     { kind: 'chope', x: 870, y: 560, w: 80, h: 60, label: 'Barril de chope', text: 'O barril do Loli: chope gelado é coisa séria em Pomerode.' },
     { kind: 'shoes', x: 180, y: 700, w: 50, h: 30, solid: false, flat: true }, { kind: 'table', x: 180, y: 560, w: 150, h: 50 },
     { kind: 'flag', wall: true, x: 400, y: 128, w: 96, h: 62, colors: ['#1a1a1a', '#d42a2a', '#f0c020'] }] }),
-  casaPadrao({ id: 'casa:jayme', name: 'Casa de Jayme Caetano Braun', residents: ['jayme'], items: [
+  // Fronteira: o pajador
+  casaPadrao({ id: 'casa:jayme', name: 'Casa de Jayme Caetano Braun', residents: ['jayme'], cuia: true, items: [
     { kind: 'shelf', x: 840, y: 540, w: 200, h: 40, label: 'Livros', text: 'A estante do Jayme: livros de payada, história do Rio Grande e cadernos de verso.' },
     { kind: 'desk', x: 160, y: 560, w: 200, h: 50, papers: true, label: 'Versos do pajador', text: 'Folhas e mais folhas de versos: o Jayme escreve sobre o pampa, o cavalo e o chimarrão.' },
     { kind: 'viola', x: 420, y: 700, w: 50, h: 30 }] })
@@ -216,6 +233,8 @@ const CASONA_LINES = {
   banheiro: 'Olha aí o banheirão podre de chique do Márcio e Marcelo, e o quê? Show de bola, marmorezão top!',
   cama: 'Cama bauzona top, né? E o quê? Duvido acharem em Erechim uma cama bauzona top dessas, show de bola!'
 };
+// Objeto da casa: aparece na caixa de diálogo com o retrato do dono.
+function showItem(label, text, owner) { const i = PEOPLE.findIndex(p => p.id === owner); if (i < 0) { showInfo(label, text); return; } worldTalkAt = { x: worldOut.x, y: worldOut.y }; showRpgBox('worldTalk', { person: i, name: label, reply: text }); AudioEngine.tick(); }
 function twinSay(id, text) { const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; worldTalkAt = { x: worldOut.x, y: worldOut.y }; showRpgBox('worldTalk', { person: i, name: PEOPLE[i].name, reply: text }); AudioEngine.tick(); }
 function anyTwin() { return pick(['marcio', 'marcelo']); }
 WORLD_MAPS['casa:marcio'] = interiorMap({
@@ -227,29 +246,33 @@ WORLD_MAPS['casa:marcio'] = interiorMap({
     { kind: 'stairs', x: 1100, y: 290, w: 120, h: 400, solid: false, flat: true }
   ],
   // Subindo a escada até o topo, entra na sala da Casona.
-  stairs: [{ x: 1100, y: 270, w: 120, h: 60, to: () => ({ map: 'casona', x: 1140, y: 830, title: 'Casona de Márcio e Marcelo' }) }]
+  stairs: [{ x: 1100, y: 270, w: 120, h: 60, to: () => ({ map: 'casona', x: 700, y: 836, title: 'Casona de Márcio e Marcelo' }) }]
 });
+// Em cima: três portas no corredor de cima (quarto, banheiro, quarto) e, embaixo, sala e cozinha juntas.
+// Entra-se pela porta do meio, vindo da escada lateral.
 WORLD_MAPS.casona = interiorMap({
-  id: 'casona', name: 'Casona de Márcio e Marcelo', W: 1400, H: 980, bounds: { x: 100, y: 220, w: 1200, h: 640 }, door: 1140, floor: 'wood', wallColor: '#e8d8b0', windows: [200, 600, 1000],
-  walls: [[100, 500, 280, 20], [460, 500, 150, 20], [690, 500, 190, 20], [960, 500, 340, 20], [490, 220, 20, 280], [790, 220, 20, 280], [490, 520, 20, 90], [490, 700, 20, 160]],
+  id: 'casona', name: 'Casona de Márcio e Marcelo', W: 1400, H: 1000, bounds: { x: 100, y: 240, w: 1200, h: 620 }, door: 700, floor: 'wood', wallColor: '#e8d8b0', windows: [160, 760, 1170],
+  walls: [[100, 520, 160, 20], [340, 520, 320, 20], [740, 520, 320, 20], [1140, 520, 160, 20], [500, 240, 20, 280], [880, 240, 20, 280]],
   rooms: [
-    { name: 'quarto1', x: 100, y: 220, w: 390, h: 280, floor: 'wood', enter: () => { if (atHome('marcio')) twinSay(anyTwin(), CASONA_LINES.cama); } },
-    { name: 'banheiro', x: 510, y: 220, w: 280, h: 280, floor: 'marble', enter: () => { if (atHome('marcio')) twinSay('marcio', CASONA_LINES.banheiro); } },
-    { name: 'quarto2', x: 810, y: 220, w: 490, h: 280, floor: 'wood', enter: () => { if (atHome('marcio')) twinSay(anyTwin(), CASONA_LINES.cama); } },
-    { name: 'cozinha', x: 100, y: 520, w: 390, h: 340, floor: 'tile' }
+    { name: 'quarto1', x: 100, y: 240, w: 400, h: 280, floor: 'wood', enter: () => { if (atHome('marcio')) twinSay(anyTwin(), CASONA_LINES.cama); } },
+    { name: 'banheiro', x: 520, y: 240, w: 360, h: 280, floor: 'marble', enter: () => { if (atHome('marcio')) twinSay('marcio', CASONA_LINES.banheiro); } },
+    { name: 'quarto2', x: 900, y: 240, w: 400, h: 280, floor: 'wood', enter: () => { if (atHome('marcio')) twinSay(anyTwin(), CASONA_LINES.cama); } },
+    { name: 'cozinha', x: 100, y: 540, w: 420, h: 320, floor: 'tile' }
   ],
   items: [
-    { kind: 'bedbau', x: 130, y: 250, w: 200, h: 200, color: '#2a6a3a', label: 'Cama baú', text: 'Cama baú de casal, com gavetão embaixo: o orgulho do quarto.' },
-    { kind: 'wardrobe', x: 400, y: 250, w: 70, h: 44 },
-    { kind: 'bathtub', x: 540, y: 250, w: 230, h: 90 }, { kind: 'toilet', x: 720, y: 400, w: 50, h: 50 }, { kind: 'sinkbath', x: 520, y: 400, w: 80, h: 40 },
-    { kind: 'bedbau', x: 1080, y: 250, w: 200, h: 200, color: '#2a4a8a', label: 'Cama baú', text: 'A outra cama baú: igualzinha, porque gêmeo não aceita cama menor que a do irmão.' },
-    { kind: 'wardrobe', x: 830, y: 250, w: 70, h: 44 },
-    { kind: 'stove', x: 120, y: 560, w: 110, h: 60 }, { kind: 'counter', x: 240, y: 560, w: 160, h: 50, sink: true }, { kind: 'fridge', x: 405, y: 560, w: 70, h: 50 }, { kind: 'table', x: 210, y: 720, w: 140, h: 50 },
-    { kind: 'tv', x: 600, y: 560, w: 180, h: 40 }, { kind: 'sofa', x: 560, y: 770, w: 240, h: 60, color: '#2a6a3a' }, { kind: 'rug', x: 820, y: 620, w: 280, h: 150, solid: false, color: '#2a6a3a', flat: true },
-    { kind: 'trophy', x: 1100, y: 560, w: 170, h: 40, label: 'Troféus do racha', text: 'Medalhas e troféus de várzea: os gêmeos guardam até o de “melhor churrasco do torneio”.' }
+    { kind: 'bedbau', x: 115, y: 270, w: 140, h: 200, color: '#2a6a3a', label: 'Cama baú do Márcio', text: 'Cama baú de casal, com gavetão embaixo: o orgulho do quarto.' },
+    { kind: 'wardrobe', x: 410, y: 280, w: 70, h: 44 },
+    { kind: 'bathtub', x: 540, y: 280, w: 200, h: 90 }, { kind: 'toilet', x: 800, y: 300, w: 50, h: 50 }, { kind: 'sinkbath', x: 790, y: 440, w: 70, h: 40 },
+    { kind: 'bedbau', x: 1145, y: 270, w: 140, h: 200, color: '#2a4a8a', label: 'Cama baú do Marcelo', text: 'A outra cama baú: igualzinha, porque gêmeo não aceita cama menor que a do irmão.' },
+    { kind: 'wardrobe', x: 920, y: 280, w: 70, h: 44 },
+    { kind: 'stove', x: 120, y: 590, w: 110, h: 50, noPipe: true }, { kind: 'counter', x: 240, y: 590, w: 170, h: 50, sink: true }, { kind: 'fridge', x: 425, y: 590, w: 70, h: 50, refri: true },
+    { kind: 'table', x: 190, y: 740, w: 170, h: 60 },
+    { kind: 'tv', x: 900, y: 590, w: 200, h: 40 }, { kind: 'rug', x: 860, y: 650, w: 300, h: 120, flat: true, color: '#2a6a3a' }, { kind: 'sofa', x: 880, y: 790, w: 260, h: 50, color: '#2a6a3a' },
+    { kind: 'miniatura', x: 1150, y: 590, w: 140, h: 40, label: 'Miniatura da camionete da Brigada', text: 'Miniatura da camionete da Brigada: réplica caprichada, com giroflex e tudo.' },
+    { kind: 'som', x: 1180, y: 770, w: 100, h: 60, label: 'Sonzão da Casona', text: 'Sonzão da Casona.' }
   ],
-  residents: ['marcio', 'marcelo'], homeSpots: [[880, 700], [980, 700]],
-  // Saindo pela porta da sala, volta para a escada lateral.
+  residents: ['marcio', 'marcelo'], homeSpots: [[960, 680], [1060, 680]],
+  // Saindo pela porta, volta para a escada lateral.
   exit: () => ({ map: 'casa:marcio', x: 1160, y: 640, title: '' }),
   // Na primeira vez que entra, um dos gêmeos mostra a porta.
   onEnter() { if (atHome('marcio') && !G.casonaSeen) { G.casonaSeen = true; twinSay(anyTwin(), CASONA_LINES.porta); save(); } }
