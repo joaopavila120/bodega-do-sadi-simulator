@@ -112,6 +112,8 @@ function sceneNext() {
   if (st.say) { if (rpgTyping('sceneTalk')) { finishRpgTyping('sceneTalk'); return; } showRpgBox('sceneTalk', null); sceneAdvance(); }
   else if (st.overlay) { hideSceneOverlays(); sceneAdvance(); }
 }
+// Espaço: pula a fala (ou o papel na tela) de uma vez, sem esperar terminar de digitar.
+function sceneSkipLine() { const st = scene?.step; if (!st) return; if (st.say) { showRpgBox('sceneTalk', null); sceneAdvance(); } else if (st.overlay) { hideSceneOverlays(); sceneAdvance(); } }
 function sceneSkip() { if (scene) endScene(); return true; }
 function endScene() {
   const done = scene?.onEnd; scene = null; sceneForcesCampo = false; AudioEngine.sceneQuiet = false;
@@ -122,7 +124,8 @@ function endScene() {
 }
 function sceneKey(e) {
   const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-  if (['e', ' ', 'Enter'].includes(key)) { e.preventDefault(); if (!e.repeat) sceneNext(); }
+  if (key === ' ') { e.preventDefault(); if (!e.repeat) sceneSkipLine(); }
+  else if (['e', 'Enter'].includes(key)) { e.preventDefault(); if (!e.repeat) sceneNext(); }
   else if (key === 'Escape') sceneSkip();
 }
 
