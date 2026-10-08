@@ -67,7 +67,8 @@
  phoneTab='upgrades';renderPhone();check(!$('phoneContent').querySelector('.contact-card')&&[...$('phoneContent').querySelectorAll('.upgrade-cats button')].map(b=>b.textContent).join()==='Botas,Mate,Cozinha,Balcão,Outros'&&$('phoneContent').querySelectorAll('.upgrade-category').length===1,'melhorias em abas: Botas, Mate, Cozinha, Balcão e Outros');
  {const lauroI=index('lauro');window.NO_SCENES=false;G.arcs={};G.arcQueue=[];G.phase='open';deliveryConversation(lauroI,{});check(scene?.id==='arcMeet'&&arcState('lauro').met,'primeiro atendimento do Lauro abre a conversa de apresentação');sceneSkip();
   G.friends[lauroI]=80;arcCheck();check(G.arcQueue.length===3&&G.arcQueue.every(q=>q.arc==='lauro'),'amizade libera os três capítulos em ordem');
-  const repBefore=G.rep;G.phase='closed';let guard=0;while(G.arcQueue.length&&guard++<5){playNextArc(null);let n=0;while(scene&&n++<900){if(scene.step?.say){sceneNext();sceneNext();}else sceneTick(1/20);}}
+  const repBefore=G.rep;G.phase='closed';let guard=0,played=0;while(G.arcQueue.length&&guard++<5){playNextArc(null);played++;arcCheck();check(!G.arcQueue.some(q=>q.arc==='lauro'&&q.i===played-1),'o capítulo em cena não volta para a fila (não repete)');let n=0;while(scene&&n++<900){if(scene.step?.say){sceneNext();sceneNext();}else sceneTick(1/20);}arcCheck();}
+  check(played===3,'cada capítulo toca uma vez só');
   check(arcState('lauro').done.filter(Boolean).length===3&&G.rep>repBefore,'os capítulos acontecem em cena e o último dá recompensa');
   phoneOpen=true;phoneTab='contacts';renderPhone();check($('phoneContent').textContent.includes('Lauro na câmera: 3/3'),'aba Contatos mostra o progresso do arco');phoneOpen=false;
   const mm=index('marcio');deliveryConversation(mm,{});check(scene?.id==='arcMeet'&&arcState('marciomarcelo').met,'Márcio e Marcelo dividem o mesmo arco');sceneSkip();window.NO_SCENES=true;}

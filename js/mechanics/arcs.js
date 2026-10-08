@@ -149,13 +149,15 @@ function arcMeet(person) {
   playSteps([{ view: 'bodega' }, { fade: 'in', time: .2 }, ...arcLines(arc, ARCS[arc].meet)], 'arcMeet');
   return true;
 }
+// Capítulo tocando agora: já saiu da fila mas só fica "visto" no fim da cena; não pode voltar para a fila no meio dela.
+let arcPlaying = null;
 // Capítulos liberados pela amizade ficam na fila para o fim do expediente.
 function arcCheck() {
   G.arcQueue ??= [];
   for (const arc of Object.keys(ARCS)) {
     const st = arcState(arc); if (!st.met) continue;
     const f = arcFriendship(arc);
-    ARC_AT.forEach((at, i) => { if (f >= at && !st.done[i] && !G.arcQueue.some(q => q.arc === arc && q.i === i) && (i === 0 || st.done[i - 1] || G.arcQueue.some(q => q.arc === arc && q.i === i - 1))) G.arcQueue.push({ arc, i }); });
+    ARC_AT.forEach((at, i) => { if (f >= at && !st.done[i] && !(arcPlaying?.arc === arc && arcPlaying.i === i) && !G.arcQueue.some(q => q.arc === arc && q.i === i) && (i === 0 || st.done[i - 1] || G.arcQueue.some(q => q.arc === arc && q.i === i - 1))) G.arcQueue.push({ arc, i }); });
   }
 }
 function arcReward(arc, i) {
@@ -171,7 +173,8 @@ function arcReward(arc, i) {
 function playNextArc(after) {
   const q = G.arcQueue?.shift(); if (!q) return false;
   const st = arcState(q.arc), ch = ARCS[q.arc].chapters[q.i], members = arcMembers(q.arc).map(i => PEOPLE[i].id);
-  const finish = () => { st.done[q.i] = G.day; arcReward(q.arc, q.i); save(); after?.(); };
+  arcPlaying = q;
+  const finish = () => { st.done[q.i] = G.day; arcPlaying = null; arcReward(q.arc, q.i); save(); after?.(); };
   if (!scenesEnabled()) { finish(); return true; }
   const spot = n => ({ x: clamp(G.player.x + 90 + n * 70, 120, W - 120), y: clamp(G.player.y + n * 20, 470, 840) });
   playSteps([
