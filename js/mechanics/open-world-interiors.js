@@ -4,7 +4,9 @@
 'use strict';
 
 // Hoje, quem anda pela estrada e quem fica em casa (os gêmeos andam sempre juntos).
-function walkingToday(i) { const id = PEOPLE[i]?.id || '', key = id === 'marcelo' ? 'marcio' : id; let h = (G.day || 1) * 131 + 7; for (const c of key) h = (h * 31 + c.charCodeAt(0)) % 100003; return h % 3 !== 0; }
+// De dia, uns dois terços andam pela rua; de noite, a maioria está em casa.
+function worldNight() { return G.phase === 'closed' || G.phase === 'open' && G.elapsed / DAY > .72; }
+function walkingToday(i) { const id = PEOPLE[i]?.id || '', key = id === 'marcelo' ? 'marcio' : id; let h = (G.day || 1) * 131 + 7; for (const c of key) h = (h * 31 + c.charCodeAt(0)) % 100003; return worldNight() ? h % 5 === 0 : h % 3 !== 0; }
 function atHome(id) { const i = PEOPLE.findIndex(p => p.id === id); return i >= 0 && !activeUniqueVisitors().has(i) && !walkingToday(i); }
 
 // ---------- Pisos ----------

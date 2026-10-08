@@ -55,7 +55,7 @@ function worldBanner(title, text) { showBanner(title, text, 'info', { world: tru
 let worldWalkers = [], worldWalkersKey = '';
 function walkerPos(w) { const a = w.line[w.seg], b = w.line[w.seg + 1]; return { a, b }; }
 function spawnWalkers(M) {
-  worldWalkersKey = M.id + ':' + G.day; worldWalkers = [];
+  worldWalkersKey = M.id + ':' + G.day + ':' + worldNight(); worldWalkers = [];
   const free = (M.residents || []).map(id => PEOPLE.findIndex(p => p.id === id)).filter(i => i >= 0 && !activeUniqueVisitors().has(i) && walkingToday(i));
   for (const i of free.slice(0, 4)) {
     const line = pick(M.walkLines), seg = Math.floor(Math.random() * (line.length - 1)), k = Math.random(), a = line[seg], b = line[seg + 1];
@@ -64,7 +64,7 @@ function spawnWalkers(M) {
 }
 function walkersTick(dt) {
   const M = worldMap(); if (!M.walkLines) { worldWalkers = []; worldWalkersKey = ''; return; }
-  if (worldWalkersKey !== M.id + ':' + G.day) spawnWalkers(M);
+  if (worldWalkersKey !== M.id + ':' + G.day + ':' + worldNight()) spawnWalkers(M);
   worldWalkers = worldWalkers.filter(w => !activeUniqueVisitors().has(w.person));
   for (const w of worldWalkers) {
     const near = Math.hypot(w.x - worldOut.x, w.y - worldOut.y) < 120 && worldTalkOpen();

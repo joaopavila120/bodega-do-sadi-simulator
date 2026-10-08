@@ -55,6 +55,7 @@
    worldOut.x=650;worldOut.y=470;keys.add('w');simulate(.05);keys.clear();finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('banheirão')&&$('worldTalkName').textContent==='Márcio','no banheiro, o Márcio fala do marmorezão');skipWorldTalk();
    worldOut.x=420;worldOut.y=470;keys.add('w');simulate(.05);keys.clear();finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('bauzona'),'no quarto, a cama bauzona');skipWorldTalk();
    check(WORLD_MAPS.casona.spots().some(s=>s.id==='home:marcio'),'os gêmeos estão em casa');window.walkingToday=realWalk;}
+  {G.phase='prep';const day=WORLD_MAPS.serra.residents.concat(WORLD_MAPS.vila.residents,WORLD_MAPS.sc.residents).map(id=>PEOPLE.findIndex(p=>p.id===id)).filter(walkingToday).length;G.phase='closed';const night=WORLD_MAPS.serra.residents.concat(WORLD_MAPS.vila.residents,WORLD_MAPS.sc.residents).map(id=>PEOPLE.findIndex(p=>p.id===id)).filter(walkingToday).length;check(night<day,'de noite os personagens ficam mais em casa');G.phase='prep';}
   goInside();G.phase='open';}
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);
