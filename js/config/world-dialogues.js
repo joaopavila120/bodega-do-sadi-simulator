@@ -102,3 +102,82 @@ const WORLD_TALK = {
 };
 // Depois das três prosas do dia, o personagem segue o caminho.
 const WORLD_TALK_TIRED = ['Já proseamos bastante hoje, vivente. Amanhã tem mais!', 'Agora tenho que seguir caminho. Passa na bodega que a gente continua.', 'Bah, a prosa tá boa, mas o dia não espera. Até amanhã!'];
+
+// Falas em casa: quando o Sadi visita alguém (diferentes das da estrada e das do balcão).
+const WORLD_HOME_TALK = {
+  valter: [
+    { player: 'Com licença, Valter!', reply: 'Entra, guri, a casa é tua. Teu pai sentava nesse mesmo sofá pra ver o Inter perder.' },
+    { player: 'Que cheiro bom é esse?', reply: 'Feijão no fogão a lenha. Panela de ferro, que nem a da tua vó.' },
+    { player: 'Essa TV ainda funciona?', reply: 'Funciona quando dá um tapa do lado. Igual eu de manhã.' }
+  ],
+  manolima: [
+    { player: 'Ô de casa, Mano Lima!', reply: 'Ô de fora! Entra e puxa uma cadeira, que a mesa de truco tá sempre posta.' },
+    { player: 'Toca uma na gaita?', reply: 'Só uma vanerinha, que a vizinha reclama. Ela diz que gaita depois das dez é pecado.' },
+    { player: 'Bonita a bandeira na parede.', reply: 'Foi do meu avô, lá do tempo do CTG. Bandeira do Rio Grande não se dobra, se pendura.' }
+  ],
+  baitaca: [
+    { player: 'Buenas, Baitaca! Posso entrar?', reply: 'Entra, vivente. Rancho de barro, mas a porta é larga pra quem vem de coração aberto.' },
+    { player: 'Tava ensaiando?', reply: 'Tava afinando a viola. Ela desafina quando chove, que nem eu.' },
+    { player: 'Que lugar aconchegante.', reply: 'Fogão aceso, chimarrão pronto e o catre do lado. Precisa mais o quê?' }
+  ],
+  guri: [
+    { player: 'Opa, Guri! Tá em casa hoje?', reply: 'Tô de folga da fronteira. Nem a ponte eu atravessei hoje.' },
+    { player: 'Duas bandeiras na parede?', reply: 'Uma do Rio Grande e outra do Uruguai. Na fronteira a gente é meio dos dois lados.' },
+    { player: 'Me serve um mate?', reply: 'Serve-se! Erva castelhana, forte que nem coice de mula.' }
+  ],
+  badin: [
+    { player: 'Permesso, Badin!', reply: 'Avanti, Sadi! Entra que a nona deixou polenta no forno.' },
+    { player: 'Quanto salame!', reply: 'Tá curando. Daqui a um mês eu levo pra bodega e tu vende pra gauchada.' },
+    { player: 'Essas pipas são de vinho?', reply: 'Vinho da colônia, feito no pé. Mas não conta pra mãe que eu experimentei antes da hora.' }
+  ],
+  marcio: [
+    { player: 'Bonita a Casona, Márcio!', reply: 'Bonita é pouco! Isso aqui é show de bola, top de linha, padrão Erechim.' },
+    { player: 'Cadê a bola?', reply: 'Embaixo da cama baú. Tudo que some aqui tá embaixo da cama baú.' },
+    { player: 'Muito troféu, hein?', reply: 'Metade é meu, metade é do Marcelo. A de melhor churrasco é minha, ele que não discuta.' }
+  ],
+  marcelo: [
+    { player: 'E aí, Marcelo, de bobeira?', reply: 'Descansando pro racha. Atleta de várzea também precisa de sofá.' },
+    { player: 'Que cozinha limpa!', reply: 'Limpa porque a gente só faz churrasco embaixo. Cozinha é só pra guardar refri.' },
+    { player: 'O Márcio tá por aí?', reply: 'Tá sempre por aí. Gêmeo é igual sombra: não adianta fugir.' }
+  ],
+  gaudencio: [
+    { player: 'Buenas, Gaudêncio. Incomodo?', reply: 'Gente de bem não incomoda. Senta aí que a chaleira tá no fogo.' },
+    { player: 'Bonitos os arreios.', reply: 'Couro bom dura uma vida. O meu já durou duas: a do meu pai e a minha.' },
+    { player: 'Rancho bem cuidado.', reply: 'Rancho é que nem cavalo: se não cuidar, ele te deixa a pé.' }
+  ],
+  mitodosul: [
+    { player: 'E aí, Mito! Tá ao vivo?', reply: 'Tô em pausa, pode falar! O chat tá mandando um abraço pro bodegueiro.' },
+    { player: 'Que setup, hein!', reply: 'Dois monitores: um pro jogo e outro pra ver o Grêmio. Prioridades.' },
+    { player: 'Tu dorme quando?', reply: 'Quando a colheita do Farming termina. Ou seja: nunca.' }
+  ],
+  dianho: [
+    { player: 'Dá licença, Dianho?', reply: 'Entra, mas limpa o pé. Gângster de galpão também tem tapete.' },
+    { player: 'Só refri na geladeira?', reply: 'Só refri. Cabeça boa é a melhor arma de um gângster.' },
+    { player: 'Bonito o quadro na parede.', reply: 'Foi presente dos guris de Santa Cruz. Respeito se ganha, não se compra.' }
+  ],
+  lauro: [
+    { player: 'Seu Lauro, quanto troféu!', reply: 'Cada um com uma história. Esse do meio eu ganhei com a bocha emprestada!' },
+    { player: 'Treinando dentro de casa?', reply: 'Só a mira, no tapete. A patroa não deixa jogar bocha na sala.' },
+    { player: 'O senhor joga desde quando?', reply: 'Desde guri, em Indaial. Meu pai dizia: olho no bolim e paciência no braço.' }
+  ],
+  indavirus: [
+    { player: 'Atrapalho a redação?', reply: 'Atrapalha nada! Tu é notícia. Senta que eu vou te entrevistar.' },
+    { player: 'Quanto papel!', reply: 'Arquivo do Jornal Indavírus. Vinte anos de manchete, metade é sobre o Lauro.' },
+    { player: 'Essa impressora funciona?', reply: 'Funciona com reza. Antes de imprimir eu acendo uma vela.' }
+  ],
+  peixinhonabrasa: [
+    { player: 'Peixinho, tá em casa!', reply: 'Descansando entre uma pescaria e outra. Quer uma Kaiser?' },
+    { player: 'Quantas varas de pesca!', reply: 'Uma pra traíra, uma pra jundiá e uma pra mentir que pegou dourado.' },
+    { player: 'Cadê o peixe de hoje?', reply: 'Na caixa térmica, esperando a brasa. Peixe bom não espera muito.' }
+  ],
+  loligebien: [
+    { player: 'Guten Tag, Loli! Posso entrar?', reply: 'Komm rein! Entra, entra. Tira o sapato, que o assoalho é do bisavô.' },
+    { player: 'Um barril de chope em casa?', reply: 'Em Pomerode isso é móvel da sala. Igual o sofá.' },
+    { player: 'Esses tamancos são teus?', reply: 'São de dançar na Festa Pomerana. Fazem um barulho bonito no salão.' }
+  ],
+  jayme: [
+    { player: 'Seu Jayme, com licença.', reply: 'Entra, moço. A casa de um pajador é feita de livro, de mate e de silêncio.' },
+    { player: 'Escrevendo um verso novo?', reply: '“O galpão guarda a memória, o fogo guarda o calor; quem chega de mão estendida leva da casa o melhor.”' },
+    { player: 'Quanto livro!', reply: 'Cada livro é uma tropeada. A gente sai de um jeito e volta de outro.' }
+  ]
+};

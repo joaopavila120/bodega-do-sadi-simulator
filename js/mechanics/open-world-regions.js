@@ -138,18 +138,19 @@ const SERRA = { W: 3600, H: 2600, roadY: 940, roadH: 90, roadX: 1760, roadW: 80,
   badin: { x: 520, y: 560, w: 290, h: 210 }, casona: { x: 2200, y: 420, w: 320, h: 360 }, gaudencio: { x: 2900, y: 580, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' },
   mito: { x: 3050, y: 1250, w: 260, h: 190, wall: '#d8d8d0', roof: '#2a6ac8' }, dianho: { x: 1900, y: 2160, w: 280, h: 200 },
   vines: [{ x: 120, y: 500, w: 340, h: 340 }, { x: 900, y: 520, w: 440, h: 300 }, { x: 160, y: 2100, w: 600, h: 320 }, { x: 2500, y: 2150, w: 520, h: 300 }],
-  estacao: { x: 300, y: 1140, w: 300, h: 150 }, igreja: { x: 700, y: 1260, w: 300, h: 360 }, praca: { x: 1080, y: 1250, w: 560, h: 420 }, salao: { x: 1900, y: 1320, w: 560, h: 240 },
+  estacao: { x: 120, y: 1140, w: 260, h: 150 }, igreja: { x: 440, y: 1320, w: 300, h: 330 }, salao: { x: 750, y: 1420, w: 520, h: 230 }, praca: { x: 1330, y: 1250, w: 380, h: 400 },
+  roadEnd: 3300, roadSouth: 2400, tunnel: { x: 3300, y: 900, w: 300, h: 280 },
   campinho: { x: 2560, y: 1180, w: 400, h: 260 }, vinicola: { x: 2500, y: 1640, w: 380, h: 220 }, galeteria: { x: 3080, y: 1660, w: 340, h: 210 },
-  capiteis: [{ x: 1420, y: 600, w: 70, h: 90 }, { x: 3300, y: 940 - 120, w: 70, h: 90 }], enx: { x: 1900, y: 190, w: 230, h: 170 },
+  capiteis: [{ x: 1420, y: 600, w: 70, h: 90 }, { x: 3080, y: 940 - 120, w: 70, h: 90 }], enx: { x: 1900, y: 190, w: 230, h: 170 },
   italianos: { x: 2620, y: 640, w: 110, h: 130 }, alemaes: { x: 1420, y: 2160, w: 110, h: 130 }
 };
 SERRA.coreto = { x: SERRA.praca.x + SERRA.praca.w / 2 - 80, y: SERRA.praca.y + SERRA.praca.h / 2 - 80, w: 160, h: 140 };
-SERRA.obstacles = [SERRA.badin, SERRA.casona, SERRA.gaudencio, SERRA.mito, SERRA.dianho, ...SERRA.vines, SERRA.estacao, SERRA.igreja, SERRA.coreto, SERRA.salao, SERRA.vinicola, SERRA.galeteria, ...SERRA.capiteis, SERRA.enx, SERRA.italianos, SERRA.alemaes];
+SERRA.obstacles = [SERRA.badin, SERRA.casona, SERRA.gaudencio, SERRA.mito, SERRA.dianho, ...SERRA.vines, SERRA.estacao, SERRA.igreja, SERRA.coreto, SERRA.salao, SERRA.vinicola, SERRA.galeteria, ...SERRA.capiteis, SERRA.enx, SERRA.italianos, SERRA.alemaes, SERRA.tunnel];
 WORLD_MAPS.serra = regionMap({
   id: 'serra', name: 'Serra Gaúcha', W: SERRA.W, H: SERRA.H, obstacles: SERRA.obstacles,
   residents: ['badin', 'marcio', 'marcelo', 'gaudencio', 'mitodosul', 'dianho'],
-  walkLines: [[[80, 985], [900, 985], [1800, 985], [2700, 985], [3520, 985]], [[1800, 150], [1800, 985], [1800, 1700], [1800, 2450]]],
-  blocked(x, y) { const S = SERRA, cx = S.roadX + S.roadW / 2; if (y < 110 && Math.abs(x - cx) > 36) return true; return y > S.arroio - 10 && y < S.arroio + 64 && Math.abs(x - cx) > 60; },
+  walkLines: [[[80, 985], [900, 985], [1800, 985], [2700, 985], [3240, 985]], [[1800, 150], [1800, 985], [1800, 1700], [1800, 2360]]],
+  blocked(x, y) { const S = SERRA, cx = S.roadX + S.roadW / 2; if (y < 110 && Math.abs(x - cx) > 36) return true; if (x < 40 && (y < S.roadY || y > S.roadY + S.roadH)) return true; return y > S.arroio - 10 && y < S.arroio + 64 && Math.abs(x - cx) > 60; },
   // Pela esquerda volta à Fronteira; subindo pela estrada, Santa Catarina.
   edge(p) {
     if (p.x < 10) return { map: 'vila', x: VILA.W - 70, y: VILA.roadY + VILA.roadH / 2, title: 'Fronteira', text: 'De volta à bodega, na beira do rio Uruguai.' };
@@ -158,21 +159,21 @@ WORLD_MAPS.serra = regionMap({
   },
   spots() { const S = SERRA; return [
     { id: 'house:badin', ...front(S.badin), label: 'Casa de pedra de Badin', house: 'badin' },
-    { id: 'italianos', ...front(S.italianos, 24), label: 'Monumento ao imigrante italiano', text: 'Imigração italiana: a partir de 1875, famílias vindas principalmente do Vêneto subiram a Serra Gaúcha. Abriram picadas no mato, plantaram parreirais e fundaram as colônias que viraram Caxias do Sul, Bento Gonçalves e Garibaldi.' },
-    { id: 'alemaes', ...front(S.alemaes, 24), label: 'Monumento ao imigrante alemão', text: 'Imigração alemã: em 25 de julho de 1824, as primeiras famílias alemãs chegaram às margens do rio dos Sinos e fundaram São Leopoldo. Depois vieram outras colônias de pequenas propriedades, como Santa Cruz do Sul.' },
-    { id: 'farroupilha', x: S.praca.x + 66, y: S.praca.y + S.praca.h / 2 + 10, label: 'Bandeira do Rio Grande', text: 'Revolução Farroupilha (1835–1845): os farrapos enfrentaram o Império por dez anos, e a bandeira tricolor do Rio Grande nasceu nessa luta. Todo 20 de setembro o gaúcho comemora a data.' },
+    { id: 'italianos', ...front(S.italianos, 24), label: 'Monumento ao imigrante italiano', info: true, text: 'Imigração italiana: a partir de 1875, famílias vindas principalmente do Vêneto subiram a Serra Gaúcha. Abriram picadas no mato, plantaram parreirais e fundaram as colônias que viraram Caxias do Sul, Bento Gonçalves e Garibaldi.' },
+    { id: 'alemaes', ...front(S.alemaes, 24), label: 'Monumento ao imigrante alemão', info: true, text: 'Imigração alemã: em 25 de julho de 1824, as primeiras famílias alemãs chegaram às margens do rio dos Sinos e fundaram São Leopoldo. Depois vieram outras colônias de pequenas propriedades, como Santa Cruz do Sul.' },
+    { id: 'farroupilha', x: S.praca.x + 66, y: S.praca.y + S.praca.h / 2 + 10, label: 'Bandeira do Rio Grande', info: true, text: 'Revolução Farroupilha (1835–1845): os farrapos enfrentaram o Império por dez anos, e a bandeira tricolor do Rio Grande nasceu nessa luta. Todo 20 de setembro o gaúcho comemora a data.' },
     { id: 'house:marcio', ...front(S.casona), label: 'Casona de Márcio e Marcelo', house: 'marcio' },
     { id: 'house:gaudencio', ...front(S.gaudencio), label: 'Rancho de Gaudêncio', house: 'gaudencio' },
     { id: 'house:mitodosul', ...front(S.mito), label: 'Casa de Mito do Sul', house: 'mitodosul' },
     { id: 'house:dianho', ...front(S.dianho), label: 'Casa de Dianho', house: 'dianho' },
     { id: 'campinho', x: S.campinho.x + S.campinho.w / 2, y: S.campinho.y + S.campinho.h + 24, label: 'Campinho · show de bola', text: 'O campinho dos gêmeos: aqui é show de bola. Em breve, um racha no domingo à tarde.' },
-    { id: 'estacao', ...front(S.estacao), label: 'Estação da Maria Fumaça', text: 'Maria Fumaça: o trem a vapor que corre entre os vinhedos, com apito, vinho e música italiana.' },
-    { id: 'igreja', ...front(S.igreja), label: 'Igreja da comunidade', text: 'Igreja da comunidade, com o campanário: em breve, a missa de domingo e a festa do padroeiro.' },
+    { id: 'estacao', ...front(S.estacao), label: 'Estação da Maria Fumaça', info: true, text: 'Maria Fumaça: na Serra, o trem a vapor ainda corre entre Bento Gonçalves, Garibaldi e Carlos Barbosa, no meio dos parreirais, com apito, vinho e música italiana.' },
+    { id: 'igreja', x: S.igreja.x + S.igreja.w * .4, y: S.igreja.y + S.igreja.h + 30, label: 'Entrar na igreja', act: () => enterInterior('igreja') },
     { id: 'coreto', ...front(S.coreto, 26), label: 'Coreto da praça', text: 'Praça da comunidade: em breve, feirinha de domingo e roda de chimarrão.' },
-    { id: 'salao', ...front(S.salao), label: 'Salão da comunidade', text: 'Salão da comunidade: em breve, baile, jantar de galeto com cuca e campeonato de truco.' },
+    { id: 'salao', ...front(S.salao), label: 'Entrar no salão da comunidade', act: () => enterInterior('salao') },
     { id: 'vinicola', ...front(S.vinicola), label: 'Vinícola da família', text: 'Vinícola da família: vinho colonial e suco de uva. Em breve dá para comprar vinho para a bodega.' },
     { id: 'galeteria', ...front(S.galeteria), label: 'Galeteria', text: 'Galeteria: galeto al primo canto, polenta frita, radicci e massa.' },
-    ...S.capiteis.map((c, i) => ({ id: 'capitel' + i, ...front(c, 24), label: 'Capitel', text: 'Capitel de beira de estrada: capelinha erguida por promessa, onde as famílias rezam o terço e pedem chuva para a lavoura.' }))
+    ...S.capiteis.map((c, i) => ({ id: 'capitel' + i, ...front(c, 24), label: 'Capitel', info: true, text: 'Capitel de beira de estrada: capelinha erguida por promessa, onde as famílias rezam o terço e pedem chuva para a lavoura.' }))
   ]; },
   lights() { const S = SERRA; return [[S.badin.x + 50, S.badin.y + 120], [S.casona.x + 60, S.casona.y + 100], [S.gaudencio.x + 50, S.gaudencio.y + 116], [S.mito.x + 50, S.mito.y + 116], [S.dianho.x + 44, S.dianho.y + 100], [S.salao.x + 90, S.salao.y + 150], [S.igreja.x + 120, S.igreja.y + 100], [S.galeteria.x + 60, S.galeteria.y + 120]]; },
   draw(view, seen, layers) {
@@ -180,7 +181,7 @@ WORLD_MAPS.serra = regionMap({
     grassField(this, view, seen, '#76984a', ['#668a3e', '#8aac58']);
     for (const [x, y, rx] of [[600, 300, 600], [2000, 300, 700], [3200, 360, 500], [1800, 2400, 700]]) if (seen(x, y, rx)) ellipse(x, y, rx, rx * .3, 'rgba(110,140,70,.4)');
     forestEdge(this, S.roadX, S.roadW);
-    road(0, S.roadY, S.W, S.roadH); road(S.roadX, 110, S.roadW, S.H - 110); drawRail(0, S.W, S.rail);
+    road(0, S.roadY, S.roadEnd, S.roadH); road(S.roadX, 110, S.roadW, S.roadSouth - 110); ellipse(cx, S.roadSouth, 90, 40, '#b08a58'); drawRail(0, S.tunnel.x + 60, S.rail);
     drawArroio(this, S.arroio, cx);
     for (const v of S.vines) add(v, () => drawVineyard(v));
     for (const c of S.capiteis) add(c, () => drawCapitel(c));
@@ -200,6 +201,9 @@ WORLD_MAPS.serra = regionMap({
     add(S.vinicola, () => { drawStoneHouse(S.vinicola, null); rect(S.vinicola.x + 30, S.vinicola.y + 72, S.vinicola.w - 60, 26, '#f4ecd8', 3, '#5a3a20'); txt('VINÍCOLA DA FAMÍLIA · VINHO COLONIAL', S.vinicola.x + S.vinicola.w / 2, S.vinicola.y + 85, 12, '#6a1a2a', 'center', 'Georgia'); wineBarrels(S.vinicola.x - 150, S.vinicola.y + S.vinicola.h - 20); });
     add(S.galeteria, () => { drawStoneHouse(S.galeteria, null); rect(S.galeteria.x + 20, S.galeteria.y + 70, S.galeteria.w - 40, 26, '#f4ecd8', 3, '#5a3a20'); txt('GALETERIA · GALETO E POLENTA', S.galeteria.x + S.galeteria.w / 2, S.galeteria.y + 83, 12, '#6a1a2a', 'center', 'Georgia'); pennants(S.galeteria.x + 10, S.galeteria.x + S.galeteria.w - 10, S.galeteria.y + 50, ['#2a8a3a', '#f4f4f4', '#d42a2a']); });
     layers.push({ y: S.rail + 20, draw: () => drawTrain(trainX(0, S.W, 120, 900), S.rail + 10) });
+    // O trilho some no túnel da serra, rumo a Bento Gonçalves; a estrada termina antes do morro.
+    layers.push({ y: S.rail + 40, draw: () => { const t = S.tunnel; ellipse(t.x + 170, t.y + 150, 230, 170, '#4f7a36'); ellipse(t.x + 200, t.y + 90, 170, 120, '#5f8a42'); rect(t.x + 30, S.rail - 70, 70, 100, '#2a2420', 30); rect(t.x + 22, S.rail - 78, 86, 14, '#8a8a80', 4); rect(t.x + 60, S.rail + 30, t.w, 60, '#4f7a36'); signBoard(t.x + 170, t.y - 100, 200, 'BENTO GONÇALVES →', 12); } });
+    layers.push({ y: S.roadY - 10, draw: () => { rect(110, S.roadY - 120, 8, 120, '#5a3a20'); poly([[250, S.roadY - 120], [70, S.roadY - 120], [40, S.roadY - 98], [70, S.roadY - 76], [250, S.roadY - 76]], '#e8d6a8'); txt('← FRONTEIRA', 150, S.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
     layers.push({ y: 240, draw: () => { signBoard(cx + 170, 150, 200, 'SANTA CATARINA ↑', 13); } });
   }
 });
@@ -218,6 +222,7 @@ WORLD_MAPS.sc = regionMap({
   id: 'sc', name: 'Santa Catarina · Vale Europeu', W: SC.W, H: SC.H, obstacles: SC.obstacles,
   residents: ['lauro', 'indavirus', 'peixinhonabrasa', 'loligebien', 'jayme'],
   walkLines: [[[240, 1000], [900, 1000], [1500, 1000], [2100, 1000], [2760, 1000]], [[1500, 1060], [1500, 1500], [1500, 1880]]],
+  blocked(x, y) { return y > SC.H - 40 && Math.abs(x - (SC.roadX + SC.roadW / 2)) > 50; },
   edge(p) { if (p.y > SC.H - 10) return { map: 'serra', x: SERRA.roadX + SERRA.roadW / 2, y: 70, title: 'Serra Gaúcha', text: 'De volta ao Rio Grande.' }; return null; },
   spots() { const P = SC; return [
     ...P.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: h.label, house: h.id })),
@@ -225,9 +230,9 @@ WORLD_MAPS.sc = regionMap({
     { id: 'luterana', ...front(P.luterana), label: 'Igreja luterana', text: 'Igreja luterana: o culto de domingo e o coral da comunidade.' },
     { id: 'bolao', ...front(P.bolao), label: 'Cancha de bolão', text: 'Cancha de bolão: o boliche dos colonos alemães. Em breve, partidas valendo chope.' },
     { id: 'festa', ...front(P.festa), label: 'Festa Pomerana', text: 'Festa Pomerana: chope, bandinha, marreco recheado e baile, como na Kerb dos colonos.' },
-    { id: 'ostern', ...front(P.ostern, 0), label: 'Osterbaum', text: 'Osterbaum: a árvore de Páscoa enfeitada com casquinhas de ovo pintadas, orgulho de Pomerode.' },
+    { id: 'ostern', ...front(P.ostern, 0), label: 'Osterbaum', info: true, text: 'Osterbaum: a árvore de Páscoa enfeitada com casquinhas de ovo pintadas, orgulho de Pomerode.' },
     { id: 'canchaLauro', ...front(P.canchaLauro, 20), label: 'Cancha do Lauro', text: 'A canchinha do Lauro Boleador: é aqui que ele treina o jogo de bocha que te ensinou.' },
-    { id: 'marco', ...front(P.marco, 24), label: 'Marco do Vale Europeu', text: 'Vale Europeu: Blumenau foi fundada em 1850 por Hermann Blumenau, e dela nasceram cidades como Pomerode e Indaial. Muitos colonos vieram da Pomerânia, que deu nome a Pomerode.' },
+    { id: 'marco', ...front(P.marco, 24), label: 'Marco do Vale Europeu', info: true, text: 'Vale Europeu: Blumenau foi fundada em 1850 por Hermann Blumenau, e dela nasceram cidades como Pomerode e Indaial. Muitos colonos vieram da Pomerânia, que deu nome a Pomerode.' },
     { id: 'grelha', ...front(P.grelha, 20), label: 'Brasa do Peixinho', text: 'A brasa do Peixinho: peixe na grelha e uma Kaiser gelada na mão.' }
   ]; },
   lights() { return [...SC.houses.map(h => [h.x + 44, h.y + 100]), [SC.cafe.x + 60, SC.cafe.y + 100], [SC.festa.x + SC.festa.w / 2, SC.festa.y + 90]]; },

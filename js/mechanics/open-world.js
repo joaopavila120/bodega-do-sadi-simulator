@@ -35,7 +35,13 @@ function goInside() {
 function canchaToPatio() { leaveCancha(true); goOutside(front(VILA.cancha, 40)); }
 // Botão na tela dentro da cancha: a única opção é sair para o pátio.
 function canchaExit() { if (worldOut?.map !== 'cancha') return; switchMap({ map: 'vila', ...front(VILA.cancha, 40), title: 'Pátio da bodega', text: '' }); refreshHUD(); }
-function switchMap(to) { worldOut.map = to.map; worldOut.x = to.x; worldOut.y = to.y; keys.clear(); showRpgBox('worldTalk', null); AudioEngine.swoosh(.04); worldBanner(to.title, to.text || ''); }
+function switchMap(to) {
+  worldOut.map = to.map; worldOut.x = to.x; worldOut.y = to.y; worldOut.fired = {}; keys.clear(); showRpgBox('worldTalk', null);
+  if (WORLD_MAPS[to.map]?.indoor) AudioEngine.doorChime(); else AudioEngine.swoosh(.04);
+  if (to.title) worldBanner(to.title, to.text || ''); WORLD_MAPS[to.map]?.onEnter?.();
+}
+// Entra numa casa (ou na igreja, no salão): guarda onde estava lá fora para sair pela mesma porta.
+function enterInterior(id) { const M = WORLD_MAPS[id]; if (!M) return false; worldOut.back = { map: worldOut.map, x: worldOut.x, y: worldOut.y + 6 }; switchMap({ map: id, ...M.spawn(), title: M.name }); worldOut.dy = -1; return true; }
 
 // ---------- Avisos: os da bodega ficam na bodega ----------
 // Fora da bodega, say() e showBanner() da bodega ficam em silêncio; o mundo aberto usa worldSay/worldBanner.
@@ -50,15 +56,14 @@ let worldWalkers = [], worldWalkersKey = '';
 function walkerPos(w) { const a = w.line[w.seg], b = w.line[w.seg + 1]; return { a, b }; }
 function spawnWalkers(M) {
   worldWalkersKey = M.id + ':' + G.day; worldWalkers = [];
-  const free = (M.residents || []).map(id => PEOPLE.findIndex(p => p.id === id)).filter(i => i >= 0 && !activeUniqueVisitors().has(i));
-  const count = Math.min(free.length, 2 + Math.floor(Math.random() * 2));
-  for (const i of free.sort(() => Math.random() - .5).slice(0, count)) {
+  const free = (M.residents || []).map(id => PEOPLE.findIndex(p => p.id === id)).filter(i => i >= 0 && !activeUniqueVisitors().has(i) && walkingToday(i));
+  for (const i of free.slice(0, 4)) {
     const line = pick(M.walkLines), seg = Math.floor(Math.random() * (line.length - 1)), k = Math.random(), a = line[seg], b = line[seg + 1];
     worldWalkers.push({ person: i, line, seg, dir: 1, x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k, wait: Math.random() * 3, dx: 1, walk: false });
   }
 }
 function walkersTick(dt) {
-  const M = worldMap(); if (!M.walkLines) { worldWalkers = []; return; }
+  const M = worldMap(); if (!M.walkLines) { worldWalkers = []; worldWalkersKey = ''; return; }
   if (worldWalkersKey !== M.id + ':' + G.day) spawnWalkers(M);
   worldWalkers = worldWalkers.filter(w => !activeUniqueVisitors().has(w.person));
   for (const w of worldWalkers) {
@@ -73,12 +78,17 @@ function walkerSpots() { return worldWalkers.map(w => ({ id: 'walker:' + w.perso
 
 // Prosa na estrada: primeiro a fala do Sadi, depois a resposta. Até 3 por dia com cada um; cada uma aumenta a amizade.
 const WORLD_TALKS_PER_DAY = 3;
+let worldTalkAt = null;
 function worldTalkOpen() { return !$('worldTalkUI')?.classList.contains('hidden'); }
+// Monumentos e lugares históricos: explicação em forma de diálogo, com a lâmpada no lugar do retrato.
+function showInfo(title, text) { worldTalkAt = { x: worldOut.x, y: worldOut.y }; showRpgBox('worldTalk', { portrait: '<div class="lamp-portrait" aria-hidden="true">💡</div>', name: 'Você sabia? · ' + title, reply: text }); AudioEngine.tick(); }
+// Espaço pula a conversa inteira.
+function skipWorldTalk() { showRpgBox('worldTalk', null); }
 function worldTalk(w) {
   const i = w.person, id = PEOPLE[i].id, name = PEOPLE[i].name;
   if (G.worldTalks?.day !== G.day) G.worldTalks = { day: G.day, count: {} };
-  const n = G.worldTalks.count[id] || 0, lines = WORLD_TALK[id] || [];
-  w.wait = 4; w.dx = worldOut.x > w.x ? 1 : -1;
+  const home = worldMap().indoor && WORLD_HOME_TALK[id], n = G.worldTalks.count[id] || 0, lines = home || WORLD_TALK[id] || [];
+  w.wait = 4; w.dx = worldOut.x > w.x ? 1 : -1; worldTalkAt = { x: w.x, y: w.y };
   if (n >= WORLD_TALKS_PER_DAY || !lines.length) { showRpgBox('worldTalk', { person: i, name, reply: pick(WORLD_TALK_TIRED) }); return; }
   G.worldTalks.count[id] = n + 1;
   const line = lines[(n + G.day * 2) % lines.length];
@@ -89,20 +99,21 @@ function worldTalkNext() { if (!rpgAdvance('worldTalk')) showRpgBox('worldTalk',
 
 function outsideTick(dt) {
   const p = worldOut; walkersTick(dt);
-  if (worldTalkOpen() && worldWalkers.every(w => Math.hypot(w.x - p.x, w.y - p.y) > 220)) showRpgBox('worldTalk', null);
+  if (worldTalkOpen() && worldTalkAt && Math.hypot(worldTalkAt.x - p.x, worldTalkAt.y - p.y) > 240) showRpgBox('worldTalk', null);
   let dx = (keys.has('d') || keys.has('ArrowRight') ? 1 : 0) - (keys.has('a') || keys.has('ArrowLeft') ? 1 : 0), dy = (keys.has('s') || keys.has('ArrowDown') ? 1 : 0) - (keys.has('w') || keys.has('ArrowUp') ? 1 : 0);
   const len = Math.hypot(dx, dy); p.walk = !!len; if (!len) return;
   dx /= len; dy /= len; p.dx = dx; p.dy = dy; const step = BASE_SPEED * 1.4 * (1 + movementBonus()) * dt;
   for (let n = 0; n < 4; n++) { const x = p.x + dx * step / 4, y = p.y + dy * step / 4; if (worldCanWalk(x, p.y)) p.x = x; if (worldCanWalk(p.x, y)) p.y = y; }
-  const to = worldMap().edge?.(p); if (to) switchMap(to);
+  const to = worldMap().edge?.(p); if (to) { switchMap(to); return; }
+  worldMap().tick?.(p);
 }
 function outsideInteract() {
   if (worldTalkOpen()) { worldTalkNext(); return; }
   const s = worldNearest(); if (!s) { effect('Chegue mais perto', worldOut.x, worldOut.y - 52); return; }
-  if (s.act) s.act(); else if (s.house) houseVisit(s.house); else worldSay(s.text);
+  if (s.act) s.act(); else if (s.house) houseVisit(s.house); else if (s.info) showInfo(s.label, s.text); else worldSay(s.text);
 }
 // A casa só se revela de perto; o morador, se não estiver na bodega, anda pela estrada.
-function houseVisit(id) { const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; worldSay(activeUniqueVisitors().has(i) ? PEOPLE[i].name + ' não está em casa: tá lá na bodega.' : worldWalkers.some(w => w.person === i) ? PEOPLE[i].name + ' não está em casa: deve estar andando pela estrada.' : 'Casa de ' + PEOPLE[i].name + ': ninguém atendeu. Em breve dá pra bater na porta e levar presente.'); }
+function houseVisit(id) { if (enterInterior('casa:' + id)) return; const i = PEOPLE.findIndex(p => p.id === id); if (i < 0) return; worldSay(activeUniqueVisitors().has(i) ? PEOPLE[i].name + ' não está em casa: tá lá na bodega.' : worldWalkers.some(w => w.person === i) ? PEOPLE[i].name + ' não está em casa: deve estar andando pela estrada.' : 'Casa de ' + PEOPLE[i].name + ': ninguém atendeu. Em breve dá pra bater na porta e levar presente.'); }
 function outsideHint() { const s = worldNearest(); return s ? '<strong>E</strong> ' + s.label : worldMap().name + ' · WASD anda'; }
 
 // ---------- Desenho comum ----------
@@ -170,26 +181,28 @@ function drawWorldTree(x, y, kind) {
 const VILA = {
   W: 3600, H: 2700, river: 540, border: 2380, roadY: 690, roadH: 90, roadX: 1580,
   horta: { x: 600, y: 260, w: 250, h: 280 }, fogo: { x: 870, y: 250, w: 400, h: 330 }, bodega: { x: 1300, y: 180, w: 640, h: 420 },
-  cancha: { x: 2060, y: 240, w: 460, h: 360 }, potreiro: { x: 2640, y: 200, w: 860, h: 440 },
+  cancha: { x: 2060, y: 240, w: 460, h: 360 }, potreiro: { x: 2640, y: 200, w: 860, h: 380 },
   agro: { x: 1720, y: 1080, w: 440, h: 260 }, gado: { x: 2380, y: 1080, w: 440, h: 260 },
   houses: [{ id: 'valter', x: 700, y: 1150, w: 260, h: 190, wall: '#c9b58a', roof: '#9a4a32' }, { id: 'manolima', x: 900, y: 1700, w: 270, h: 190, wall: '#d8c9a2', roof: '#7a3a2a' },
     { id: 'baitaca', x: 2700, y: 1700, w: 260, h: 190, wall: '#efe6d2', roof: '#b89a58' }, { id: 'guri', x: 1900, y: 2110, w: 250, h: 190, wall: '#e6d2a8', roof: '#5a4a3a' }],
   marco: { x: 1500, y: 2250, w: 40, h: 60 },
-  missoes: { x: 2940, y: 980, w: 440, h: 300 }, pouso: { x: 2160, y: 1620, w: 340, h: 190 }
+  missoes: { x: 2940, y: 980, w: 440, h: 300 }, pouso: { x: 2160, y: 1620, w: 340, h: 190 }, estacao: { x: 1720, y: 870, w: 260, h: 130 }
 };
-const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [3520, 820, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2500, 2200, 'a'], [1100, 2230, 'a'], [3100, 1250, 'a'], [1400, 1250, 'ipe'], [2600, 1560, 'jaca']];
-const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [VILA.roadX, VILA.roadY, 80, VILA.border - VILA.roadY], [VILA.river, 1440, VILA.W - VILA.river, 60]];
+VILA.rail = VILA.roadY + 132;   // mesma distância da estrada que o trilho da Serra: os dois se encontram na divisa
+const VILA_TREES = [[600, 1000, 'a'], [1210, 960, 'a'], [3480, 1150, 'a'], [600, 1760, 'a'], [3450, 1700, 'a'], [2500, 2200, 'a'], [1100, 2230, 'a'], [3100, 1250, 'a'], [1400, 1250, 'ipe'], [2600, 1560, 'jaca']];
+const VILA_ROADS = [[VILA.river, VILA.roadY, VILA.W - VILA.river, VILA.roadH], [VILA.roadX, VILA.roadY, 80, VILA.border - VILA.roadY], [VILA.river, 1440, 3400 - VILA.river, 60]];
 
 WORLD_MAPS.vila = {
   id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
   residents: ['valter', 'manolima', 'baitaca', 'guri'],
   walkLines: [[[620, 735], [1620, 735], [2600, 735], [3500, 735]], [[1620, 800], [1620, 1470], [1620, 2300]], [[620, 1470], [1620, 1470], [2700, 1470], [3500, 1470]]],
-  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, ...V.houses]; },
+  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
   canWalk(x, y) {
     if (y < 130 || x > VILA.W + 20) return false;
     if (y > VILA.border - 20) return false;                          // rio Uruguai embaixo: fronteira com o Uruguai
     const pier = x >= 250 && y >= 890 && y <= 945;
     if (x < VILA.river - 20 && !pier) return false;
+    if (x > VILA.W - 40 && (y < VILA.roadY || y > VILA.roadY + VILA.roadH)) return false;   // a divisa com a Serra é pela estrada
     return !hitRect(this.obstacles(), x, y);
   },
   // Seguindo a estrada para a direita, passa sozinho para o mapa 2 (Serra Gaúcha).
@@ -204,10 +217,11 @@ WORLD_MAPS.vila = {
       { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } worldSay('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na Casa do Campeiro.'); } },
       { id: 'agro', ...front(V.agro), label: 'Armazém Querência · produtos para agricultura', text: 'Armazém Querência: sementes, mudas, adubo e ferramentas para a horta. Em breve, a horta da bodega começa por aqui.' },
       { id: 'gado', ...front(V.gado), label: 'Casa do Campeiro · produtos para pecuária', act: campoShop },
-      { id: 'missoes', x: V.missoes.x + V.missoes.w / 2, y: V.missoes.y + V.missoes.h + 26, label: 'Ruínas das Missões', text: 'Missões: entre os séculos XVII e XVIII, padres jesuítas e indígenas guaranis ergueram os Sete Povos das Missões no noroeste do Rio Grande. As ruínas de São Miguel Arcanjo são Patrimônio Mundial da UNESCO.' },
-      { id: 'pouso', ...front(V.pouso, 24), label: 'Pouso de tropeiros', text: 'Tropeirismo: nos séculos XVIII e XIX, os tropeiros levavam tropas de mulas e gado do Rio Grande até Sorocaba, em São Paulo. Nos pousos a tropa descansava; pelo caminho nasceram vilas e se espalharam o charque e o chimarrão.' },
+      { id: 'missoes', x: V.missoes.x + V.missoes.w / 2, y: V.missoes.y + V.missoes.h + 26, label: 'Ruínas das Missões', info: true, text: 'Missões: entre os séculos XVII e XVIII, padres jesuítas e indígenas guaranis ergueram os Sete Povos das Missões no noroeste do Rio Grande. As ruínas de São Miguel Arcanjo são Patrimônio Mundial da UNESCO.' },
+      { id: 'pouso', ...front(V.pouso, 24), label: 'Pouso de tropeiros', info: true, text: 'Tropeirismo: nos séculos XVIII e XIX, os tropeiros levavam tropas de mulas e gado do Rio Grande até Sorocaba, em São Paulo. Nos pousos a tropa descansava; pelo caminho nasceram vilas e se espalharam o charque e o chimarrão.' },
       { id: 'river', x: 470, y: 917, label: 'Trapiche do rio Uruguai', text: 'Rio Uruguai: em breve, pescaria de dourado e jundiá no trapiche.' },
-      { id: 'marco', x: V.marco.x + 20, y: V.marco.y - 20, label: 'Marco da fronteira', text: 'Marco da fronteira: do outro lado do rio é o Uruguai. Em breve, a balsa e os fregueses castelhanos.' },
+      { id: 'marco', x: V.marco.x + 20, y: V.marco.y - 20, label: 'Marco da fronteira', info: true, text: 'Fronteira gaúcha: o Rio Grande divide rios, coxilhas e até cidades com o Uruguai. Em Santana do Livramento e Rivera, basta atravessar uma rua para mudar de país.' },
+      { id: 'estacao', ...front(V.estacao), label: 'Estação da Fronteira', info: true, text: 'Ferrovia: os trilhos levavam gado, charque e passageiros da fronteira até a Serra e a capital. Daqui o trem segue junto da estrada, rumo à Serra Gaúcha.' },
       ...V.houses.map(h => ({ id: 'house:' + h.id, ...front(h), label: 'Casa de ' + (PEOPLE.find(p => p.id === h.id)?.name || h.id), house: h.id }))
     ];
   },
@@ -222,10 +236,13 @@ WORLD_MAPS.vila = {
     add(V.agro, () => drawWorldShop(V.agro, 'ARMAZÉM QUERÊNCIA', 'produtos para agricultura', '#4a7a3a', '#e8e0c8', ['semente', 'regador', 'enxada']));
     add(V.gado, () => drawWorldShop(V.gado, 'CASA DO CAMPEIRO', 'produtos para pecuária', '#8a3a24', '#e8d8b8', ['sal', 'racao', 'arreio']));
     add({ ...V.missoes, h: V.missoes.h + 20 }, drawMissoes); add(V.pouso, drawPouso);
+    drawRail(1690, V.W, V.rail); rect(1676, V.rail - 14, 16, 40, '#a83a24', 3);   // fim de linha na estação
+    add(V.estacao, () => { const s = V.estacao; gable(s.x, s.y + 10, s.w, 50, '#7a3a24', 16); rect(s.x, s.y + 56, s.w, s.h - 56, '#f0d8a8', 0, '#6a5a3a'); for (const x of [s.x + 20, s.x + s.w - 70]) windowPane(x, s.y + 74, 50, 40); rect(s.x + s.w / 2 - 20, s.y + s.h - 56, 40, 56, '#6a4424'); signBoard(s.x + s.w / 2, s.y + 20, 200, 'ESTAÇÃO DA FRONTEIRA', 12); });
+    layers.push({ y: V.rail + 20, draw: () => { ctx.save(); ctx.beginPath(); ctx.rect(1690, 0, V.W, V.H); ctx.clip(); drawTrain(trainX(1690, V.W, 120, 300), V.rail + 10); ctx.restore(); } });
     drawWorldPotreiro(layers, seen);
     for (const h of V.houses) add(h, () => worldHouse(h, null, h));
     for (const [x, y, kind] of VILA_TREES) if (seen(x, y)) layers.push({ y, draw: () => drawWorldTree(x, y, kind) });
-    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 120, 8, 120, '#5a3a20'); poly([[V.W - 250, V.roadY - 120], [V.W - 70, V.roadY - 120], [V.W - 40, V.roadY - 98], [V.W - 70, V.roadY - 76], [V.W - 250, V.roadY - 76]], '#e8d6a8'); txt('SERRA GAÚCHA →', V.W - 150, V.roadY - 98, 13, '#5a2a14', 'center', 'Georgia'); } });
+    if (seen(V.W - 120, V.roadY)) layers.push({ y: V.roadY - 10, draw: () => { rect(V.W - 130, V.roadY - 66, 8, 66, '#5a3a20'); poly([[V.W - 250, V.roadY - 66], [V.W - 70, V.roadY - 66], [V.W - 40, V.roadY - 44], [V.W - 70, V.roadY - 22], [V.W - 250, V.roadY - 22]], '#e8d6a8'); txt('SERRA GAÚCHA →', V.W - 150, V.roadY - 44, 13, '#5a2a14', 'center', 'Georgia'); } });
   }
 };
 // Ruínas das Missões: a fachada de pedra vermelha de São Miguel Arcanjo, com os arcos e a torre.

@@ -46,6 +46,15 @@
   G.groups=[];G.shop=[];worldWalkersKey='';walkersTick(.05);check(worldWalkers.length>0&&worldWalkers.every(w=>WORLD_MAPS.vila.residents.includes(PEOPLE[w.person].id)),'moradores da Fronteira andam pela estrada');
   const w=worldWalkers[0],id=PEOPLE[w.person].id,f=G.friends[w.person]||0;G.worldTalks=null;worldOut.x=w.x;worldOut.y=w.y;for(let k=0;k<4;k++){showRpgBox('worldTalk',null);interact();}
   check(G.worldTalks.count[id]===3&&(G.friends[w.person]||0)===f+6&&!$('worldTalkUI').classList.contains('hidden'),'prosa na estrada: até 3 por dia, cada uma aumenta a amizade');showRpgBox('worldTalk',null);
+  const mi=WORLD_MAPS.vila.spots().find(s=>s.id==='missoes');worldOut.x=mi.x;worldOut.y=mi.y;interact();check(worldTalkOpen()&&$('worldTalkPortrait').innerHTML.includes('lamp-portrait')&&$('worldTalkName').textContent.includes('Você sabia'),'monumentos explicam em diálogo com a lâmpada');
+  document.dispatchEvent(new KeyboardEvent('keydown',{key:' '}));check(!worldTalkOpen(),'Espaço pula o diálogo');
+  const v=WORLD_MAPS.vila.spots().find(s=>s.house==='valter');worldOut.x=v.x;worldOut.y=v.y;interact();check(worldOut.map==='casa:valter','E na porta entra na casa');worldOut.y=WORLD_MAPS['casa:valter'].bounds.y+WORLD_MAPS['casa:valter'].bounds.h+20;keys.add('s');simulate(.05);keys.clear();check(worldOut.map==='vila'&&Math.abs(worldOut.x-v.x)<5,'saindo pela porta, de volta à rua');
+  check(VILA.rail===VILA.roadY+132&&SERRA.rail===SERRA.roadY+132,'o trilho da Fronteira continua na Serra');
+  {const realWalk=walkingToday;window.walkingToday=()=>false;G.groups=[];G.shop=[];G.casonaSeen=false;G.worldTalks=null;worldOut.map='serra';const c=WORLD_MAPS.serra.spots().find(s=>s.house==='marcio');worldOut.x=c.x;worldOut.y=c.y;interact();check(worldOut.map==='casa:marcio','Casona: entra pelo térreo, com a churrasqueira');
+   worldOut.x=1160;worldOut.y=300;keys.add('w');simulate(.05);keys.clear();check(worldOut.map==='casona'&&$('worldTalkReply').textContent!==null&&G.casonaSeen,'sobe a escada lateral e entra pela sala');finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('Portonzon'),'na primeira vez, um dos gêmeos mostra o portão');skipWorldTalk();
+   worldOut.x=650;worldOut.y=470;keys.add('w');simulate(.05);keys.clear();finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('banheirão')&&$('worldTalkName').textContent==='Márcio','no banheiro, o Márcio fala do marmorezão');skipWorldTalk();
+   worldOut.x=420;worldOut.y=470;keys.add('w');simulate(.05);keys.clear();finishRpgTyping('worldTalk');check($('worldTalkReply').textContent.includes('bauzona'),'no quarto, a cama bauzona');skipWorldTalk();
+   check(WORLD_MAPS.casona.spots().some(s=>s.id==='home:marcio'),'os gêmeos estão em casa');window.walkingToday=realWalk;}
   goInside();G.phase='open';}
  reset();G.day=7;G.phase='open';G.up.table3=G.up.table4=true;
  for(let id=0;id<4;id++)spawnGroup({size:4,targetTable:id,fixedOrders:Array(12).fill('cerveja')});for(let i=0;i<350;i++)customersTick(.05);
