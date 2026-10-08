@@ -46,7 +46,7 @@ function enterInterior(id) { const M = WORLD_MAPS[id]; if (!M) return false; wor
 // ---------- Avisos: os da bodega ficam na bodega ----------
 // Fora da bodega, say() e showBanner() da bodega ficam em silêncio; o mundo aberto usa worldSay/worldBanner.
 let worldAway = null;
-function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world && modal !== 'worldStore'; }
+function bodegaNoticeMuted(opts) { return !!worldOut && !opts?.world && !['worldStore', 'horta'].includes(modal); }
 function worldSay(text) { say(text, { world: true }); }
 function worldBanner(title, text) { showBanner(title, text, 'info', { world: true }); }
 
@@ -197,7 +197,7 @@ WORLD_MAPS.vila = {
   id: 'vila', name: 'Fronteira', W: VILA.W, H: VILA.H,
   residents: ['valter', 'manolima', 'baitaca', 'guri', 'jayme'],
   walkLines: [[[620, 735], [1620, 735], [2600, 735], [3500, 735]], [[1620, 800], [1620, 1470], [1620, 2300]], [[620, 1470], [1620, 1470], [2700, 1470], [3500, 1470]]],
-  obstacles() { const V = VILA; return [V.bodega, V.cancha, V.horta, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
+  obstacles() { const V = VILA; return [V.bodega, V.cancha, { x: V.fogo.x + 50, y: V.fogo.y + 80, w: V.fogo.w - 100, h: V.fogo.h - 150 }, V.potreiro, V.agro, V.gado, V.marco, { x: V.missoes.x, y: V.missoes.y + 60, w: V.missoes.w, h: V.missoes.h - 60 }, V.pouso, V.estacao, ...V.houses]; },
   canWalk(x, y) {
     if (y < 130 || x > VILA.W + 20) return false;
     if (y > VILA.border - 20) return false;                          // rio Uruguai embaixo: fronteira com o Uruguai
@@ -213,7 +213,7 @@ WORLD_MAPS.vila = {
     return [
       { id: 'door', ...front(V.bodega), label: 'Entrar na bodega', act: goInside },
       { id: 'cancha', ...front(V.cancha), label: 'Entrar na cancha de bocha', act: () => { const was = worldOut; worldOut = null; enterCancha(true); if (!worldOut) worldOut = was; } },
-      { id: 'horta', ...front(V.horta), label: G.up.bergamota ? 'Horta e pomar de bergamota' : 'Horta e pomar', text: G.up.bergamota ? 'Pomar de bergamota: é dele que sai a bergamota vendida no balcão. Em breve dá para colher na mão.' : 'Horta e pomar da bodega: em breve dá para plantar, regar e colher. As sementes vêm da agropecuária.' },
+      ...hortaSpots(),
       { id: 'fogo', ...front(V.fogo), label: isCampo() ? 'Voltar ao costelão' : 'Fogo de chão do costelão', act: () => { if (isCampo()) goInside(); else worldSay('Fogo de chão: é aqui que sai o costelão de domingo. A carne vem do potreiro, laçada no sábado.'); } },
       { id: 'potreiro', ...front(V.potreiro), label: 'Potreiro · ' + herd + (herd === 1 ? ' boi' : ' bois'), act: () => { if (lassoNeeded()) { goInside(); lassoIntro(); return; } worldSay('Potreiro: ' + herd + (herd === 1 ? ' boi pastando.' : ' bois pastando.') + ' Sábado à noite é dia de laçar para o costelão. Bois novos se compram na Casa do Campeiro.'); } },
       { id: 'agro', ...front(V.agro), label: 'Entrar no Armazém Querência', act: () => enterInterior('agro') },
@@ -233,7 +233,7 @@ WORLD_MAPS.vila = {
     for (const r of VILA_ROADS) road(...r);
     drawVilaRiver();
     const add = (r, fn) => { if (seen(r.x + r.w / 2, r.y + r.h / 2, Math.max(r.w, r.h))) layers.push({ y: r.y + r.h, draw: fn }); };
-    add(V.bodega, drawWorldBodega); add(V.cancha, drawWorldCancha); add(V.horta, drawWorldHorta); add(V.fogo, drawWorldFogo); add(V.marco, drawWorldMarco);
+    add(V.bodega, drawWorldBodega); add(V.cancha, drawWorldCancha); drawHortaLayers(layers, seen); add(V.fogo, drawWorldFogo); add(V.marco, drawWorldMarco);
     add(V.agro, () => drawWorldShop(V.agro, 'ARMAZÉM QUERÊNCIA', 'produtos para agricultura', '#4a7a3a', '#e8e0c8', ['semente', 'regador', 'enxada']));
     add(V.gado, () => drawWorldShop(V.gado, 'CASA DO CAMPEIRO', 'produtos para pecuária', '#8a3a24', '#e8d8b8', ['sal', 'racao', 'arreio']));
     add({ ...V.missoes, h: V.missoes.h + 20 }, drawMissoes); add(V.pouso, drawPouso);
@@ -320,14 +320,6 @@ function drawWorldCancha() {
   for (const [x, y, col] of [[c.x + 160, c.y + 220, '#3a6ad0'], [c.x + 260, c.y + 260, '#d03a3a'], [c.x + 220, c.y + 180, '#f0e8c0']]) ellipse(x, y, 8, 6, col);
   for (const x of [c.x + 20, c.x + c.w / 2 - 6, c.x + c.w - 32]) rect(x, c.y + 70, 12, c.h - 70, '#5a3a20');
   gable(c.x, c.y, c.w, 90, '#7a4a2a', 20); signBoard(c.x + c.w / 2, c.y + 36, 220, 'CANCHA DE BOCHA');
-}
-function drawWorldHorta() {
-  const h = VILA.horta, cropW = h.w * .52;
-  rect(h.x, h.y, h.w, h.h, '#7a5a34', 4, '#5a3a20');
-  for (let r = 0; r < 4; r++) { const y = h.y + 40 + r * 48; rect(h.x + 14, y, cropW, 20, '#5e4428', 6); for (let x = h.x + 24; x < h.x + 14 + cropW; x += 24) { rect(x, y - 20, 4, 28, '#4f8a2a'); ellipse(x + 2, y - 22, 7, 4, '#6aa83a'); } }
-  for (const dy of [60, 150]) { const x = h.x + h.w * .8, y = h.y + dy; rect(x - 4, y, 8, 26, '#5a3a20'); ellipse(x, y - 6, 32, 26, '#2f6a2a'); for (let k = 0; k < 6; k++) ellipse(x - 18 + (k * 15) % 36, y - 16 + (k * 11) % 22, 4, 4, '#f09a2a'); }
-  const sx = h.x + h.w * .62, sy = h.y + 196; rect(sx - 2, sy - 30, 4, 60, '#5a3a20'); rect(sx - 24, sy - 14, 48, 4, '#5a3a20'); ellipse(sx, sy - 36, 11, 11, '#e8d6a8'); rect(sx - 15, sy - 50, 30, 7, '#3a2a1a'); rect(sx - 9, sy - 59, 18, 10, '#3a2a1a'); rect(sx - 13, sy - 20, 26, 26, '#a83a24', 3);
-  signBoard(h.x + h.w / 2, h.y + h.h - 30, G.up.bergamota ? 200 : 120, G.up.bergamota ? 'HORTA E POMAR' : 'HORTA', 13);
 }
 function drawWorldFogo() {
   const f = VILA.fogo, c = campoState(), today = isCampo(), lit = today && fireLit(), cx = f.x + f.w / 2, cy = f.y + f.h / 2;

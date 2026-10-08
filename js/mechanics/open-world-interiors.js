@@ -362,7 +362,7 @@ const AGRO_GOODS = ['erva', 'salada', 'ovo', 'bergamota', 'pinhao', 'amendoim'];
 function agroShop() {
   const list = AGRO_GOODS.filter(k => GOODS[k] && unlocked(k));
   const card = k => { const g = GOODS[k], qty = Math.min(g.pack || 6, stationCapacity(k) - G.stock[k]), cost = round(Math.max(qty, 0) * g.cost * STORE_DISCOUNT); return '<div class="supply"><span class="icon">' + itemIconHTML(k) + '</span><div><b>' + nameOf(k) + '</b><p>No estoque: ' + stockText(k, G.stock[k]) + '</p></div><button class="primary" data-act="storeBuy" data-id="' + k + '" ' + (qty > 0 && hasCash(cost) ? '' : 'disabled') + '>' + (qty > 0 ? 'Comprar ' + stockText(k, qty) + ' · ' + money(cost) : 'Estoque cheio') + '</button></div>'; };
-  openDialog('Armazém Querência', '<p>Produtos para agricultura. No balcão sai na hora, e mais barato que pelo celular.</p><div class="store-list">' + list.map(card).join('') + '</div><p class="small-note">Sementes e mudas para a horta: em breve.</p>', 'worldStore');
+  openDialog('Armazém Querência', '<p>Produtos para agricultura. No balcão sai na hora, e mais barato que pelo celular.</p><div class="store-list">' + list.map(card).join('') + '</div><h3>Para a horta</h3><div class="store-list">' + hortaSeedCards() + '</div>', 'worldStore');
 }
 const CAMPEIRO_GEAR = ['bodoque', 'bootsGaucho', 'bootsBagual'];
 function campeiroShop() {
