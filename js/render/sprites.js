@@ -42,10 +42,12 @@ function personDraw(index,x,y,walking=false,chef=false,dx=1,seated=false,mood=0)
   if(mood>.7)ctx.translate(Math.sin(frameClock*16+seed)*1.5,0);
   part(0,.72,1,.28,-dw/2,-height*.28+15,dw,height*.28-15);ctx.save();ctx.translate(0,-height*.28+15);ctx.scale(1,1+breath*.012);part(0,0,1,.72,-dw/2,-height*.72,dw,height*.72);ctx.restore();
  }else if(walking){
-  // Caminhada: pernas giram no quadril, o tronco sobe a cada passo e inclina para a frente.
-  const ph=frameClock*(chef&&G.boost>0?19:13)+seed,swing=Math.sin(ph),lift=Math.abs(Math.cos(ph)),hip=-height*.3;
-  for(let leg=0;leg<2;leg++){ctx.save();ctx.translate(-dw/4+leg*dw/2,hip-lift*3);ctx.rotate(swing*(leg?1:-1)*.42);part(leg*.5,.7,.5,.3,-dw/4,0,dw/2,height*.3);ctx.restore();}
-  ctx.save();ctx.translate(0,hip-lift*3.5);ctx.rotate(.045+swing*.03);part(0,0,1,.72,-dw/2,-height*.7,dw,height*.72);ctx.restore();
+  // Caminhada: as pernas balançam no quadril com os pés no chão, o corpo sobe de leve a cada passo
+  // e o tronco inclina para o lado em que anda (na tela, não no desenho, para nunca inclinar para trás).
+  const ph=frameClock*(chef&&G.boost>0?19:13)+seed,swing=Math.sin(ph),bob=Math.abs(Math.cos(ph))*1.6,hip=-height*.3,legLen=height*.3,flip=t.a<0?-1:1,lean=.05*Math.sign(dx||0)*flip;
+  for(let leg=0;leg<2;leg++){const a=swing*(leg?1:-1)*.3;ctx.save();ctx.translate(-dw/4+leg*dw/2,hip+legLen*(1-Math.cos(a)));ctx.rotate(a);part(leg*.5,.7,.5,.3,-dw/4,0,dw/2,height*.3);ctx.restore();}
+  // O tronco vai até um pouco abaixo do quadril e cobre a junta com as pernas (o avental não se parte).
+  ctx.save();ctx.translate(0,hip-bob);ctx.rotate(lean+swing*.02);part(0,0,1,.78,-dw/2,-height*.7,dw,height*.78);ctx.restore();
  }else if(mood>.65){
   // Impaciente: bate o pé da frente e balança o corpo.
   const tap=Math.max(0,Math.sin(frameClock*11+seed))**2;part(0,.7,.5,.3,-dw/2,-height*.3,dw/2,height*.3);
